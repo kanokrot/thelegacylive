@@ -1,0 +1,15 @@
+export const ui = {
+  title:'ชีวิต', subtitle:'เรื่องเล่าหนึ่งชีวิตในภาคอีสาน', homeEyebrow:'ภาคอีสาน · หนึ่งชีวิต', pitch:'คุณจะเกิดมาเป็นใครสักคนโดยบังเอิญ แล้วใช้ชีวิตหนึ่งเดียวไปทีละปี ท่ามกลางโลกจำลองที่ผู้คนเกิด เติบโต และจากไปพร้อมกัน',
+  lives:'ชีวิตที่กำลังดำเนินอยู่', births:'เกิดใหม่ในวันนี้', recently:'เมื่อครู่มีคนเกิดที่', worldHeading:'โลกเดินต่อไป',accessPlaceholder:'ตัวเลขการเข้าถึงเป็นค่าตั้งต้นสำหรับเกม',projectedNotice:'เหตุการณ์ต่อไปนี้เป็นภาพสมมติสำหรับอนาคต',
+  born:'เกิดใหม่', continue:'ใช้ชีวิตต่ออีกหนึ่งปี', home:'หน้าแรก', collection:'สมุดสะสม', reveal:'เรื่องราวที่ติดตัวมา', nextReveal:'เปิดดูต่อ', startLife:'เริ่มต้นชีวิต',newborn:'เด็กคนหนึ่ง',birthPlaceUnknown:'บ้านเกิดจะเปิดเผยถัดไป',
+  stage:{childhood:'วัยเด็ก',teen:'วัยรุ่น',youngAdult:'วัยเริ่มต้นทำงาน',midLife:'วัยกลางคน',elder:'วัยสูงอายุ'},
+  stats:{health:'สุขภาพ',wellbeing:'ความเป็นอยู่',knowledge:'ความรู้',relationships:'ความสัมพันธ์',careBurden:'ภาระดูแล'},
+  year:'พ.ศ.', yearsOld:'ปี', rai:'ไร่', money:'เงิน',debt:'หนี้',family:'ครอบครัว',relatives:'คนรอบตัว',timeline:'บันทึกชีวิต',save:'บันทึกในอุปกรณ์นี้',quiet:'ปีนี้ผ่านไปอย่างเรียบง่าย ไม่มีเหตุการณ์เด่นที่ต้องตัดสินใจ',yearResolved:'เหตุการณ์ของปีนี้ผ่านไปแล้ว',
+  death:'อนุสรณ์',candle:'จุดเทียนให้ระลึกถึง',candles:'เทียนที่จุดในอุปกรณ์นี้',newLife:'เกิดใหม่อีกครั้ง',cohortTitle:'ชีวิตจำลองที่เกิดในช่วงเวลาใกล้กัน',
+  collectionTitle:'สมุดสะสม',collectionIntro:'ผู้คนที่คุณเคยเป็นและคนที่ได้พบระหว่างชีวิตนี้',common:'ทั่วไป',rare:'หายาก',special:'พิเศษ',locked:'ยังไม่พบ',unlockHint:'ดำเนินชีวิตต่อไปเพื่อพบผู้คนและเรื่องราวใหม่',
+  resume:'กลับไปใช้ชีวิตต่อ',peopleSuffix:'คน',relativeMigrated:'ย้ายถิ่น',relativeDead:'จากไปแล้ว',collectionEyebrow:'ชีวิตที่ผ่านมา',noTimeline:'เรื่องราวจะค่อย ๆ ปรากฏขึ้นที่นี่',
+  school:'โรงเรียน',hospital:'สถานพยาบาล',jobs:'งาน',worldLives:'ชีวิตกำลังดำเนินอยู่',householdMoney:'เงินในบ้าน',personalMoney:'เงินส่วนตัว',householdDebt:'หนี้ในบ้าน',personalDebt:'หนี้ส่วนตัว',married:'มีคู่ครอง',notMarried:'ยังไม่มีคู่ครอง',place:'ที่อยู่',partnerStatus:'ความสัมพันธ์',childCount:'ลูก',
+  relativeRoles:{mother:'แม่',father:'พ่อ',grandmother:'ยาย',grandfather:'ตา',aunt:'ป้า/น้า',uncle:'ลุง/อา',sibling:'พี่น้อง'},
+  footer:'ชีวิตหนึ่ง ไม่มีการส่งต่อให้คนรุ่นถัดไป',
+  gameErrors:{inactiveCard:'ไม่มีเหตุการณ์นี้ในรอบปัจจุบัน',unavailableChoice:'ตัวเลือกนี้ยังใช้ไม่ได้',notAuto:'การ์ดนี้ไม่ใช่เหตุการณ์อัตโนมัติ'},
+} as const
