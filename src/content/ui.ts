@@ -1,5 +1,5 @@
 export const ui = {
-  title:'ชีวิต', subtitle:'เรื่องเล่าหนึ่งชีวิตในภาคอีสาน', homeEyebrow:'ภาคอีสาน · หนึ่งชีวิต', pitch:'คุณจะเกิดมาเป็นใครสักคนโดยบังเอิญ แล้วใช้ชีวิตหนึ่งเดียวไปทีละปี ท่ามกลางโลกจำลองที่ผู้คนเกิด เติบโต และจากไปพร้อมกัน',
+  title:'ชีวิต', subtitle:'เรื่องเล่าหนึ่งชีวิตในภาคอีสาน', homeEyebrow:'ภาคอีสาน · หนึ่งชีวิต', homeHeadline:'ถ้าคุณเกิดเป็น', homeHeadlineAccent:'คนอีสาน', isanMapIllustration:'ภาพประกอบแผนที่ภาคอีสาน', isanProvinces:'รายชื่อจังหวัดภาคอีสาน', pitch:'คุณจะเกิดมาเป็นใครสักคนโดยบังเอิญ แล้วใช้ชีวิตหนึ่งเดียวไปทีละปี ท่ามกลางโลกจำลองที่ผู้คนเกิด เติบโต และจากไปพร้อมกัน',
   lives:'ชีวิตที่กำลังดำเนินอยู่', births:'เกิดใหม่ในวันนี้', recently:'เมื่อครู่มีคนเกิดที่', worldHeading:'โลกเดินต่อไป',accessPlaceholder:'ตัวเลขการเข้าถึงเป็นค่าตั้งต้นสำหรับเกม',projectedNotice:'เหตุการณ์ต่อไปนี้เป็นภาพสมมติสำหรับอนาคต',
   born:'เกิดใหม่', continue:'ใช้ชีวิตต่ออีกหนึ่งปี', home:'หน้าแรก', collection:'สมุดสะสม', startLife:'เริ่มต้นชีวิต',
   stage:{childhood:'วัยเด็ก',teen:'วัยรุ่น',youngAdult:'วัยเริ่มต้นทำงาน',midLife:'วัยกลางคน',elder:'วัยสูงอายุ'},
@@ -14,4 +14,7 @@ export const ui = {
   relativeRoles:{mother:'แม่',father:'พ่อ',grandmother:'ยาย',grandfather:'ตา',aunt:'ป้า/น้า',uncle:'ลุง/อา',sibling:'พี่น้อง'},
   footer:'ชีวิตหนึ่ง ไม่มีการส่งต่อให้คนรุ่นถัดไป',
   gameErrors:{inactiveCard:'ไม่มีเหตุการณ์นี้ในรอบปัจจุบัน',unavailableChoice:'ตัวเลือกนี้ยังใช้ไม่ได้',notAuto:'การ์ดนี้ไม่ใช่เหตุการณ์อัตโนมัติ'},
+  birthplaceEyebrow:'กำลังสุ่มจังหวัดที่จะเกิด',
+  birthplaceDialogTitle:'จังหวัดที่คุณจะเกิด', birthplaceCaption:'สุ่มเท่ากันทุกจังหวัด (1 ใน 20 จังหวัดอีสาน)', birthplaceFactTitle:'รายได้ครัวเรือนเฉลี่ยต่อเดือน', birthplaceIncomeProvince:'จังหวัดนี้', birthplaceIncomeRegion:'เทียบกับค่าเฉลี่ยภาคอีสาน', birthplaceSource:'สสช. สำรวจภาวะเศรษฐกิจและสังคมของครัวเรือน 2566', birthplaceContinue:'ดูใบแจ้งเกิด',
+  mapAttribution:'ขอบเขตจังหวัด: © OpenStreetMap contributors / geoBoundaries (ODbL 1.0)',
 } as const
