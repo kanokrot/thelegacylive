@@ -6,13 +6,12 @@ import { ui } from '../content/ui'
 import { balance } from '../content/balance'
 import Portrait from './portraits/Portrait.vue'
 import HomeWorldCounters from './HomeWorldCounters.vue'
+import BirthProfile from './BirthProfile.vue'
 import { evaluateCondition } from '../engine/conditions'
 import type { RelativeRole } from '../engine/types'
 
 const store = useGameStore()
-const { game, screen, roll, revealIndex, collection, person, card, counters, recentBirth, candleCount, worldLabel, worldDescription, cohort } = storeToRefs(store)
-const revealed = computed(() => roll.value?.reveals.slice(0, revealIndex.value + 1) ?? [])
-const finalReveal = computed(() => Boolean(roll.value && revealIndex.value === roll.value.reveals.length - 1))
+const { game, screen, roll, collection, person, card, counters, recentBirth, candleCount, worldLabel, worldDescription, cohort } = storeToRefs(store)
 const age = computed(() => game.value && person.value ? game.value.year - person.value.birthYear : 0)
 const currentChoices = computed(() => game.value && card.value ? card.value.choices.filter(choice => evaluateCondition(choice.requires, game.value!)) : [])
 const choiceEffects = (choice: (typeof currentChoices.value)[number]) => {
@@ -49,12 +48,7 @@ const roleLabel = (role: RelativeRole) => ui.relativeRoles[role]
       <p class="footnote">{{ ui.accessPlaceholder }}</p>
     </section>
 
-    <section v-else-if="screen === 'reveal' && roll" class="reveal panel">
-      <p class="eyebrow">{{ ui.reveal }} · {{ revealIndex + 1 }}/{{ roll.reveals.length }}</p>
-      <div class="reveal-person"><Portrait v-if="finalReveal" :person="roll.person" :size="150" /><div v-else class="portrait-placeholder">?</div><div><h1>{{ finalReveal ? roll.person.name : ui.newborn }}</h1><p>{{ revealIndex >= 2 ? roll.person.province : ui.birthPlaceUnknown }}</p></div></div>
-      <div class="reveals"><p v-for="item in revealed" :key="item.label"><span>{{ item.label }}</span><strong>{{ item.value }}</strong></p></div>
-      <button class="primary" @click="store.nextReveal()">{{ revealIndex + 1 === roll.reveals.length ? ui.startLife : ui.nextReveal }}</button>
-    </section>
+    <BirthProfile v-else-if="screen === 'reveal' && roll" :roll="roll" @start="store.startLife()" />
 
     <section v-else-if="screen === 'life' && game && person" class="life-screen">
       <div class="yearbar"><span class="stage-pill">{{ ui.stage[person.stage] }}</span><strong>{{ ui.year }} {{ buddhistYear(game.year) }}</strong><span class="place">{{ person.province }}</span></div>
