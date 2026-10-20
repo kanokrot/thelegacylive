@@ -1,0 +1,227 @@
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --line-height-base: 1.6;
+  line-height: var(--line-height-base);
+}
+
+#app {
+  line-height: var(--line-height-base);
+}
+
+#app :is(p, li, dt, dd, h1, h2, h3, button, small, time, label, strong, b, span) {
+  line-height: var(--line-height-base);
+}
+
+.life-shell {
+  gap: var(--space-4);
+}
+
+.life-shell .masthead {
+  margin: 0;
+}
+
+.life-screen {
+  gap: var(--space-4);
+}
+
+.life-screen .yearbar {
+  gap: var(--space-4);
+  margin-bottom: 0;
+  padding: var(--space-3) var(--space-4);
+}
+
+.life-screen .life-layout {
+  column-gap: var(--space-5);
+  row-gap: var(--space-4);
+}
+
+.life-screen .sidebar,
+.life-screen .story-column {
+  gap: var(--space-4);
+}
+
+.life-screen .profile,
+.life-screen .household,
+.life-screen .story,
+.life-screen .log {
+  padding: var(--space-5);
+}
+
+.life-screen .profile h2 {
+  margin: var(--space-3) 0 0;
+}
+
+.life-screen .profile > p {
+  margin: 0;
+  line-height: var(--line-height-base);
+}
+
+.life-screen .profile dl {
+  gap: var(--space-2);
+  margin: var(--space-4) 0 0;
+}
+
+.life-screen .life-stat-row {
+  display: grid;
+  grid-template-columns: minmax(88px, 0.8fr) minmax(0, 1fr) 32px;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.life-screen .life-stat-row dt {
+  grid-column: 1;
+  line-height: var(--line-height-base);
+}
+
+.life-screen .life-stat-row dd {
+  display: contents;
+}
+
+.life-screen .life-stat-row .meter {
+  grid-column: 2;
+  min-width: 0;
+}
+
+.life-screen .life-stat-row b {
+  grid-column: 3;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.life-screen .profile-home-map {
+  margin-top: var(--space-4);
+}
+
+.life-screen .household h2,
+.life-screen .household h3,
+.life-screen .log h2 {
+  margin: 0;
+}
+
+.life-screen .household > p {
+  margin: var(--space-2) 0 0;
+}
+
+.life-screen .economy {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-3);
+}
+
+.life-screen .household h3 {
+  margin-top: var(--space-4);
+}
+
+.life-screen .household ul {
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.life-screen .household li {
+  align-items: flex-start;
+  gap: var(--space-2);
+  line-height: var(--line-height-base);
+}
+
+.life-screen .story h2 {
+  margin: var(--space-1) 0 var(--space-3);
+}
+
+.life-screen .story > p:not(.eyebrow) {
+  line-height: var(--line-height-base);
+}
+
+.life-screen .choices {
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.life-screen .choices button {
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  line-height: var(--line-height-base);
+}
+
+.life-screen .choices button > span:first-child {
+  display: grid;
+  min-width: 0;
+  gap: var(--space-3);
+}
+
+.life-screen .choice-effects {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.life-screen .choice-effect {
+  margin: 0;
+  line-height: var(--line-height-base);
+}
+
+.life-screen .quiet {
+  line-height: var(--line-height-base);
+}
+
+.life-screen .quiet .primary {
+  margin-top: var(--space-3);
+}
+
+.life-screen .log ol {
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.life-screen .log li {
+  gap: var(--space-2);
+  line-height: var(--line-height-base);
+}
+
+.life-screen .world-strip {
+  gap: var(--space-2) var(--space-3);
+  margin: 0;
+  padding: var(--space-3);
+  line-height: var(--line-height-base);
+}
+
+.life-screen .world-strip-description {
+  margin: 0;
+}
+
+@media (max-width: 760px) {
+  .life-screen .life-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .life-screen .sidebar {
+    gap: var(--space-4);
+  }
+}
+
+@media (max-width: 500px) {
+  .life-screen .yearbar {
+    gap: var(--space-2);
+  }
+
+  .life-screen .place {
+    margin-left: 0;
+  }
+
+  .life-screen .profile,
+  .life-screen .household,
+  .life-screen .story,
+  .life-screen .log {
+    padding: var(--space-4);
+  }
+
+  .life-screen .life-stat-row {
+    grid-template-columns: minmax(88px, 0.8fr) minmax(0, 1fr) 32px;
+  }
+}
