@@ -21,13 +21,17 @@ export function rollBirth(seed = Math.floor(Math.random()*0xffffffff)): BirthRol
   const people: Relative[]=[relative(`${personId}:mother`,'mother',`${pick(rng,givenNamesByEra[era].female)} ${familyName}`,int(rng,b.relativeLife.parentMother[0],b.relativeLife.parentMother[1]),'หญิง',rng),relative(`${personId}:father`,'father',`${pick(rng,givenNamesByEra[era].male)} ${familyName}`,int(rng,b.relativeLife.parentFather[0],b.relativeLife.parentFather[1]),'ชาย',rng),relative(`${personId}:grandmother`,'grandmother',`${pick(rng,givenNamesByEra.earlier.female)} ${familyName}`,int(rng,b.relativeLife.grandmother[0],b.relativeLife.grandmother[1]),'หญิง',rng),relative(`${personId}:grandfather`,'grandfather',`${pick(rng,givenNamesByEra.earlier.male)} ${familyName}`,int(rng,b.relativeLife.grandfather[0],b.relativeLife.grandfather[1]),'ชาย',rng),relative(`${personId}:aunt`,'aunt',`${pick(rng,givenNamesByEra[era].female)} ${familyName}`,int(rng,b.relativeLife.extendedAge[0],b.relativeLife.extendedAge[1]),'หญิง',rng),relative(`${personId}:uncle`,'uncle',`${pick(rng,givenNamesByEra[era].male)} ${familyName}`,int(rng,b.relativeLife.extendedAge[0],b.relativeLife.extendedAge[1]),'ชาย',rng)]
   people.slice(0,4).forEach(r=>r.married=true)
   for(let i=1;i<=siblings;i++){const order=i>=birthOrder?i+1:i;const age=order<birthOrder?int(rng,1,b.relativeLife.siblingAge[1]):int(rng,b.relativeLife.siblingAge[0],b.relativeLife.siblingAge[0]);people.push(relative(`${personId}:sibling-${i}`,'sibling',`${pick(rng,[...givenNamesByEra[era].female,...givenNamesByEra[era].male])} ${familyName}`,age,pick(rng,['หญิง','ชาย']),rng))}
-  const person: Person={id:personId,name,gender,birthYear:year,province,householdType,householdLandRai:householdType==='ทำนา'?int(rng,b.rai[0],b.rai[1]):0,householdMoney:int(rng,b.startingHouseholdMoney[0],b.startingHouseholdMoney[1]),occupation:'',location:province,migrated:false,partnered:false,children:0,birthOrder,siblingCount:siblings,health:stat('health'),wellbeing:stat('wellbeing'),knowledge:stat('knowledge'),relationships:stat('relationships'),careBurden:stat('careBurden'),aptitude:stat('aptitude'),diligence:stat('diligence'),temperament:stat('temperament'),money:int(rng,b.startingMoney[0],b.startingMoney[1]),debt:int(rng,b.startingDebt[0],b.startingDebt[1]),personalDebt:int(rng,b.startingPersonalDebt[0],b.startingPersonalDebt[1]),flags:{},affinities:Object.fromEntries(people.map(r=>[r.id,int(rng,b.affinityRange[0],b.affinityRange[1])])),relatives:people,stage:'childhood',alive:true}
+  const person: Person={id:personId,name,gender,birthYear:year,province,householdType,householdLandRai:householdType==='ทำนา'?int(rng,b.rai[0],b.rai[1]):0,householdMoney:int(rng,b.startingHouseholdMoney[0],b.startingHouseholdMoney[1]),occupation:'',location:province,migrated:false,partnered:false,children:0,remittancesSent:0,birthOrder,siblingCount:siblings,health:stat('health'),wellbeing:stat('wellbeing'),knowledge:stat('knowledge'),relationships:stat('relationships'),careBurden:stat('careBurden'),aptitude:stat('aptitude'),diligence:stat('diligence'),temperament:stat('temperament'),money:int(rng,b.startingMoney[0],b.startingMoney[1]),debt:int(rng,b.startingDebt[0],b.startingDebt[1]),personalDebt:int(rng,b.startingPersonalDebt[0],b.startingPersonalDebt[1]),flags:householdType==='ค้าขายครอบครัวไทยเชื้อสายจีน'?{thaiChinese:true}:{},affinities:Object.fromEntries(people.map(r=>[r.id,int(rng,b.affinityRange[0],b.affinityRange[1])])),relatives:people,stage:'childhood',alive:true}
   const region=regions[provinces.indexOf(province)]!
   return {person,region,reveals:birthRevealLabels.map((label,i)=>({label,value:[gender,`พ.ศ. ${year+b.yearOffsetBE}`,province,`${householdType}${person.householdLandRai?` · ${person.householdLandRai} ไร่`:''}`,`คนที่ ${birthOrder} จาก ${siblings+1} คน`,`${person.health}/100`,`${person.aptitude}/100`,`${person.diligence}/100`,`${person.temperament}/100`,name][i]!}))}
 }
 export function createLife(seed: number): LifeState {
-  const roll=rollBirth(seed); const p=roll.person
-  return {person:p,year:p.birthYear,region:roll.region,seed,rngCounter:0,playedCards:[],currentCardIds:[],log:[],status:'playing',memorial:''}
+  return createLifeFromRoll(seed,rollBirth(seed))
+}
+/** Creates a life from a resolved birth roll; also supports authored scenario fixtures. */
+export function createLifeFromRoll(seed: number, roll: BirthRoll): LifeState {
+  const p=roll.person
+  return {person:p,year:p.birthYear,region:roll.region,seed,rngCounter:0,playedCards:[],currentCardIds:[],metPeople:[],log:[],status:'playing',memorial:''}
 }
 function random(s: LifeState): () => number { const r=mulberry32((s.seed+s.rngCounter*0x9e3779b9)>>>0); s.rngCounter++; return r }
 function setStage(s: LifeState): void { s.person.stage=stageFor(s.year-s.person.birthYear) }
@@ -50,7 +54,7 @@ function finish(s: LifeState): void {
 function annual(s: LifeState): void {
   const p=s.person, rng=random(s); s.year++; const age=s.year-p.birthYear; setStage(s)
   p.relatives.forEach(r=>{if(r.alive){r.age++; if(r.age>b.relativeLife.deathAge || rng()<Math.max(b.annual.relativeDeathBase,(r.age-b.annual.relativeAgeGate)*b.annual.relativeDeathPerYear)) r.alive=false; if(!r.migrated&&age>b.annual.migrationMinAge&&rng()<b.relativeLife.migrationChance)r.migrated=true; if(!r.married&&r.age>=b.relativeLife.marriageAge&&rng()<b.relativeLife.marriageChance)r.married=true}})
-  p.health=clamp(p.health-b.annual.healthDecay-rng()*b.annual.healthVariation+(p.householdType==='ทำนา'&&age<b.annual.harvestAgeLimit?b.annual.farmHealth:0)); p.money=clamp(p.money+rng()*b.annual.moneyRange-b.annual.moneyRange/2); p.householdMoney=clamp(p.householdMoney+b.annual.householdIncome+(p.householdType==='ทำนา'?p.householdLandRai*b.annual.riceIncomePerRai:0)+(p.migrated?b.annual.migrantRemittance:0)); p.debt=clamp(p.debt*(1+b.annual.debtInterest));p.personalDebt=clamp(p.personalDebt*(1+b.annual.debtInterest))
+  p.health=clamp(p.health-b.annual.healthDecay-rng()*b.annual.healthVariation+(p.householdType==='ทำนา'&&age<b.annual.harvestAgeLimit?b.annual.farmHealth:0)); p.money=clamp(p.money+rng()*b.annual.moneyRange-b.annual.moneyRange/2); p.householdMoney=clamp(p.householdMoney+b.annual.householdIncome+(p.householdType==='ทำนา'?p.householdLandRai*b.annual.riceIncomePerRai:0)+(p.migrated?b.annual.migrantRemittance:0)); if(p.migrated)p.remittancesSent+=b.annual.migrantRemittance; p.debt=clamp(p.debt*(1+b.annual.debtInterest));p.personalDebt=clamp(p.personalDebt*(1+b.annual.debtInterest))
   const mortality=age>=b.maxAge?1:Math.min(b.mortality.maxChance,(age<b.mortality.age50At?b.mortality.base:age<b.mortality.age65At?b.mortality.age50:age<b.mortality.age80At?b.mortality.age65:b.mortality.age80)+(b.maxStat-p.health)/b.mortality.healthDivisor+(1-s.region.hospitalAccess)*b.mortality.accessRisk)
   if(rng()<mortality) finish(s)
   if(age===b.childFarmWorkAge&&p.householdType==='ทำนา')p.occupation=occupations.farmWork
@@ -70,9 +74,18 @@ export function choose(s: LifeState,card: Card,choice: Choice): void {
   if(!s.currentCardIds.includes(card.id))throw new Error(ui.gameErrors.inactiveCard)
   if(!evaluateCondition(choice.requires,s))throw new Error(ui.gameErrors.unavailableChoice)
   const modifierEffects=choice.modifiers?.filter(m=>evaluateCondition(m.when,s)).flatMap(m=>m.effects)??[]
-  applyEffects(s,[...choice.effects,...modifierEffects]); choice.setFlags?.forEach(flag=>{s.person.flags[flag]=true;if(flag==='migrated'||flag==='migrated-east'){s.person.migrated=true;s.person.location=flag==='migrated-east'?b.migrationDestinations.east:b.migrationDestinations.bangkok;s.person.occupation=occupations.urbanWork}if(flag==='returnedHome'){s.person.migrated=false;s.person.location=s.person.province;s.person.occupation=occupations.farmWork}if(flag==='partnered')s.person.partnered=true;if(flag==='hasChild')s.person.children++})
+  applyEffects(s,[...choice.effects,...modifierEffects]); choice.setFlags?.forEach(flag=>{s.person.flags[flag]=true;if(flag==='migrated'||flag==='migrated-east'){s.person.migrated=true;s.person.location=flag==='migrated-east'?b.migrationDestinations.east:b.migrationDestinations.bangkok;s.person.occupation=occupations.urbanWork}if(flag==='returnedHome'){s.person.migrated=false;s.person.flags.migrated=false;s.person.location=s.person.province;s.person.occupation=occupations.farmWork}if(flag==='partnered')s.person.partnered=true;if(flag==='hasChild')s.person.children++;if(flag==='metUrbanCoworker'||flag==='metThaiChineseShopkeeper')addMetPerson(s,flag)})
   s.log.push({year:s.year,title:card.title,text:choice.label,cardId:card.id}); if(card.once&&!s.playedCards.includes(card.id))s.playedCards.push(card.id)
   s.currentCardIds.shift()
+}
+function addMetPerson(s: LifeState, flag: string): void {
+  if(s.metPeople.some(person=>person.id.endsWith(flag)))return
+  const person=rollBirth((s.seed^flag.length^s.year)>>>0).person
+  person.id=`${s.person.id}:met:${flag}`
+  person.householdType=flag==='metThaiChineseShopkeeper'?'ค้าขายครอบครัวไทยเชื้อสายจีน':'แรงงานในเมือง'
+  person.flags={...person.flags,thaiChinese:flag==='metThaiChineseShopkeeper'}
+  person.occupation=flag==='metThaiChineseShopkeeper'?'ค้าขายเล็ก ๆ':occupations.urbanWork
+  s.metPeople.push(person)
 }
 export function resolveAutoCard(s:LifeState,card:Card):void {
   if(!card.auto||card.choices.length||!s.currentCardIds.includes(card.id))throw new Error(ui.gameErrors.notAuto)

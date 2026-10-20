@@ -1,4 +1,4 @@
-import { balance } from './balance'
+﻿import { balance } from './balance'
 import type { Card, Condition, RegionProfile } from '../engine/types'
 
 export { balance }
@@ -21,8 +21,11 @@ export const occupations = { farmWork:'ช่วยงานนา', urbanWork:'
 export const provinces = ['กาฬสินธุ์', 'ขอนแก่น', 'ชัยภูมิ', 'นครพนม', 'นครราชสีมา', 'บึงกาฬ', 'บุรีรัมย์', 'มหาสารคาม', 'มุกดาหาร', 'ยโสธร', 'ร้อยเอ็ด', 'เลย', 'ศรีสะเกษ', 'สกลนคร', 'สุรินทร์', 'หนองคาย', 'หนองบัวลำภู', 'อำนาจเจริญ', 'อุดรธานี', 'อุบลราชธานี']
 export const regions: RegionProfile[] = provinces.map((name, i) => ({ id: `isan-${i}`, name, schoolAccess: balance.access.school, hospitalAccess: balance.access.hospital, jobAccess: balance.access.jobs }))
 
-const stages = ['childhood', 'teen', 'youngAdult', 'midLife', 'elder'] as const
-const labels = [
+const ageWindow = (range:readonly [number,number]):Condition => ({all:[{age:'>=',value:range[0]},{age:'<=',value:range[1]}]})
+const S = (key: 'health'|'wellbeing'|'knowledge'|'relationships'|'careBurden'|'aptitude'|'diligence'|'temperament', delta: number) => ({ target: 'self' as const, key, delta: balance.eventDeltas[key][String(delta)]! })
+const H = (key: 'money'|'debt', delta: number) => ({ target: 'household' as const, key, delta: balance.eventDeltas[key][String(delta)]! })
+const R = (relativeRole: string, key: 'health'|'relationships', delta: number) => ({ target: { relativeRole }, key, delta: balance.eventDeltas[key][String(delta)]! })
+/*
   ['เสียงในเรือนยามเช้า', 'คนในบ้านเริ่มวันด้วยงานหลายอย่าง คุณยังเล็กเกินกว่าจะเข้าใจทั้งหมด แต่จำจังหวะชีวิตนั้นได้'],
   ['งานเล็ก ๆ ในบ้าน', 'มีงานพอดีกับวัยให้ช่วยทำ ผู้ใหญ่คอยบอกและปรับตามวันที่คุณเหนื่อย'],
   ['เพื่อนบ้านแวะมา', 'การทักทายสั้น ๆ กลายเป็นความช่วยเหลือในวันที่ต้องการแรงอีกคน'],
@@ -64,34 +67,42 @@ const labels = [
   ['วางแผนวัยเกษียณ', 'คุณเริ่มคิดถึงค่าใช้จ่ายในอนาคตและคนที่จะช่วยดูแลเมื่อทำงานได้น้อยลง'],
   ['ส่งต่อประสบการณ์', 'คนรุ่นน้องถามถึงงานที่คุณทำ คุณแบ่งปันสิ่งที่เรียนรู้จากทั้งวันที่ดีและวันที่ยาก'],
 ]
-const storyClosers = ['คนในบ้านคุยกันถึงสิ่งที่พอทำได้ตามเวลาและกำลังที่มี','คุณค่อย ๆ เรียนรู้ว่าการวางแผนช่วยให้รับมือกับสิ่งที่ควบคุมไม่ได้','ทางเลือกของแต่ละคนขึ้นกับระยะทาง รายได้ และความช่วยเหลือรอบตัว','เรื่องเล็กที่ทำร่วมกันกลายเป็นส่วนหนึ่งของความสัมพันธ์ในบ้าน']
-const closeStory = (id:string) => storyClosers[[...id].reduce((sum,char)=>sum+char.charCodeAt(0),0)%storyClosers.length]!
-const ageWindow = (range:readonly [number,number]):Condition => ({all:[{age:'>=',value:range[0]},{age:'<=',value:range[1]}]})
-const effect: Card['choices'][number]['effects'][number] = { target: 'self', key: 'wellbeing', delta: balance.eventDeltas.wellbeing['2']! }
-const genericCards: Card[] = Array.from({ length: balance.cards.genericCount }, (_, i) => {
-  const [title, body] = labels[i % labels.length]!
-  const stage = stages[Math.floor(i / 8)]!
-  return {
-    id: `isan-life-${String(i + 1).padStart(2, '0')}`, stage, title, body: `${body}. ${closeStory(`isan-life-${i}`)}.`,
-    weight: balance.cards.routineWeights[i % balance.cards.routineWeights.length]!, once: i < balance.cards.initialOnceCount,
-    choices: [
-      { id: `stay-${i}`, label: 'อยู่ช่วยจัดการที่บ้าน', effects: [effect, { target: 'household', key: 'money', delta: -1 }, { target: 'self', key: 'relationships', delta: 1 }] },
-      { id: `try-${i}`, label: 'ลองเลือกทางที่สนใจ', effects: [{ target: 'self', key: 'knowledge', delta: 2 }, { target: 'self', key: 'wellbeing', delta: -1 }, { target: 'self', key: 'relationships', delta: -1 }] },
-    ],
-  }
-})
+*/
+const routine = (id: string, stage: Card['stage'], title: string, body: string, a: string, b: string, ea: Card['choices'][number]['effects'], eb: Card['choices'][number]['effects'], opts: Partial<Card> = {}): Card => ({ id, stage, title, body, weight: balance.cards.routineWeight, once: true, ...opts, choices: [{ id: `${id}-a`, label: a, effects: ea }, { id: `${id}-b`, label: b, effects: eb }] })
+// Authored recurring situations: each card describes a distinct decision, not a generated title/choice template.
+const routineCards: Card[] = [
+  routine('rain-delay','childhood','ฝนยังไม่มาตามนัด','ผู้ใหญ่คุยกันว่าจะหว่านซ่อมบางส่วนหรือเก็บเมล็ดไว้รอจังหวะที่เหมาะกว่า','ช่วยเตรียมแปลงเท่าที่ทำได้','เก็บเมล็ดพันธุ์ไว้ก่อน',[S('diligence',2),S('careBurden',1)],[S('wellbeing',1),H('money',-1)]),
+  routine('school-library','childhood','มุมหนังสือในโรงเรียน','ครูเปิดห้องสมุดหลังเลิกเรียน แต่รถรับส่งกลับบ้านออกก่อนเวลา','อยู่ทำรายงานกับเพื่อน','กลับบ้านตามเวลารถ',[S('knowledge',3),S('relationships',1)],[S('knowledge',1),S('careBurden',-1)],{when:ageWindow(balance.routineAges.library)}),
+  routine('younger-sibling','childhood','น้องมีไข้ในวันที่ต้องสอบ','คนในบ้านต้องแบ่งเวลาเฝ้าน้องกับพาคุณไปโรงเรียน','ไปสอบแล้วให้ญาติช่วยดูน้อง','อยู่เฝ้าน้องและเลื่อนสอบ',[S('knowledge',2),S('relationships',-1),H('money',-1)],[S('relationships',2),S('wellbeing',-1)],{when:ageWindow(balance.routineAges.siblingExam)}),
+  routine('school-uniform','childhood','เครื่องแบบที่ยังใส่ได้','ชุดนักเรียนตัวเดิมเริ่มคับ ครอบครัวดูเงินที่เหลือก่อนเปิดเทอม','ซื้อชุดใหม่ให้พอดีตัว','ซ่อมหรือรับชุดต่อจากญาติ',[H('money',-3),S('wellbeing',1)],[H('money',-1),S('relationships',1)]),
+  routine('exam-trip','teen','วันสอบไกลบ้าน','สนามสอบอยู่อีกอำเภอ คุณต้องเลือกว่าจะเดินทางไปสอบหรือรับงานที่มีค่าจ้างแน่นอน','ไปสอบตามกำหนด','รับงานที่มีค่าจ้างแน่นอน',[H('money',-3),S('knowledge',4)],[H('money',2),S('knowledge',-1)],{when:ageWindow(balance.routineAges.examTrip)}),
+  routine('teacher-reference','teen','ครูเขียนจดหมายแนะนำ','มีทุนหรือโครงการให้สมัคร แต่เอกสารและการเดินทางต้องจัดการเอง','ให้ครูช่วยตรวจใบสมัคร','สมัครตามเอกสารที่มี',[S('knowledge',3),H('money',-1)],[S('wellbeing',1),S('relationships',1)]),
+  routine('factory-interview','teen','นัดสัมภาษณ์งานโรงงาน','บริษัทนัดสัมภาษณ์พร้อมกันหลายคน คุณชั่งใจเรื่องค่าเดินทางและการเริ่มงานเร็ว','เดินทางไปสัมภาษณ์','รับงานใกล้บ้านก่อน',[H('money',-2),S('knowledge',2)],[H('money',1),S('wellbeing',-1)],{when:ageWindow(balance.routineAges.factoryInterview)}),
+  routine('village-transport','youngAdult','รถเที่ยวสุดท้าย','รถกลับหมู่บ้านมีรอบจำกัด การทำงานกะดึกเพิ่มรายได้แต่ทำให้กลับบ้านยาก','รับกะกลางวัน','รับกะกลางคืน',[H('money',-1),S('health',1),S('relationships',1)],[H('money',3),S('health',-2)]),
+  routine('first-pay','youngAdult','เงินเดือนงวดแรก','หลังหักค่าห้องและค่าเดินทาง คุณแบ่งเงินระหว่างเก็บสำรองกับส่งให้บ้าน','กันเงินฉุกเฉินไว้ก่อน','ส่งเงินให้บ้านมากขึ้น',[S('wellbeing',2),H('money',-1)],[H('money',2),S('relationships',2)]),
+  routine('market-stall','youngAdult','แผงขายของหน้าตลาด','ญาติชวนลองขายอาหารช่วงเช้า มีต้นทุนวัตถุดิบและโอกาสได้ลูกค้าประจำ','ช่วยตั้งแผงวันหยุด','พักวันหยุดและเก็บเงินไว้',[H('money',-2),S('aptitude',2),S('relationships',1)],[S('wellbeing',1),S('knowledge',1)]),
+  routine('workplace-course','youngAdult','อบรมทักษะหลังเลิกงาน','ที่ทำงานมีอบรมเพิ่มทักษะโดยไม่คิดค่าเรียน แต่ต้องสละเวลาพักหลายสัปดาห์','สมัครอบรม','ใช้เวลาพักหลังเลิกงาน',[S('knowledge',4),S('wellbeing',-2)],[S('health',1),S('wellbeing',1)]),
+  routine('roommate-rent','youngAdult','ค่าเช่าห้องปรับขึ้น','เจ้าของห้องแจ้งค่าเช่าใหม่ คุณเลือกหาห้องร่วมกับคนอื่นหรือเดินทางไกลขึ้น','แชร์ห้องกับเพื่อน','ย้ายไปห้องที่ไกลกว่า',[H('money',1),S('relationships',1)],[H('money',-2),S('wellbeing',-1)]),
+  routine('community-fund','youngAdult','กองทุนช่วยงานศพ','เพื่อนบ้านชวนร่วมกองทุนที่ช่วยสมาชิกยามจำเป็น การจ่ายวันนี้กระทบเงินใช้จ่าย','ร่วมกองทุนตามกำลัง','เก็บเงินไว้ใช้เอง',[H('money',-1),S('relationships',2)],[H('money',1),S('wellbeing',-1)]),
+  routine('childcare-shift','midLife','เวลางานชนกับเวลารับลูก','โรงเรียนเลิกก่อนกะงานจบ คุณคุยกับญาติและหัวหน้างานเพื่อจัดตารางใหม่','ขอลดกะเพื่อไปรับลูก','รักษากะงานเดิมและขอญาติช่วย',[H('money',-2),S('relationships',2),S('careBurden',1)],[H('money',1),S('wellbeing',-1)]),
+  routine('repair-pump','midLife','ปั๊มน้ำเสียก่อนปลูก','การซ่อมอาจทันรอบเพาะปลูกแต่ต้องจ่ายก่อน หรือรอใช้เครื่องมือร่วมกับเพื่อนบ้าน','ซ่อมทันที','รอใช้เครื่องมือร่วมกัน',[H('money',-3),S('wellbeing',1)],[H('money',1),S('relationships',2)]),
+  routine('care-rotation','midLife','จัดเวรดูแลผู้ใหญ่','พี่น้องอยู่คนละที่ คุณชวนคุยเรื่องตารางดูแลและค่าเดินทาง','ทำตารางร่วมกัน','ช่วยค่าเดินทางแทน',[S('relationships',3),S('careBurden',-1)],[H('money',1),S('careBurden',2)]),
+  routine('local-election-day','midLife','วันช่วยงานชุมชน','ชุมชนขอแรงจัดสถานที่ คุณมีงานรับจ้างที่เสียรายได้หากหยุด','ช่วยช่วงเช้า','รับงานตามปกติ',[S('relationships',2),H('money',-1)],[H('money',2),S('wellbeing',-1)]),
+  routine('clinic-queue','elder','คิวตรวจที่โรงพยาบาล','ญาติชวนไปตรวจตามนัด การเดินทางใช้เวลาทั้งวันและต้องมีคนพาไป','ไปตามนัด','เลื่อนนัดเพื่อเก็บเงิน',[S('health',3),H('money',-2),S('careBurden',1)],[H('money',-1),S('relationships',-1)]),
+  routine('teach-grandchild','elder','หลานถามเรื่องงานเก่า','หลานอยากรู้ว่าครอบครัวเคยย้ายถิ่นและทำงานอย่างไร คุณเลือกเล่าเรื่องหรือพักผ่อน','เล่าให้ฟัง','พักในวันที่เหนื่อย',[S('relationships',2),S('wellbeing',2)],[S('health',1),S('wellbeing',1)]),
+  routine('home-modification','elder','ปรับบ้านให้เดินสะดวก','ขั้นบันไดเริ่มลำบาก ครอบครัวคุยกันว่าจะปรับบ้านหรือจัดคนช่วยดูแล','ปรับทางเดินและราวจับ','จัดเวรคนในบ้านช่วยดูแล',[H('money',-3),S('health',2)],[S('relationships',2),S('careBurden',1)]),
+]
+routineCards.find(card=>card.id==='market-stall')!.choices[0]!.setFlags=['metThaiChineseShopkeeper']
+routineCards.find(card=>card.id==='childcare-shift')!.choices[0]!.setFlags=['metUrbanCoworker']
 
-const milestone = (id: string, stage: Card['stage'], title: string, body: string, choiceA: string, choiceB: string, effectsA: Card['choices'][number]['effects'], effectsB: Card['choices'][number]['effects'], opts: Partial<Card> = {}): Card => ({ id, stage, title, body: `${body}. ${closeStory(id)}.`, weight: balance.cards.milestoneWeight, once: true, ...opts, choices: [{ id: `${id}-a`, label: choiceA, effects: effectsA }, { id: `${id}-b`, label: choiceB, effects: effectsB }] })
-const S = (key: 'health'|'wellbeing'|'knowledge'|'relationships'|'careBurden'|'aptitude'|'diligence'|'temperament', delta: number) => ({ target: 'self' as const, key, delta: balance.eventDeltas[key][String(delta)]! })
-const H = (key: 'money'|'debt', delta: number) => ({ target: 'household' as const, key, delta: balance.eventDeltas[key][String(delta)]! })
-const R = (relativeRole: string, key: 'health'|'relationships', delta: number) => ({ target: { relativeRole }, key, delta: balance.eventDeltas[key][String(delta)]! })
+const milestone = (id: string, stage: Card['stage'], title: string, body: string, choiceA: string, choiceB: string, effectsA: Card['choices'][number]['effects'], effectsB: Card['choices'][number]['effects'], opts: Partial<Card> = {}): Card => ({ id, stage, title, body, weight: balance.cards.milestoneWeight, once: true, ...opts, choices: [{ id: `${id}-a`, label: choiceA, effects: effectsA }, { id: `${id}-b`, label: choiceB, effects: effectsB }] })
 const extra: Card[] = [
   milestone('birth-health', 'childhood', 'วันแรกของชีวิต', 'คนในบ้านช่วยกันดูแลคุณในช่วงแรก ผู้ใหญ่สังเกตอาการและหาความช่วยเหลือตามที่เข้าถึงได้', 'พาไปสถานพยาบาล', 'ขอแรงญาติช่วยดูแล', [S('health', 5), H('money', -3)], [S('relationships', 2), S('health', 1)], {when:ageWindow(balance.milestoneAges.earlyHealth)}),
   milestone('who-raises', 'childhood', 'ใครช่วยเลี้ยงดู', 'งานและการเดินทางของผู้ใหญ่ทำให้การดูแลเป็นเรื่องที่หลายคนช่วยกัน', 'อยู่กับยายช่วงกลางวัน', 'ไปกับแม่ตามงาน', [S('relationships', 3), S('careBurden', -1)], [S('relationships', 1), S('knowledge', 1)]),
   milestone('child-farm-work', 'childhood', 'ช่วยงานนา', 'ช่วงฤดูทำนามีงานเล็ก ๆ ให้ช่วยตามกำลังและเวลาเรียน', 'ช่วยเก็บของหลังเลิกเรียน', 'ช่วยตามเวลาว่าง', [S('diligence', 2), S('careBurden', 1)], [S('wellbeing', 1)], {when:ageWindow(balance.milestoneAges.farmWork)}),
   milestone('school-start', 'childhood', 'เริ่มเข้าโรงเรียน', 'โรงเรียนอยู่ห่างจากบ้านพอให้ต้องวางแผนการเดินทางและค่าใช้จ่าย', 'เดินทางไปเรียน', 'เรียนใกล้บ้านและแบ่งเวลาช่วยงาน', [S('knowledge', 5), H('money', -2)], [S('knowledge', 2), S('careBurden', 2)], {when:ageWindow(balance.milestoneAges.schoolStart)}),
   milestone('grade-six', 'childhood', 'หลังจบ ป.6', 'การเรียนต่อ ม.1 ต้องคุยกันเรื่องระยะทาง ค่าเดินทาง และภาระของบ้าน', 'เรียนต่อ ม.1', 'ทำงานและเรียนตามโอกาส', [S('knowledge', 5), H('money', -3)], [H('money', 3), S('knowledge', 1)], {when:ageWindow(balance.milestoneAges.gradeSix)}),
-  milestone('grade-nine', 'teen', 'หลังจบ ม.3', 'ผลการเรียนเปิดทางเลือก แต่ค่าใช้จ่ายและแรงงานในบ้านก็เป็นเรื่องจริงที่ต้องนับรวม', 'เรียนต่อ ม.4', 'ออกไปทำงานและส่งเงินกลับ', [S('knowledge', 5), H('money', -4)], [H('money', 4), S('relationships', -1)], {when:ageWindow(balance.milestoneAges.gradeNine)}),
+  milestone('grade-nine', 'teen', 'หลังจบ ม.3', 'คุณทำคะแนนได้ดี แต่ค่าเรียนของคุณกับพี่ชายเกินกำลังที่บ้านจะจ่ายพร้อมกัน จึงต้องเลือกระหว่างเรียนต่อกับเริ่มทำงาน', 'เรียนต่อ ม.4', 'เริ่มทำงานและส่งเงินกลับบ้าน', [S('knowledge', 5), H('money', -4)], [H('money', 4), S('relationships', -1)], {when:ageWindow(balance.milestoneAges.gradeNine)}),
   milestone('grade-twelve', 'teen', 'หลังจบ ม.6', 'คุณตัดสินใจว่าจะเรียนต่อหรือเริ่มทำงาน โดยมองทั้งโอกาสและภาระที่บ้าน', 'สมัครเรียนต่อ', 'เริ่มทำงานก่อน', [S('knowledge', 6), H('money', -5)], [H('money', 5), S('wellbeing', 1)], {when:ageWindow(balance.milestoneAges.gradeTwelve)}),
   milestone('migration-first', 'teen', 'งานไกลบ้าน', 'มีคนชวนไปทำงานกรุงเทพฯ หรือเขตอุตสาหกรรม ค่าเดินทางและการแยกจากบ้านต้องคิดไว้', 'ไปทำงานโรงงานในกรุงเทพฯ และส่งเงินกลับบ้าน', 'รอหางานใกล้บ้าน', [H('money', 4), S('relationships', -2)], [H('money', 1), S('relationships', 1)], {when:ageWindow(balance.milestoneAges.migration)}),
   milestone('baht-fund', 'youngAdult', 'เงินกู้กองทุนหมู่บ้าน', 'รายจ่ายก้อนหนึ่งมาถึงในช่วงที่เงินสดไม่พอ คุณชั่งน้ำหนักเงื่อนไขและความจำเป็น', 'กู้จากกองทุนหมู่บ้าน', 'ลดรายจ่ายและรอ', [H('money', 6), H('debt', 7)], [S('wellbeing', -1), H('debt', 0)]),
@@ -100,7 +111,7 @@ const extra: Card[] = [
   milestone('love', 'youngAdult', 'คนที่อยากใช้ชีวิตด้วย', 'ความสัมพันธ์เติบโตจากการใช้เวลาและพูดคุยถึงความคาดหวังของแต่ละคน', 'ค่อย ๆ สร้างความสัมพันธ์', 'ให้เวลากับงานและตัวเองก่อน', [S('relationships', 4), S('wellbeing', 2)], [S('knowledge', 1), S('wellbeing', 1)]),
   milestone('marriage', 'youngAdult', 'ตกลงสร้างครอบครัว', 'คุณและคนรักคุยกันเรื่องงาน ที่อยู่ และวิธีแบ่งภาระในชีวิตประจำวัน', 'จัดพิธีพอเหมาะกับกำลัง', 'ใช้ชีวิตร่วมกันแบบเรียบง่าย', [H('money', -3), S('relationships', 3)], [S('relationships', 2)]),
   milestone('children', 'youngAdult', 'มีลูกคนแรก', 'สมาชิกใหม่ทำให้มีทั้งความสุขและงานดูแลเพิ่มขึ้น เครือญาติช่วยกันตามความพร้อม', 'เลี้ยงดูใกล้ชิด', 'ให้ผู้ใหญ่ช่วยดูแลระหว่างทำงาน', [S('relationships', 4), S('careBurden', 5)], [S('relationships', 2), H('money', 2)]),
-  milestone('grandparent-care', 'midLife', 'ฝากลูกไว้กับยาย', 'งานต่างจังหวัดช่วยให้มีรายได้ แต่ลูกต้องอยู่กับยายและมีค่าเดินทางกลับบ้าน', 'ไปทำงานฝั่งตะวันออกและส่งเงิน', 'หางานที่กลับบ้านได้บ่อย', [H('money', 5), S('relationships', -2)], [H('money', 2), S('relationships', 1)]),
+  milestone('grandparent-care', ['youngAdult','midLife'], 'ฝากลูกไว้กับยาย', 'งานต่างจังหวัดช่วยให้มีรายได้ แต่ลูกต้องอยู่กับยายและมีค่าเดินทางกลับบ้าน', 'ไปทำงานฝั่งตะวันออกและส่งเงิน', 'หางานที่กลับบ้านได้บ่อย', [H('money', 5), S('relationships', -2)], [H('money', 2), S('relationships', 1)]),
   // TODO(verify): verify the current and historical conscription rules and how deferments are represented.
   milestone('conscription', 'youngAdult', 'จับสลากเกณฑ์ทหาร', 'ชายไทยถึงวัยเข้ารับการตรวจเลือก คุณเตรียมตัวตามขั้นตอนและวางแผนเรื่องงานระหว่างนั้น', 'ไปตรวจเลือกตามหมายเรียก', 'สอบถามช่องทางการศึกษาและการผ่อนผัน', [S('wellbeing', -2), S('relationships', 1)], [S('knowledge', 1), H('money', -1)], { when: { all: [{ age: '>=', value: balance.milestoneAges.conscription }, { gender: 'ชาย' }] } }),
   milestone('illness-care', 'midLife', 'เจ็บป่วยและค่าใช้จ่าย', 'อาการป่วยรบกวนงาน คุณคิดถึงระยะทางไปสถานพยาบาลและรายได้ที่อาจหายไป', 'เดินทางไปรักษา', 'ขอคำแนะนำและนัดติดตามอาการ', [S('health', 7), H('money', -5)], [S('health', 2), H('money', -1)]),
@@ -113,31 +124,45 @@ const extra: Card[] = [
   milestone('floods-2011', ['childhood','teen','youngAdult','midLife','elder'], 'น้ำท่วม พ.ศ. 2554', 'น้ำท่วมกระทบการเดินทางและสถานที่ทำงานในหลายพื้นที่ หากโรงงานหยุดงาน ครอบครัวต้องวางแผนรายได้และการเดินทางกลับบ้าน', 'กลับอีสานและช่วยครอบครัวทำนา', 'หางานต่อในพื้นที่อื่น', [H('money', -2), S('relationships', 3)], [H('money', 1), S('relationships', -1)], { pinnedYear: 2011 }),
   milestone('covid-2020', ['childhood','teen','youngAdult','midLife','elder'], 'การระบาด พ.ศ. 2563', 'การเดินทางและงานหลายอย่างเปลี่ยนไป คุณปรับตัวตามข้อมูลและความช่วยเหลือที่เข้าถึงได้', 'ลดการเดินทางและดูแลคนในบ้าน', 'หาช่องทางทำงานที่ยังทำได้', [S('health', 2), S('relationships', 2)], [H('money', 2), S('wellbeing', -1)], { pinnedYear: 2020 }),
   milestone('projected-2030', ['childhood','teen','youngAdult','midLife','elder'], 'ปีข้างหน้าที่คาดเดาไม่ได้', 'เหตุการณ์นี้เป็นภาพสมมติสำหรับปีหลัง พ.ศ. 2569 ไม่มีการอ้างว่าเป็นเหตุการณ์จริง', 'วางแผนจากสิ่งที่รู้', 'ขอคำแนะนำจากคนรอบตัว', [S('wellbeing', 1), S('knowledge', 1)], [S('relationships', 1)], { pinnedYear: 2030 }),
-  { id:'heat-wave-auto',stage:['childhood','teen','youngAdult','midLife','elder'],title:'วันที่อากาศร้อนจัด',body:'อากาศร้อนทำให้งานกลางแจ้งเหนื่อยขึ้น คุณพักและดื่มน้ำตามที่มี. ในช่วงนี้การพักเป็นส่วนหนึ่งของการดูแลสุขภาพ',weight:balance.cards.milestoneWeight,once:false,auto:true,effects:[S('health',-1)],choices:[] },
+  { id:'heat-wave-auto',stage:['childhood','teen','youngAdult','midLife','elder'],title:'วันที่อากาศร้อนจัด',body:'อากาศร้อนทำให้งานกลางแจ้งเหนื่อยขึ้น คุณพักและดื่มน้ำตามที่มี ในช่วงนี้การพักเป็นส่วนหนึ่งของการดูแลสุขภาพ',weight:balance.cards.lowWeight,once:false,auto:true,effects:[S('health',-1)],choices:[] },
 ]
 const addModifiers = (cardId: string, choiceIndex: number, modifiers: NonNullable<Card['choices'][number]['modifiers']>) => {
-  const choice=extra.find(card=>card.id===cardId)?.choices[choiceIndex]
+  const choice=[...extra,...routineCards].find(card=>card.id===cardId)?.choices[choiceIndex]
   if(choice)choice.modifiers=modifiers
 }
 const distanceCost=balance.access.distanceCost
 for(const id of ['school-start','grade-six','grade-nine','grade-twelve']) addModifiers(id,0,[
-  {when:{regionAccess:'school',op:'<',value:balance.access.lowSchoolThreshold},effects:[H('money',-distanceCost)]},
-  {when:{householdMoney:'<',value:balance.lowWealthThreshold},effects:[H('money',-balance.choiceCost)]},
-  {when:{birthOrder:'>=',value:3},effects:[H('money',-balance.birthOrderCost)]},
-  {when:{gender:'หญิง'},effects:[S('relationships',-1)]},
+  {when:{regionAccess:'school',op:'<',value:balance.access.lowSchoolThreshold},effects:[H('money',-distanceCost)],narration:'โรงเรียนที่เข้าถึงได้อยู่ไกล จึงมีค่าเดินทางเพิ่ม'},
+  {when:{householdMoney:'<',value:balance.lowWealthThreshold},effects:[H('money',-balance.choiceCost)],narration:'เงินสำรองในบ้านมีจำกัด ต้องแบ่งค่าเรียนจากเงินก้อนเดิม'},
+  {when:{birthOrder:'>=',value:3},effects:[H('money',-balance.birthOrderCost)],narration:'มีพี่น้องหลายคน ค่าใช้จ่ายเพื่อเรียนต้องแบ่งกัน'},
+  ...genderModifiers('การเรียนต่อมีค่าใช้จ่ายและแรงกดดันในบ้านต่างกัน',S('relationships',-1),H('money',-1),S('relationships',-1)),
 ])
 addModifiers('migration-first',0,[
-  {when:{regionAccess:'jobs',op:'<',value:balance.access.lowJobThreshold},effects:[H('money',-distanceCost)]},
-  {when:{gender:'หญิง'},effects:[S('careBurden',balance.genderCareCost)]},
-  {when:{householdMoney:'<',value:balance.lowWealthThreshold},effects:[H('money',-balance.choiceCost)]},
+  {when:{regionAccess:'jobs',op:'<',value:balance.access.lowJobThreshold},effects:[H('money',-distanceCost)],narration:'งานใกล้บ้านมีน้อย ค่าเดินทางไปเริ่มงานไกลจึงสูงขึ้น'},
+  ...genderModifiers('การย้ายงานทำให้ภาระที่บ้านและความคาดหวังเปลี่ยนไป',S('careBurden',balance.genderExpectationCosts.female),S('relationships',-1),S('careBurden',balance.genderExpectationCosts.other)),
+  {when:{householdMoney:'<',value:balance.lowWealthThreshold},effects:[H('money',-balance.choiceCost)],narration:'ครอบครัวมีเงินสำรองน้อย จึงออกค่าเดินทางล่วงหน้าได้ยาก'},
 ])
-addModifiers('parent-care',0,[{when:{gender:'หญิง'},effects:[S('careBurden',balance.genderCareCost)]}])
-for(const id of ['birth-health','illness-care'])addModifiers(id,0,[{when:{regionAccess:'hospital',op:'<',value:balance.access.lowSchoolThreshold},effects:[H('money',-distanceCost)]}])
+addModifiers('parent-care',0,genderModifiers('สมาชิกครอบครัวถูกคาดหวังให้รับภาระดูแลไม่เท่ากัน',S('careBurden',balance.genderExpectationCosts.female),S('careBurden',balance.genderExpectationCosts.male),S('careBurden',balance.genderExpectationCosts.other)))
+for(const id of ['birth-health','illness-care'])addModifiers(id,0,[{when:{regionAccess:'hospital',op:'<',value:balance.access.lowHospitalThreshold},effects:[H('money',-distanceCost)],narration:'สถานพยาบาลอยู่ไกล มีค่าเดินทางและเวลาที่ต้องจัดเพิ่ม'}])
+for(const id of ['baht-fund','baac','informal-debt']) addModifiers(id,0,[{when:{householdMoney:'<',value:balance.lowWealthThreshold},effects:[H('debt',2)],narration:'เงินสำรองน้อย การกู้เพิ่มจึงมีภาระชำระมากขึ้น'}])
+addModifiers('floods-2011',0,[{when:{regionAccess:'jobs',op:'<',value:balance.access.lowJobThreshold},effects:[H('money',-distanceCost)],narration:'การหางานทดแทนในพื้นที่มีตัวเลือกจำกัดและต้องเดินทาง'}])
+addModifiers('childcare-shift',0,genderModifiers('ตารางงานและความคาดหวังเรื่องการรับส่งลูกกระทบคนในบ้านต่างกัน',S('careBurden',2),S('relationships',-1),S('careBurden',2)))
+addModifiers('market-stall',0,[{when:{householdMoney:'<',value:balance.lowWealthThreshold},effects:[H('money',-2)],narration:'เงินทุนตั้งแผงต้องมาจากเงินสำรองของบ้าน'}])
+addModifiers('clinic-queue',0,[{when:{regionAccess:'hospital',op:'<',value:balance.access.lowSchoolThreshold},effects:[H('money',-distanceCost)],narration:'การเดินทางไปตรวจสุขภาพใช้เงินและเวลามากขึ้น'}])
 extra.find(card=>card.id==='migration-first')!.choices[0]!.setFlags=['migrated']
+extra.find(card=>card.id==='grade-nine')!.choices[1]!.setFlags=['topStudentM3','cannotAffordFurtherStudy']
 extra.find(card=>card.id==='love')!.choices[0]!.setFlags=['partnered']
 extra.find(card=>card.id==='marriage')!.choices[0]!.setFlags=['partnered']
 extra.find(card=>card.id==='children')!.choices[0]!.setFlags=['hasChild']
-extra.find(card=>card.id==='grandparent-care')!.choices[0]!.setFlags=['migrated-east','hasChild','grandparentCares']
+extra.find(card=>card.id==='children')!.choices[1]!.setFlags=['hasChild']
+extra.find(card=>card.id==='grandparent-care')!.choices[0]!.setFlags=['migrated-east','grandparentCares']
 extra.find(card=>card.id==='floods-2011')!.choices[0]!.setFlags=['returnedHome']
-// The generic cards supplement milestones so each stage has regular, grounded turns.
-export const cards = [...extra, ...genericCards]
+// Every gender receives an explicit, visible modifier; values are tunable placeholders.
+function genderModifiers(reason: string, female: Card['choices'][number]['effects'][number], male: Card['choices'][number]['effects'][number], other: Card['choices'][number]['effects'][number]): NonNullable<Card['choices'][number]['modifiers']> {
+  return [
+    {when:{gender:'หญิง'},effects:[female],narration:`${reason}: ตามบริบทของผู้หญิง`},
+    {when:{gender:'ชาย'},effects:[male],narration:`${reason}: ตามบริบทของผู้ชาย`},
+    {when:{gender:'อื่น ๆ'},effects:[other],narration:`${reason}: ตามบริบทของผู้มีเพศอื่น ๆ`},
+  ]
+}
+export const cards = [...extra, ...routineCards]

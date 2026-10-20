@@ -6,8 +6,11 @@ export function personPortraitSvg(person: Person, size=110): string {
   const p=person,h=hash(`${p.id}:${p.stage}:${p.gender}:${p.occupation}:${p.birthYear}:${p.province}`)
   const layers:string[]=[]
   if(p.stage==='childhood'||p.stage==='teen')layers.push(p.gender==='หญิง'?'osf':'osm')
+  else if(p.flags.thaiChinese){layers.push(p.stage==='elder'?'ox':p.gender==='หญิง'?'ok':'ap')}
+  else if(p.occupation.includes('ราชการ')||p.householdType==='ข้าราชการในเมือง')layers.push(p.gender==='หญิง'?'ol':'os')
+  else if(p.householdType==='ค้าขายครอบครัวไทยเชื้อสายจีน'||p.householdType==='ค้าขายเล็ก ๆ'){layers.push('ap')}
+  else if(p.householdType==='แรงงานในเมือง')layers.push(p.gender==='หญิง'?'ol':'os')
   else if(p.occupation.includes('นา')||p.householdType==='ทำนา'){layers.push('ow','kr');if(p.gender==='หญิง')layers.push('op')}
-  else if(p.occupation.includes('ราชการ'))layers.push(p.gender==='หญิง'?'ol':'os')
   else layers.push(p.gender==='หญิง'?'op':'oc')
   if(p.stage==='elder'&&p.flags.thaiChinese)layers.push('ox')
   layers.push(['hc','hp','hb','hl','hbo'][h%5]!)

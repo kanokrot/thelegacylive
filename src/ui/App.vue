@@ -14,6 +14,16 @@ const revealed = computed(() => roll.value?.reveals.slice(0, revealIndex.value +
 const finalReveal = computed(() => Boolean(roll.value && revealIndex.value === roll.value.reveals.length - 1))
 const age = computed(() => game.value && person.value ? game.value.year - person.value.birthYear : 0)
 const currentChoices = computed(() => game.value && card.value ? card.value.choices.filter(choice => evaluateCondition(choice.requires, game.value!)) : [])
+const choiceEffects = (choice: (typeof currentChoices.value)[number]) => {
+  if (!game.value) return []
+  const base = choice.effects.map(effect => ({ effect, context: '' }))
+  const contextual = (choice.modifiers ?? []).filter(modifier => evaluateCondition(modifier.when, game.value!)).flatMap(modifier => modifier.effects.map(effect => ({ effect, context: modifier.narration })))
+  return [...base, ...contextual].map(({ effect, context }) => {
+    const key = ui.effects[effect.key as keyof typeof ui.effects] ?? effect.key
+    const target = effect.target === 'self' ? ui.effectTargets.self : effect.target === 'household' ? ui.effectTargets.household : ui.relativeRoles[effect.target.relativeRole as RelativeRole] ?? effect.target.relativeRole
+    return `${context ? `${context} · ` : ''}${target}: ${key} ${effect.delta > 0 ? '+' : ''}${effect.delta}`
+  })
+}
 const yearResolved = computed(() => Boolean(game.value?.log.some(event => event.year === game.value?.year)))
 const buddhistYear = (year: number | undefined) => year === undefined ? '' : year + balance.yearOffsetBE
 const rarity = (i: number) => i % 23 === 0 ? ui.special : i % 7 === 0 ? ui.rare : ui.common
@@ -63,13 +73,13 @@ const roleLabel = (role: RelativeRole) => ui.relativeRoles[role]
           </section>
           <section class="panel household">
             <h2>{{ ui.family }}</h2><p>{{ person.householdType }}<span v-if="person.householdLandRai"> · {{ person.householdLandRai }} {{ ui.rai }}</span></p>
-            <div class="economy"><span>{{ ui.householdMoney }} <b>{{ Math.round(person.householdMoney) }}</b></span><span>{{ ui.personalMoney }} <b>{{ Math.round(person.money) }}</b></span><span>{{ ui.householdDebt }} <b>{{ Math.round(person.debt) }}</b></span><span>{{ ui.personalDebt }} <b>{{ Math.round(person.personalDebt) }}</b></span></div>
+            <div class="economy"><span>{{ ui.householdMoney }} <b>{{ Math.round(person.householdMoney) }}</b></span><span>{{ ui.personalMoney }} <b>{{ Math.round(person.money) }}</b></span><span>{{ ui.householdDebt }} <b>{{ Math.round(person.debt) }}</b></span><span>{{ ui.personalDebt }} <b>{{ Math.round(person.personalDebt) }}</b></span><span>{{ ui.remittances }} <b>{{ Math.round(person.remittancesSent) }}</b></span></div>
             <h3>{{ ui.relatives }}</h3>
             <ul><li v-for="relative in person.relatives" :key="relative.id"><span :class="{ dead: !relative.alive }">{{ roleLabel(relative.role) }} · {{ relative.name }}</span><small>{{ relative.alive ? `${relative.age} ${ui.yearsOld}${relative.migrated ? ` · ${ui.relativeMigrated}` : ''} · ${relative.married ? ui.married : ui.notMarried}` : ui.relativeDead }}</small></li></ul>
           </section>
         </aside>
         <div class="story-column">
-          <article v-if="card" class="story panel"><p class="eyebrow">{{ ui.year }} {{ buddhistYear(game.year) }} · {{ ui.stage[person.stage] }}</p><h2>{{ card.title }}</h2><p v-if="game.year > balance.yearMax" class="projected">{{ ui.projectedNotice }}</p><p>{{ card.body }}</p><div v-if="card.auto" class="choices"><button @click="store.continueAuto()"><span>{{ ui.continue }}</span><span>→</span></button></div><div v-else class="choices"><button v-for="choice in currentChoices" :key="choice.id" @click="store.pick(choice.id)"><span>{{ choice.label }}</span><span>↗</span></button></div></article>
+          <article v-if="card" class="story panel"><p class="eyebrow">{{ ui.year }} {{ buddhistYear(game.year) }} · {{ ui.stage[person.stage] }}</p><h2>{{ card.title }}</h2><p v-if="game.year > balance.yearMax" class="projected">{{ ui.projectedNotice }}</p><p>{{ card.body }}</p><div v-if="card.auto" class="choices"><button @click="store.continueAuto()"><span>{{ ui.continue }}</span><span>→</span></button></div><div v-else class="choices"><button v-for="choice in currentChoices" :key="choice.id" @click="store.pick(choice.id)"><span>{{ choice.label }}<small v-for="(effect, i) in choiceEffects(choice)" :key="i" class="choice-effect">{{ effect }}</small></span><span>↗</span></button></div></article>
           <article v-else class="story quiet panel"><p>{{ yearResolved ? ui.yearResolved : ui.quiet }}</p><button class="primary" @click="store.nextYear()">{{ ui.continue }}</button></article>
           <section class="panel log"><h2>{{ ui.timeline }}</h2><p v-if="!game.log.length" class="empty">{{ ui.noTimeline }}</p><ol><li v-for="(event, i) in [...game.log].reverse().slice(0, 16)" :key="i"><time>{{ buddhistYear(event.year) }}</time><span><b>{{ event.title }}</b>{{ event.text }}</span></li></ol></section>
           <div class="world-strip"><span class="world-dot" /><strong>{{ worldLabel }}</strong><span>{{ counters.lives }} {{ ui.worldLives }}</span><small>{{ recentBirth?.name }} {{ ui.recently }}{{ recentBirth?.province }}</small></div>
