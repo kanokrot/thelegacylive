@@ -5,6 +5,7 @@ import { useGameStore } from './store'
 import { ui } from '../content/ui'
 import { balance } from '../content/balance'
 import Portrait from './portraits/Portrait.vue'
+import HomeWorldCounters from './HomeWorldCounters.vue'
 import { evaluateCondition } from '../engine/conditions'
 import type { RelativeRole } from '../engine/types'
 
@@ -27,7 +28,6 @@ const choiceEffects = (choice: (typeof currentChoices.value)[number]) => {
 const yearResolved = computed(() => Boolean(game.value?.log.some(event => event.year === game.value?.year)))
 const buddhistYear = (year: number | undefined) => year === undefined ? '' : year + balance.yearOffsetBE
 const rarity = (i: number) => i % 23 === 0 ? ui.special : i % 7 === 0 ? ui.rare : ui.common
-const accessText = (value: number) => `${Math.round(value * 100)}%`
 const roleLabel = (role: RelativeRole) => ui.relativeRoles[role]
 </script>
 
@@ -45,15 +45,8 @@ const roleLabel = (role: RelativeRole) => ui.relativeRoles[role]
         <button class="primary" @click="store.newLife()">{{ ui.born }}</button>
         <button v-if="game" class="secondary" @click="screen = game.status === 'dead' ? 'memorial' : 'life'">{{ ui.resume }}</button>
       </article>
-      <aside class="world panel">
-        <div class="world-title"><span class="world-dot" /><div><small>{{ worldLabel }}</small><h2>{{ ui.worldHeading }}</h2></div></div>
-        <p class="world-caption">{{ worldDescription }}</p>
-        <div class="counter"><strong>{{ counters.lives.toLocaleString('th-TH') }}</strong><span>{{ ui.lives }}</span></div>
-        <div class="counter"><strong>~{{ counters.birthsToday }}</strong><span>{{ ui.births }}</span></div>
-        <p class="recent">{{ ui.recently }}<b>{{ recentBirth?.province }}</b></p>
-        <p class="access-note">{{ ui.school }} {{ accessText(balance.access.school) }} · {{ ui.hospital }} {{ accessText(balance.access.hospital) }} · {{ ui.jobs }} {{ accessText(balance.access.jobs) }}</p>
-      </aside>
-      <p class="footnote">{{ worldDescription }} · {{ ui.accessPlaceholder }}</p>
+      <HomeWorldCounters :lives="counters.lives" :births-today="counters.birthsToday" :recent-province="recentBirth?.province" />
+      <p class="footnote">{{ ui.accessPlaceholder }}</p>
     </section>
 
     <section v-else-if="screen === 'reveal' && roll" class="reveal panel">
@@ -82,7 +75,7 @@ const roleLabel = (role: RelativeRole) => ui.relativeRoles[role]
           <article v-if="card" class="story panel"><p class="eyebrow">{{ ui.year }} {{ buddhistYear(game.year) }} · {{ ui.stage[person.stage] }}</p><h2>{{ card.title }}</h2><p v-if="game.year > balance.yearMax" class="projected">{{ ui.projectedNotice }}</p><p>{{ card.body }}</p><div v-if="card.auto" class="choices"><button @click="store.continueAuto()"><span>{{ ui.continue }}</span><span>→</span></button></div><div v-else class="choices"><button v-for="choice in currentChoices" :key="choice.id" @click="store.pick(choice.id)"><span>{{ choice.label }}<small v-for="(effect, i) in choiceEffects(choice)" :key="i" class="choice-effect">{{ effect }}</small></span><span>↗</span></button></div></article>
           <article v-else class="story quiet panel"><p>{{ yearResolved ? ui.yearResolved : ui.quiet }}</p><button class="primary" @click="store.nextYear()">{{ ui.continue }}</button></article>
           <section class="panel log"><h2>{{ ui.timeline }}</h2><p v-if="!game.log.length" class="empty">{{ ui.noTimeline }}</p><ol><li v-for="(event, i) in [...game.log].reverse().slice(0, 16)" :key="i"><time>{{ buddhistYear(event.year) }}</time><span><b>{{ event.title }}</b>{{ event.text }}</span></li></ol></section>
-          <div class="world-strip"><span class="world-dot" /><strong>{{ worldLabel }}</strong><span>{{ counters.lives }} {{ ui.worldLives }}</span><small>{{ recentBirth?.name }} {{ ui.recently }}{{ recentBirth?.province }}</small></div>
+          <div class="world-strip"><span class="world-dot" /><strong>{{ worldLabel }}</strong><span>{{ counters.lives }} {{ ui.worldLives }}</span><small class="world-strip-description">{{ worldDescription }}</small><small>{{ recentBirth?.name }} {{ ui.recently }}{{ recentBirth?.province }}</small></div>
         </div>
       </div>
     </section>
