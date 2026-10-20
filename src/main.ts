@@ -7,6 +7,7 @@ import '@fontsource/noto-sans-thai/700.css'
 import './ui/style.css'
 import './ui/cohort.css'
 import App from './ui/App.vue'
+import './ui/app-theme.css'
 import './ui/life-spacing.css'
 import { ui } from './content/ui'
 
