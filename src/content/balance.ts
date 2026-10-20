@@ -1,10 +1,8 @@
 // TODO: replace with NSO / World Bank data. Every value here is a tunable game placeholder.
 export const balance = {
-  yearMin: 1950, yearMax: 2026, maxAge: 105, maxStat: 100, minStat: 0, yearOffsetBE: 543,
+  yearMax: 2026, maxAge: 105, maxStat: 100, minStat: 0, yearOffsetBE: 543,
   stages: { childhood: 12, teen: 19, youngAdult: 35, midLife: 59 }, nameEraBreaks: [1980,2000] as const,
   milestoneAges:{earlyHealth:[0,2],schoolStart:[6,8],farmWork:[8,12],gradeSix:[12,12],gradeNine:[15,16],gradeTwelve:[18,19],migration:[16,19],conscription:20},
-  birthYearDecades: [1950,1960,1970,1980,1990,2000,2010,2020] as const,
-  decadeSpan:10,birthYearWeights:[1,1,1,1,2,3,4,5] as const,
   // TODO(verify): placeholder game weights, not demographic estimates; all genders have equal birth-roll weight.
   genderWeights:[1,1,1] as const,
   // TODO(verify): background weights are placeholders, not measured population shares.
