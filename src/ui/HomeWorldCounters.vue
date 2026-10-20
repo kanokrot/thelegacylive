@@ -22,8 +22,10 @@ const accessText = (value: number) => `${Math.round(value * 100)}%`
       </div>
     </div>
     <p class="world-caption">{{ WORLD_IDENTITY.description }}</p>
-    <div class="counter"><strong>{{ lives.toLocaleString('th-TH') }}</strong><span>{{ ui.lives }}</span></div>
-    <div class="counter"><strong>~{{ birthsToday }}</strong><span>{{ ui.births }}</span></div>
+    <div class="counter-grid">
+      <div class="counter"><strong>{{ lives.toLocaleString('th-TH') }}</strong><span>{{ ui.lives }}</span></div>
+      <div class="counter"><strong>~{{ birthsToday }}</strong><span>{{ ui.births }}</span></div>
+    </div>
     <p class="recent">{{ ui.recently }}<b>{{ recentProvince }}</b></p>
     <p class="access-note">{{ ui.school }} {{ accessText(balance.access.school) }} · {{ ui.hospital }} {{ accessText(balance.access.hospital) }} · {{ ui.jobs }} {{ accessText(balance.access.jobs) }}</p>
   </aside>
