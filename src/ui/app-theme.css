@@ -1,0 +1,685 @@
+﻿:root {
+  color-scheme: dark;
+  --ink: #F3EBD8;
+  --muted: #9FB0C8;
+  --paper: #16263D;
+  --deep: #F3EBD8;
+  --gold: #E3B341;
+  --line: #2B3F5C;
+  --green: #E3B341;
+  --shadow: 0 20px 56px rgba(0, 0, 0, .3);
+  font-size: 16px;
+}
+
+body {
+  min-height: 100vh;
+  background: #0E1A2B;
+  color: #F3EBD8;
+  font-size: 16px;
+}
+
+.shell {
+  color: #F3EBD8;
+  background: #0E1A2B;
+}
+
+.shell .panel,
+.shell .story,
+.shell .person-card,
+.shell .birth-profile,
+.shell .memorial {
+  color: #F3EBD8;
+  background: #16263D;
+  border-color: #2B3F5C;
+}
+
+.shell :is(.muted, .saved, .dates, .empty, .fact-source, .recent, .access-note, .footnote, footer, .choice-effect, .person-card p, .collection-head p, .yearbar .place, .age-readout, .stage-pill, .birth-name-label, .birth-fact > span, .rarity, .world-strip small, .world-identity-label, .map-attribution, .locked p) {
+  color: #9FB0C8;
+  font-size: 12px !important;
+}
+
+.shell :is(.eyebrow, dt, label, .stage-pill, .birth-name-label, .birth-fact > span, .rarity, .world-identity-label, .counter span, .recent) {
+  color: #9FB0C8;
+  font-size: 14px !important;
+}
+
+.shell p,
+.shell .story,
+.shell .log li,
+.shell .household li,
+.shell .person-card h2,
+.shell .collection-head p:not(.eyebrow) {
+  font-size: 16px !important;
+  line-height: 1.65;
+}
+
+.shell :is(h1, h2, h3, strong, b, button, input, select, textarea, time, dd, .counter strong, .brand strong) {
+  color: #F3EBD8;
+}
+
+.shell .primary,
+.shell button.primary {
+  color: #0E1A2B;
+  background: #E3B341;
+  border-color: #E3B341;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.shell button.primary:hover { background: #F0C65D; }
+.shell .secondary,
+.shell .candle { color: #F3EBD8; background: #16263D; border-color: #9FB0C8; }
+.shell .brand small,
+.shell .masthead nav button,
+.shell .saved { color: #9FB0C8; }
+.shell .brand small,
+.shell .masthead nav button { font-size: 14px !important; }
+.collection-shell .collection-head > span { font-size: 14px !important; }
+.shell .masthead nav button[aria-current="page"],
+.shell .masthead nav button:hover { color: #E3B341; }
+.shell .mark { color: #0E1A2B; background: #E3B341; }
+.shell .meter { background: #2B3F5C; }
+.shell .meter i,
+.shell .birth-trait-meter i { background: #E3B341; }
+.shell .birth-trait-meter { background: #2B3F5C; }
+.shell .choice-effect { color: #9FB0C8; }
+.shell .projected { color: #E3B341 !important; background: #0E1A2B; border: 1px solid #2B3F5C; }
+.shell .projected { font-size: 14px !important; }
+.shell .cohort { color: #F3EBD8; background: #0E1A2B; }
+.shell .cohort h2 { color: #F3EBD8; font-size: 14px !important; }
+.shell .cohort-row { border-color: #2B3F5C; }
+.shell .cohort-row b { color: #F3EBD8; font-size: 14px !important; }
+.shell .cohort-row small { color: #9FB0C8; font-size: 12px !important; }
+.shell .story h2,
+.shell .log h2,
+.shell .profile h2,
+.shell .household h2 { color: #F3EBD8; }
+
+.home-shell {
+  --ink: #F3EBD8;
+  --muted: #9FB0C8;
+  --paper: #16263D;
+  --deep: #F3EBD8;
+  --green: #E3B341;
+  --gold: #E3B341;
+  --line: #2B3F5C;
+  background: #0E1A2B;
+  color: #F3EBD8;
+}
+.home-shell .home-grid {
+  grid-template-columns: minmax(260px, .9fr) minmax(300px, 1fr) minmax(280px, .9fr);
+  align-items: center;
+  gap: clamp(14px, 2vw, 34px);
+  min-height: min(78vh, 820px);
+}
+.home-shell .home-hero { padding: 24px 0; }
+.home-shell .home-hero h1 { color: #F3EBD8; }
+.home-shell .home-hero .intro { color: #C2CDDC; font-size: 20px !important; line-height: 1.8; }
+.home-shell .home-hero .eyebrow,
+.home-shell .home-headline-accent { color: #E3B341; }
+.home-shell .home-actions .secondary { color: #F3EBD8; border-color: #9FB0C8; }
+.home-shell .map-stage {
+  position: relative;
+  min-width: 0;
+  min-height: min(70vh, 650px);
+  isolation: isolate;
+}
+.home-shell .map-stage .isan-map-wrap { inset: 0; }
+.home-shell .home-world-column { display: flex; align-items: center; min-width: 0; }
+.home-shell .home-world-column > .world { width: 100%; padding: clamp(20px, 2vw, 32px); background: #16263D; border: 1px solid #2B3F5C; }
+.home-shell .world-title h2 { font-size: 24px; color: #F3EBD8; }
+.home-shell .world-identity-label { color: #9FB0C8; }
+.home-shell .world-caption { color: #C2CDDC; font-size: 16px !important; }
+.home-shell .counter { border-color: #2B3F5C; }
+.home-shell .counter strong { color: #E3B341; }
+.home-shell .counter span, .home-shell .recent { color: #C2CDDC; }
+.home-shell .recent b { color: #F3EBD8; }
+.home-shell .access-note, .home-shell .footnote { color: #9FB0C8; }
+.home-shell .access-note { font-size: 14px !important; }
+.home-shell footer { color: #9FB0C8; }
+
+.birthplace-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(5, 12, 22, .84);
+  backdrop-filter: blur(5px);
+}
+.birthplace-dialog {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(360px, .92fr);
+  width: min(1100px, 100%);
+  min-height: 560px;
+  max-height: min(780px, calc(100dvh - 48px));
+  overflow: auto;
+  color: #F3EBD8;
+  background: #16263D;
+  border: 1px solid #2B3F5C;
+  border-radius: 22px;
+  box-shadow: 0 28px 100px rgba(0, 0, 0, .5);
+}
+.birthplace-dialog:focus { outline: 2px solid #E3B341; outline-offset: 4px; }
+.birthplace-map { position: relative; min-height: 450px; overflow: hidden; background: #0E1A2B; }
+.birthplace-map .isan-map-wrap { inset: 22px; }
+.birthplace-map .map-attribution { right: 0; bottom: 0; }
+.birthplace-result { display: flex; flex-direction: column; justify-content: center; padding: clamp(24px, 4vw, 54px); }
+.birthplace-eyebrow { margin: 0 0 6px; color: #E3B341; font-size: 14px !important; font-weight: 700; }
+.birthplace-result h2 { margin: 0 0 28px; color: #F3EBD8; font-size: clamp(24px, 3vw, 34px); }
+.province-reel { display: grid; justify-items: center; gap: 12px; text-align: center; }
+.reel-neighbor { min-height: 1.7em; color: #9FB0C8; font-size: 16px; }
+.reel-current { display: block; width: 100%; padding: 12px 4px; border-block: 1px solid #2B3F5C; color: #E3B341; font-size: clamp(32px, 4vw, 50px); line-height: 1.35; }
+.province-reel.is-stopped .reel-current { border-color: #E3B341; }
+.reel-caption { margin: 14px 0 0; color: #C2CDDC; font-size: 16px !important; text-align: center; }
+.province-fact { margin-top: 28px; padding-top: 22px; border-top: 1px solid #2B3F5C; }
+.province-fact .fact-title { margin: 0 0 8px; color: #F3EBD8; font-weight: 700; }
+.income-comparison { margin: 0; color: #C2CDDC; }
+.income-comparison strong { display: block; margin-top: 5px; color: #E3B341; font-size: 24px; }
+.income-comparison span { display: block; margin-top: 4px; color: #9FB0C8; }
+.fact-source { margin: 12px 0 20px; color: #9FB0C8; font-size: 12px !important; }
+.province-fact .primary { align-self: flex-start; padding: 12px 24px; }
+
+.birth-profile { border-radius: 20px; }
+.birth-profile-heading { border-color: #2B3F5C; }
+.birth-profile-heading h1 { color: #F3EBD8; }
+.birth-profile-heading p { color: #9FB0C8; font-size: 16px !important; }
+.birth-fact { background: #0E1A2B; border-color: #2B3F5C; }
+.birth-fact > span { color: #9FB0C8; }
+.birth-fact > strong { color: #F3EBD8; }
+.birth-profile .primary { margin-top: 8px; }
+
+.life-screen { color: #F3EBD8; }
+.life-screen .yearbar { display: flex; align-items: center; gap: 18px; padding: 14px 18px; background: #16263D; border: 1px solid #2B3F5C; border-radius: 14px; }
+.life-screen .yearbar strong { color: #E3B341; font-size: 20px; }
+.life-screen .stage-pill { padding: 5px 12px; border: 1px solid #E3B341; border-radius: 99px; color: #E3B341; }
+.life-screen .age-readout, .life-screen .place { font-size: 14px !important; color: #9FB0C8; }
+.life-screen .place { margin-left: auto; }
+.life-screen .life-layout { grid-template-columns: minmax(300px, .82fr) minmax(0, 1.18fr); gap: 22px; }
+.life-screen .sidebar { display: flex; flex-direction: column; }
+.life-screen .profile, .life-screen .household, .life-screen .story, .life-screen .log { background: #16263D; color: #F3EBD8; border-color: #2B3F5C; }
+.life-screen .profile { text-align: left; }
+.life-screen .profile > svg { display: block; margin-inline: auto; }
+.life-screen .profile h2 { text-align: center; color: #F3EBD8; font-size: 24px; }
+.life-screen .profile > p { color: #9FB0C8; text-align: center; }
+.life-screen .profile dl dt { color: #C2CDDC; font-size: 14px !important; }
+.life-screen .profile dl dd b { color: #F3EBD8; }
+.life-screen .profile-home-map { position: relative; height: 190px; margin-top: 18px; overflow: hidden; border: 1px solid #2B3F5C; border-radius: 12px; background: #0E1A2B; }
+.life-screen .profile-home-map .isan-map-wrap { inset: 8px; }
+.life-screen .profile-home-map .map-attribution { display: none; }
+.life-screen .household h2, .life-screen .household h3 { color: #F3EBD8; }
+.life-screen .household p, .life-screen .household li, .life-screen .economy { color: #C2CDDC; }
+.life-screen .household small { color: #9FB0C8; font-size: 12px !important; }
+.life-screen .story h2, .life-screen .log h2 { color: #F3EBD8; }
+.life-screen .story > p:not(.eyebrow) { color: #F3EBD8; font-size: 18px !important; line-height: 1.75; }
+.life-screen .choices button { color: #F3EBD8; background: #0E1A2B; border-color: #2B3F5C; font-size: 16px; }
+.life-screen .choices button:hover { border-color: #E3B341; }
+.life-screen .quiet .primary { margin-top: 14px; }
+.life-screen .log ol li { border-color: #2B3F5C; color: #C2CDDC; }
+.life-screen .log time { color: #E3B341; }
+.life-screen .log b { color: #F3EBD8; }
+.life-screen .world-strip { margin-top: 18px; padding: 15px; color: #F3EBD8; background: #16263D; border: 1px solid #2B3F5C; border-radius: 14px; }
+.life-screen .world-strip .world-dot { background: #E3B341; }
+.life-screen .world-strip small { color: #9FB0C8; }
+.life-screen .world-strip-description { color: #C2CDDC !important; }
+
+.collection-shell { color: #F3EBD8; background: #0E1A2B; }
+.collection-shell .brand { display: none; }
+.collection-shell .person-card { color: #F3EBD8; background: #16263D; border-color: #2B3F5C; }
+.collection-shell .person-card h2 { color: #F3EBD8; }
+.collection-shell .person-card p { color: #9FB0C8; font-size: 14px !important; }
+.collection-shell .rarity { color: #E3B341; background: #263B58; font-size: 14px !important; }
+.collection-shell .locked { background: #16263D; border-color: #2B3F5C; }
+.collection-shell .locked h2,
+.collection-shell .locked p { color: #9FB0C8; }
+.collection-shell .silhouette { background: #0E1A2B; color: #9FB0C8; }
+.collection-shell footer { color: #9FB0C8; }
+
+@media (max-width: 1050px) {
+  .home-shell .home-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .home-shell .map-stage { grid-column: 1 / -1; min-height: 420px; }
+  .home-shell .home-hero { padding-block: 24px; }
+  .home-shell .home-world-column { grid-column: 2; grid-row: 1; }
+}
+
+@media (max-width: 760px) {
+  .home-shell .home-grid { grid-template-columns: 1fr; }
+  .home-shell .home-world-column, .home-shell .map-stage { grid-column: 1; grid-row: auto; }
+  .home-shell .map-stage { min-height: 360px; }
+  .life-screen .life-layout { grid-template-columns: 1fr; }
+  .life-screen .yearbar { flex-wrap: wrap; gap: 9px; }
+  .life-screen .place { margin-left: 0; }
+  .birthplace-backdrop { padding: 12px; }
+  .birthplace-dialog { grid-template-columns: 1fr; width: min(560px, 100%); min-height: 0; max-height: calc(100dvh - 24px); }
+  .birthplace-map { min-height: 220px; }
+  .birthplace-map .isan-map-wrap { inset: 5px 32px; }
+  .birthplace-result { padding: 22px; }
+  .birthplace-result h2 { margin-bottom: 16px; }
+  .province-fact { margin-top: 18px; padding-top: 15px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+/* One family for all rendered text; Noto Sans Thai supplies missing glyphs. */
+:root,
+body,
+.shell {
+  font-family: 'PS Pimpdeed', 'Noto Sans Thai', monospace;
+  letter-spacing: 0;
+}
+
+.shell :is(p, .world-caption, .reel-caption, .birth-province-caption, .birth-fact > span, .birth-name-label, .birth-province-income span, .birth-province-income small, .map-attribution, .saved, .masthead nav button, .yearbar .age-readout, .yearbar .place, .stage-pill, .life-screen dt, .life-screen small, .choice-effect, .world-strip small, .footnote, footer) {
+  font-family: inherit;
+  letter-spacing: 0;
+}
+
+.shell :is(h1, h2, h3, .counter strong, .recent b, .reel-current, .birth-province-card > strong, .birth-portrait-card h2, .yearbar > strong, .yearbar .place, .primary, .secondary, .choices button) {
+  font-family: inherit;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.shell p { font-size: 16px !important; letter-spacing: 0; }
+.shell small { font-size: 12px !important; }
+.shell :is(.brand small, .economy, .household li, .log li, .profile dd b) { font-size: 14px !important; }
+.shell .stage-pill { font-family: inherit; }
+.shell button.primary,
+.shell button.secondary { font-size: 18px; }
+.shell :is(.saved, .footnote, footer, .map-attribution, .birth-name-label, .birth-province-income small, .choice-effect, .world-strip small, .cohort-row small) { font-size: 12px !important; }
+.shell :is(.eyebrow, dt, label, .stage-pill, .birth-fact > span, .birth-name-label, .rarity, .world-identity-label, .counter span, .recent, .saved, .masthead nav button, .yearbar .age-readout, .yearbar .place, .birth-province-caption, .birth-province-income span, .birth-province-income small, .choice-effect, .fact-source) { font-size: 14px !important; }
+
+.home-shell,
+.birth-shell,
+.life-shell {
+  width: 100%;
+  max-width: none;
+  min-height: 100vh;
+  padding: 36px clamp(24px, 4.5vw, 88px) 24px;
+  overflow: hidden;
+  background: #0E1A2B;
+}
+
+.home-shell .masthead,
+.birth-shell .masthead,
+.life-shell .masthead { margin-bottom: 22px; }
+.life-shell .brand { display: none; }
+.home-shell .home-stripe,
+.birth-card-stripe,
+.life-stripe {
+  height: 14px;
+  background: repeating-linear-gradient(45deg, #E3B341 0 6px, #0E1A2B 6px 12px);
+}
+.home-shell .home-stripe { margin-bottom: 18px; }
+.home-shell .home-grid {
+  position: relative;
+  display: block;
+  min-height: max(480px, calc(100dvh - 300px));
+}
+.home-shell .home-hero {
+  position: relative;
+  z-index: 2;
+  width: min(51%, 650px);
+  min-height: max(440px, calc(100dvh - 335px));
+  padding: 24px 0 40px;
+}
+.home-shell .home-hero h1 {
+  margin: 30px 0 24px;
+  font-size: clamp(40px, 5vw, 64px);
+  line-height: 1.55;
+  white-space: nowrap;
+  letter-spacing: 0;
+}
+.home-shell .home-hero h1 span { display: block; }
+.home-shell .home-hero h1 .home-headline-accent { color: #E3B341; }
+.home-shell .home-hero .intro { max-width: 650px; font-size: 20px !important; line-height: 1.9; }
+.home-shell .brand { display: none; }
+.home-shell .home-actions { gap: 16px; }
+.home-shell .primary,
+.home-shell .secondary { min-height: 60px; padding: 14px 30px; font-size: 20px; }
+.home-shell button.primary,
+.home-shell button.secondary { min-height: 64px; font-size: 24px; }
+.home-shell button.primary { min-width: 180px; min-height: 64px; padding: 0 36px; font-size: 32px; line-height: 1; }
+.home-shell .map-stage {
+  position: absolute;
+  z-index: 0;
+  top: -5%;
+  right: -2%;
+  width: 65%;
+  height: 110%;
+  min-height: 0;
+  overflow: visible;
+}
+.home-shell .map-stage .isan-map-art { width: 116%; height: 112%; right: -10%; top: -6%; }
+.home-shell .home-world-column {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 1.5%;
+  width: min(40%, 590px);
+  transform: none;
+}
+.home-shell .home-world-column > .world {
+  width: 100%;
+  padding: 34px 32px;
+  background: rgba(22, 38, 61, .91);
+  border-color: rgba(94, 123, 163, .18);
+  box-shadow: none;
+}
+.home-shell .world-title h2 { font-size: 40px; }
+.home-shell .world-caption { font-size: 18px !important; line-height: 1.8; }
+.home-shell .counter-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 10px; }
+.home-shell .counter { display: flex; min-width: 0; flex-direction: column; align-items: flex-start; padding: 18px 0; border-top: 1px solid #2B3F5C; border-bottom: 0; }
+.home-shell .counter strong { color: #E3B341; font-size: clamp(56px, 5vw, 72px); line-height: 1.25; }
+.home-shell .counter span,
+.home-shell .recent { font-size: 14px !important; }
+.home-shell .counter span { font-size: 16px !important; }
+.home-shell .recent { padding-top: 16px; border-top: 1px solid #2B3F5C; }
+.home-shell .recent b { font-size: 36px; }
+.home-shell .access-note { font-size: 14px !important; }
+.home-shell .map-attribution { display: none; }
+.home-shell footer { justify-content: space-between; gap: 12px; font-size: 12px !important; }
+
+.birth-shell { display: flex; flex-direction: column; }
+.birth-shell,
+.life-shell { overflow-x: hidden; overflow-y: auto; }
+.birth-shell .masthead nav,
+.birth-shell .saved { display: none; }
+.birth-shell .brand { display: none; }
+.birth-profile {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 22px;
+  width: 100%;
+  max-width: 1280px;
+  min-height: min(760px, calc(100dvh - 176px));
+  margin: 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.birth-card-topline { display: flex; justify-content: space-between; align-items: center; gap: 16px; color: #9FB0C8; font-size: 14px; }
+.birth-card-topline strong { color: #F3EBD8; font-family: 'PS Pimpdeed', 'Noto Sans Thai', sans-serif; font-size: 18px; font-weight: 400; }
+.birth-card-layout { display: grid; flex: 1; grid-template-columns: minmax(300px, 380px) minmax(0, 1fr); gap: 40px; }
+.birth-card-aside { display: flex; flex-direction: column; gap: 20px; }
+.birth-portrait-card,
+.birth-province-card { padding: 24px; border-radius: 20px; background: #16263D; }
+.birth-portrait-card { display: flex; min-height: 202px; align-items: center; gap: 20px; }
+.birth-portrait-card h2 { margin: 4px 0 0; font-size: 30px; line-height: 1.35; }
+.birth-name-label { display: block; color: #9FB0C8; }
+.birth-province-card { text-align: center; }
+.birth-province-caption { margin: 0 0 8px; color: #9FB0C8; }
+.birth-province-card > strong { display: block; padding: 6px 0; border-block: 2px solid #E3B341; color: #E3B341; font-size: clamp(32px, 5vw, 48px); line-height: 1.35; }
+.birth-province-map { position: relative; height: 190px; margin: 8px 0; overflow: hidden; }
+.birth-province-map .map-attribution { display: none; }
+.birth-province-income { display: grid; gap: 4px; padding-top: 12px; border-top: 1px solid #2B3F5C; text-align: left; }
+.birth-province-income span { color: #9FB0C8; }
+.birth-province-income > strong { color: #E3B341; font-family: 'PS Pimpdeed', 'Noto Sans Thai', sans-serif; font-size: 26px; font-weight: 400; }
+.birth-province-income small { color: #9FB0C8; }
+.birth-card-details { display: flex; flex-direction: column; gap: 20px; min-width: 0; padding: 12px 0 4px; }
+.birth-profile-heading { padding: 0; border: 0; }
+.birth-profile-heading h1 { margin: 0; color: #F3EBD8; font-size: clamp(36px, 4vw, 52px); line-height: 1.3; }
+.birth-profile-heading h1 span + span { color: #E3B341; margin-left: .25em; }
+.birth-facts { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 20px; margin: 0; }
+.birth-fact { min-height: 64px; padding: 10px 12px; background: #0E1A2B; }
+.birth-fact > span { color: #9FB0C8; }
+.birth-fact > strong { font-size: 18px; line-height: 1.5; }
+.birth-trait-meter { height: 8px; }
+.birth-shell .birth-card-details > .primary { align-self: flex-end; min-height: 56px; margin-top: auto; padding: 14px 36px; font-size: 20px; }
+
+.birthplace-backdrop { background: rgba(6, 12, 22, .78); backdrop-filter: none; }
+.birthplace-dialog {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  width: min(980px, 100%);
+  min-height: 0;
+  height: min(600px, calc(100dvh - 48px));
+  max-height: calc(100dvh - 48px);
+  padding: 40px;
+  overflow: hidden;
+  border: 2px solid #E3B341;
+  border-radius: 24px;
+}
+.birthplace-map { flex: 0 0 390px; width: 390px; min-height: 0; height: 100%; overflow: visible; background: transparent; }
+.birthplace-map .isan-map-wrap { inset: 0; }
+.birthplace-map .map-attribution { display: none; }
+.birthplace-result { flex: 1; gap: 18px; min-width: 0; padding: 0; }
+.birthplace-eyebrow { margin: 0; font-size: 16px !important; }
+.birthplace-result h2 { margin: 0; font-size: 28px; }
+.province-reel { display: block; width: 100%; }
+.reel-current {
+  display: grid;
+  min-height: 150px;
+  place-items: center;
+  padding: 20px 10px;
+  border: 0;
+  border-top: 3px solid #E3B341;
+  border-bottom: 3px solid #E3B341;
+  border-radius: 16px;
+  background: #0E1A2B;
+  color: #E3B341;
+  font-size: 64px;
+  line-height: 1.3;
+}
+.province-reel.is-stopped .reel-current { border-color: #E3B341; }
+.reel-caption { margin: 0; font-size: 16px !important; text-align: center; }
+
+.life-shell { display: flex; flex-direction: column; gap: 20px; }
+.life-screen { display: flex; flex: 1; flex-direction: column; gap: 20px; min-height: calc(100dvh - 190px); }
+.life-stripe { flex: 0 0 14px; }
+.life-screen .yearbar { gap: 18px; padding: 14px 18px; }
+.life-screen .yearbar > strong { font-size: 34px; }
+.life-screen .life-layout { flex: 1; grid-template-columns: minmax(280px, 340px) minmax(0, 1fr); gap: 20px; }
+.life-screen .sidebar { gap: 20px; }
+.life-screen .profile,
+.life-screen .household,
+.life-screen .story,
+.life-screen .log { border-radius: 20px; padding: 24px; }
+.life-screen .story { min-height: 200px; }
+.life-screen .story h2 { font-size: 28px; }
+.life-screen .story .primary,
+.life-screen .choices button { min-height: 52px; font-size: 18px; }
+.life-screen .log ol { max-height: 290px; }
+.life-screen .world-strip { font-size: 16px; }
+
+@media (max-width: 1050px) {
+  .home-shell .home-grid { min-height: max(480px, calc(100dvh - 300px)); }
+  .home-shell .home-hero { width: 52%; min-height: max(440px, calc(100dvh - 335px)); }
+  .home-shell .home-world-column { right: 0; width: 42%; }
+  .home-shell .map-stage { width: 65%; }
+  .birth-card-layout { grid-template-columns: minmax(260px, 330px) minmax(0, 1fr); gap: 24px; }
+  .birth-profile { min-height: 0; }
+  .birth-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  .home-shell,
+  .birth-shell,
+  .life-shell { padding: 16px 20px 22px; }
+  .home-shell .home-grid { display: flex; min-height: 0; flex-direction: column; }
+  .home-shell .home-hero { width: 100%; min-height: 0; padding: 36px 0 22px; }
+  .home-shell .home-hero h1 { margin: 18px 0; font-size: clamp(40px, 5vw, 64px); line-height: 1.45; }
+  .home-shell .home-hero .intro { font-size: 20px !important; }
+  .home-shell .map-stage { position: relative; top: auto; right: auto; order: 2; width: 100%; height: 340px; min-height: 340px; }
+  .home-shell .map-stage .isan-map-art { width: 112%; height: 115%; right: -6%; top: -8%; }
+  .home-shell .home-world-column { position: relative; top: auto; right: auto; order: 3; width: min(100%, 590px); margin: -45px auto 0; transform: none; }
+  .home-shell .home-world-column > .world { padding: 22px; }
+  .home-shell .counter-grid { gap: 16px; }
+  .home-shell .counter { padding: 12px 0; }
+  .home-shell .counter strong { font-size: 42px; }
+  .home-shell .counter span { font-size: 14px !important; }
+  .birth-shell { display: block; }
+  .birth-profile { min-height: 0; }
+  .birth-card-layout { grid-template-columns: 1fr; gap: 18px; }
+  .birth-card-aside { display: grid; grid-template-columns: 1fr 1fr; align-items: stretch; gap: 12px; }
+  .birth-portrait-card { flex-direction: column; justify-content: center; text-align: center; padding: 16px; }
+  .birth-portrait-card h2 { font-size: 24px; }
+  .birth-province-card { padding: 16px; }
+  .birth-province-card > strong { font-size: 26px; }
+  .birth-province-map { height: 130px; }
+  .birth-province-income small { line-height: 1.5; }
+  .birth-card-details { padding-top: 0; }
+  .birth-profile-heading h1 { font-size: clamp(32px, 7vw, 44px); }
+  .birthplace-dialog { display: flex; flex-direction: column; gap: 4px; width: min(520px, 100%); height: auto; max-height: calc(100dvh - 24px); padding: 18px 22px 24px; overflow: auto; }
+  .birthplace-map { flex: none; width: 100%; height: 230px; }
+  .birthplace-result { gap: 12px; width: 100%; }
+  .reel-current { min-height: 100px; font-size: 34px; }
+  .life-screen { min-height: 0; }
+  .life-screen .life-layout { grid-template-columns: 1fr; }
+  .life-screen .sidebar { display: grid; grid-template-columns: 1fr 1fr; align-items: start; }
+  .life-screen .profile { grid-row: span 2; }
+}
+
+@media (max-width: 500px) {
+  .home-shell,
+  .birth-shell,
+  .life-shell { padding-inline: 14px; }
+  .home-shell .home-hero h1 { font-size: 40px; }
+  .home-shell .home-actions { gap: 9px; }
+  .home-shell .primary,
+  .home-shell .secondary { min-height: 52px; padding: 10px 16px; font-size: 18px; }
+  .home-shell button.primary,
+  .home-shell button.secondary { min-height: 52px; padding: 10px 16px; font-size: 18px; }
+  .home-shell button.primary { min-width: 0; min-height: 52px; padding: 10px 16px; line-height: 1.4; }
+  .home-shell .home-world-column > .world { padding: 18px; }
+  .home-shell footer { flex-direction: column; align-items: flex-start; }
+  .birth-card-topline { align-items: flex-start; font-size: 12px; }
+  .birth-card-topline strong { font-size: 16px; }
+  .birth-card-aside { grid-template-columns: 1fr; }
+  .birth-portrait-card { flex-direction: row; text-align: left; }
+  .birth-province-map { height: 180px; }
+  .birth-facts { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .birth-fact { padding: 9px; }
+  .birth-fact > strong { font-size: 16px; }
+  .birth-card-details > .primary { align-self: stretch; }
+  .life-screen .sidebar { grid-template-columns: 1fr; }
+  .life-screen .profile { grid-row: auto; }
+  .life-screen .yearbar { flex-wrap: wrap; gap: 9px; }
+  .life-screen .yearbar > strong { font-size: 24px; }
+  .life-screen .place { margin-left: 0; }
+}
+
+/* Single type family and shared emphasis treatment. */
+:root {
+  --font-strong-stroke: 0.5px currentColor;
+  font-family: 'PS Pimpdeed', 'Noto Sans Thai', monospace;
+  letter-spacing: 0;
+}
+#app,
+#app * {
+  font-family: 'PS Pimpdeed', 'Noto Sans Thai', monospace !important;
+  letter-spacing: 0 !important;
+}
+:is(h1, h2, h3, button, label, dt, dd, strong, b, .eyebrow, .stage-pill, .world-identity-label, .counter, .reel-current, .birth-name-label, .birth-province-card > strong, .birth-story-chip > span, .birth-province-income span, .birth-trait-row > div:first-child) {
+  -webkit-text-stroke: var(--font-strong-stroke);
+}
+.shell { font-size: 18px; }
+.shell p,
+.shell .story,
+.shell .log li,
+.shell .household li,
+.shell .person-card h2,
+.shell .collection-head p:not(.eyebrow),
+.shell .world-caption,
+.shell .birth-story-paragraphs p,
+.shell .birth-income-values p {
+  font-size: 18px !important;
+  line-height: 1.8;
+}
+.shell :is(.eyebrow, dt, label, .stage-pill, .birth-name-label, .rarity, .world-identity-label, .counter span, .recent, small, .access-note, .fact-source, footer, .birth-story-chip > span, .birth-province-caption, .birth-province-map-label, .birth-trait-row > div:first-child span, .saved, .dates, .age-readout, .yearbar .place, .choice-effect, .brand small) {
+  font-size: 15px !important;
+  line-height: 1.8;
+}
+.shell :is(.muted, .empty, .footnote, .map-attribution, .birth-province-income small) {
+  font-size: 12px !important;
+}
+.home-shell .home-hero .intro { font-size: 20px !important; }
+.home-shell .home-hero .eyebrow { font-size: 18px !important; }
+.home-shell .world-caption { font-size: 18px !important; }
+.shell .brand small { font-size: 18px !important; }
+.shell .brand strong { font-size: 24px !important; }
+#app .masthead nav button { font-size: 22px !important; }
+.shell .saved { font-size: 18px !important; }
+.home-shell .counter span,
+.home-shell .recent,
+.home-shell .access-note { font-size: 15px !important; }
+.home-shell .home-grid { overflow: hidden; }
+.home-shell .map-stage { top: 0; right: 8%; width: 53%; height: 100%; }
+.home-shell .map-stage .isan-map-art { top: 0; right: -5%; width: 108%; height: 104%; }
+.home-shell .home-world-column { top: 13%; right: 1.5%; width: min(34%, 520px); }
+.home-shell .home-world-column > .world { padding: 24px; background: rgba(22, 38, 61, .88); }
+.home-shell .map-stage .map-attribution { display: none; }
+
+.birth-profile {
+  flex: none;
+  max-width: 1360px;
+  min-height: 0;
+}
+.shell .birth-profile { background: #0E1A2B; border: 0; box-shadow: none; }
+.birth-card-layout { grid-template-columns: minmax(300px, 390px) minmax(0, 1fr); gap: 28px; }
+.birth-card-aside { gap: 16px; }
+.birth-portrait-card { min-height: 176px; padding: 20px; }
+.birth-portrait-card h2 { font-size: 30px; }
+.birth-province-card { padding: 18px 20px; border: 1px solid #2B3F5C; }
+.birth-province-map { height: 220px; margin: 4px 0 0; }
+.birth-province-map-label { display: block; color: #9FB0C8; }
+.birth-card-details { gap: 12px; padding: 0; }
+.birth-story-card,
+.birth-province-income,
+.birth-traits { padding: 18px 20px; border: 1px solid #2B3F5C; border-radius: 16px; background: #16263D; }
+.birth-story-card h1 { margin: 0 0 8px; color: #E3B341; font-size: 30px; line-height: 1.35; }
+.birth-story-card h1:focus { outline: none; }
+.birth-story-card { padding: 22px 24px; }
+.birth-story-paragraphs { display: grid; gap: 12px; }
+.birth-story-paragraphs p { margin: 0; color: #F3EBD8; font-size: 22px !important; line-height: 1.75; }
+.birth-story-chips { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.birth-story-chip { display: flex; min-width: 0; flex-direction: column; gap: 2px; padding: 8px 10px; border-radius: 10px; background: #0E1A2B; }
+.birth-story-chip > span { color: #9FB0C8; font-size: 17px !important; }
+.birth-story-chip strong { overflow-wrap: anywhere; color: #F3EBD8; font-size: 18px; }
+.birth-province-income { padding-block: 12px; }
+.birth-province-income h2 { margin: 0 0 6px; color: #F3EBD8; font-size: 18px; }
+.birth-income-values { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.birth-income-values p { display: grid; gap: 2px; margin: 0; color: #9FB0C8; }
+.birth-income-values strong { color: #E3B341; font-size: 18px; }
+.birth-province-income small { display: block; margin-top: 6px; color: #9FB0C8; }
+.birth-traits { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 18px; padding-block: 12px; }
+.birth-trait-row > div:first-child { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; color: #C2CDDC; }
+.birth-trait-row > div:first-child strong { color: #F3EBD8; font-size: 16px; }
+.birth-trait-meter { height: 8px; margin-top: 4px; overflow: hidden; border-radius: 99px; background: #0E1A2B; }
+.birth-trait-meter i { display: block; height: 100%; border-radius: inherit; background: #E3B341; }
+.birth-shell .birth-card-details > .primary { align-self: flex-end; min-height: 54px; margin-top: 0; padding: 10px 30px; font-size: 22px; }
+
+@media (max-width: 1050px) {
+  .home-shell .home-world-column { width: min(38%, 470px); }
+  .birth-card-layout { grid-template-columns: minmax(250px, 330px) minmax(0, 1fr); gap: 18px; }
+  .birth-story-chips { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .birth-profile { min-height: 0; }
+}
+@media (max-width: 760px) {
+  .home-shell .home-grid { overflow: visible; }
+  .home-shell .home-map-stage,
+  .home-shell .map-stage { top: auto; right: auto; }
+  .home-shell .map-stage .isan-map-art { top: -4%; right: -6%; width: 112%; height: 110%; }
+  .home-shell .home-world-column { top: auto; right: auto; width: min(100%, 590px); }
+  .home-shell .map-attribution { display: none; }
+  .birth-story-chips { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .birth-income-values { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  .shell .brand strong { font-size: 22px !important; }
+  #app .masthead nav button { font-size: 22px !important; }
+}
+@media (max-width: 520px) {
+  .birth-card-aside { display: flex; }
+  .birth-portrait-card { flex-direction: row; text-align: left; }
+  .birth-card-details { gap: 10px; }
+  .birth-story-card, .birth-province-income, .birth-traits { padding: 14px; }
+  .birth-traits { grid-template-columns: 1fr; }
+  .birth-shell .birth-card-details > .primary { align-self: stretch; }
+}
