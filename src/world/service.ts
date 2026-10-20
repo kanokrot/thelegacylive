@@ -15,7 +15,7 @@ export class SimulatedWorld implements WorldService {
   private lives: LifeState[]
   private cohortLives: LifeState[]
   private memorials: string[] = []
-  private worldYear=balance.yearMax
+  private worldYear=new Date().getFullYear()
   private lastTick=Math.floor(Date.now()/balance.world.liveCountWindowMs)
   private lastBirthWindow=-1
   private latestBirth:{name:string;province:string;year:number}|null=null
@@ -25,7 +25,7 @@ export class SimulatedWorld implements WorldService {
     this.lives=Array.from({length:count},(_,i)=>{
       const state=createLife(seed+i*104729+17011)
       let guard=0
-      while(state.status==='playing'&&state.year<balance.yearMax&&guard++<balance.maxAge){
+      while(state.status==='playing'&&state.year<this.worldYear&&guard++<balance.maxAge){
         beginTurn(state,cards)
         if(state.currentCardIds[0]){const card=cards.find(item=>item.id===state.currentCardIds[0]);const choice=card?.choices[0];if(card?.auto)resolveAutoCard(state,card);else if(card&&choice)choose(state,card,choice)}
         advanceYear(state,cards)
@@ -51,7 +51,7 @@ export class SimulatedWorld implements WorldService {
   getRecentBirths(region:string) {
     const window=Math.floor(Date.now()/balance.world.birthWindowMs)
     if(window!==this.lastBirthWindow){
-      const seed=this.seed+window;const state=createLife(seed);state.person.birthYear=this.worldYear;state.year=this.worldYear;state.region.name=region||state.person.province;state.person.province=state.region.name
+      const seed=this.seed+window;const state=createLife(seed);state.person.birthYear=this.worldYear;state.person.birthYearBE=this.worldYear+balance.yearOffsetBE;state.year=this.worldYear;state.region.name=region||state.person.province;state.person.province=state.region.name
       this.lives.push(state);if(this.lives.length>balance.world.populationLimit)this.lives=this.lives.filter(life=>life.status==='playing').concat(this.lives.filter(life=>life.status==='dead').slice(-balance.world.sampleLives))
       this.latestBirth={name:state.person.name,province:state.person.province,year:this.worldYear};this.lastBirthWindow=window
     }
