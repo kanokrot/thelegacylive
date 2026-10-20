@@ -2,6 +2,7 @@
 import type { Card, Condition, RegionProfile } from '../engine/types'
 
 export { balance }
+export { isanHouseholds2023, isanHouseholds2023Source } from './data/isan-households-2023'
 
 // TODO(verify): review names, spelling, era and province pairings with Thai readers.
 export const givenNames = {
