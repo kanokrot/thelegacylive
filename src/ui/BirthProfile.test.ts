@@ -13,10 +13,16 @@ describe('birth profile', () => {
     expect(html).toContain('data-testid="birth-profile"')
     expect(html).toContain('<svg')
     expect(html).toContain(roll.person.name)
-    for (const item of roll.reveals) {
-      expect(html).toContain(item.label)
-      expect(html).toContain(item.value)
-    }
+    const storyHtml = html.match(/<div class="birth-story-paragraphs">([\s\S]*?)<\/div>/)?.[1] ?? ''
+    expect(storyHtml.match(/<p>/g)).toHaveLength(3)
+    expect(html).toContain('ประวัติ')
+    expect(html).toContain('หมู่บ้านสมมติ')
+    expect(html).not.toContain(ui.birthplaceCaption)
+    for (const item of roll.reveals) expect(html).toContain(item.value)
+    expect(html).toContain('เพศ')
+    expect(html).toContain('ปีเกิด')
+    expect(html).toContain('ลำดับพี่น้อง')
+    expect(html).toContain('ครอบครัว')
     expect(html).toContain(ui.startLife)
   })
 })
