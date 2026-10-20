@@ -49,3 +49,11 @@ npm run build
 ## ตรวจสอบตัวเลขและวัฒนธรรม
 
 ตัวเลขใน `src/content/balance.ts` เป็นค่าตั้งต้นเพื่อทดลองเล่น ไม่ใช่สถิติประชากรหรือข้อเท็จจริงทางสังคม แทนที่ด้วยข้อมูล NSO หรือ World Bank ก่อนใช้เป็นตัวแทนข้อมูลจริง ชื่อและเหตุการณ์มี `TODO(verify)` เพื่อให้ตรวจสอบกับผู้อ่านและชุมชนในพื้นที่ก่อนเผยแพร่
+
+## Deploy
+
+1. สร้าง repository บน GitHub แล้ว push โปรเจกต์ขึ้น branch `main`
+2. เปิด **Settings > Pages** แล้วตั้ง **Source** เป็น **GitHub Actions**
+3. Workflow จะ build และ deploy เมื่อมี push ไป `main` หรือสั่งเองจาก **Actions > Deploy to GitHub Pages > Run workflow**
+
+URL จะเป็น `https://<owner>.github.io/<repository>/` สำหรับ repository ทั่วไป หรือ `https://<owner>.github.io/` เมื่อชื่อ repository เป็น `<owner>.github.io`
