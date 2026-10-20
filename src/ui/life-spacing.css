@@ -14,7 +14,7 @@
   line-height: var(--line-height-base);
 }
 
-#app :is(p, li, dt, dd, h1, h2, h3, button, small, time, label, strong, b, span) {
+.life-screen :is(p, li, dt, dd, h1, h2, h3, button, small, time, label, strong, b, span) {
   line-height: var(--line-height-base);
 }
 
@@ -224,4 +224,46 @@
   .life-screen .life-stat-row {
     grid-template-columns: minmax(88px, 0.8fr) minmax(0, 1fr) 32px;
   }
+}
+
+/* Home cards layer over the map; allow their content to define the panel height. */
+.home-shell .home-grid {
+  min-height: max(560px, calc(100dvh - 240px));
+  overflow: visible;
+}
+
+.home-shell .home-world-column { top: 2%; }
+.home-shell .home-world-column > .world {
+  height: auto;
+  min-height: 0;
+  overflow: visible;
+}
+
+.home-shell .home-hero { padding-inline: 8px; }
+.home-shell .home-hero h1 { white-space: normal; }
+.home-shell .home-hero .intro {
+  width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 760px) {
+  .home-shell .home-grid { min-height: 0; }
+  .home-shell .home-world-column { top: auto; }
+  .home-shell .masthead { width: 100%; min-width: 0; }
+  .home-shell .masthead nav {
+    position: absolute;
+    inset: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    margin-left: 0;
+  }
+  .home-shell .masthead nav button { min-width: 0; white-space: normal; }
+  .home-shell .home-hero .intro {
+    max-width: calc(100vw - 56px);
+    width: min(100%, calc(100vw - 56px));
+  }
+  .home-shell footer { flex-wrap: wrap; }
 }
