@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { balance, cards } from '../content'
 import { applyEffects, advanceYear, beginTurn, choose, createLife, createLifeFromRoll, resolveAutoCard, rollBirth, simulateLife } from './game'
 import { evaluateCondition } from './conditions'
@@ -8,10 +8,18 @@ import type { Card, LifeState } from './types'
 import { SimulatedWorld } from '../world/service'
 
 describe('life simulation engine',()=>{
-  it('keeps birth rolls deterministic and weighted toward recent decades',()=>{
-    const a=rollBirth(123),b=rollBirth(123);expect(a).toEqual(b);expect(a.person.birthYear).toBeGreaterThanOrEqual(1950);expect(a.person.birthYear).toBeLessThanOrEqual(2026)
-    let recent=0;for(let seed=1;seed<=1000;seed++)if(rollBirth(seed).person.birthYear>=2000)recent++
-    expect(recent).toBeGreaterThan(350)
+  it('locks a birth roll to the device year and supports a fixed test clock',()=>{
+    vi.useFakeTimers()
+    try {
+      vi.setSystemTime(new Date('2041-06-15T12:00:00'))
+      const a=rollBirth(123),b=rollBirth(123)
+      expect(a).toEqual(b)
+      expect(a.person.birthYear).toBe(2041)
+      expect(a.person.birthYearBE).toBe(2584)
+      expect(rollBirth(123,1992).person.birthYear).toBe(1992)
+    } finally {
+      vi.useRealTimers()
+    }
   })
   it('keeps all gender birth weights explicitly placeholder-balanced',()=>{
     const counts={'หญิง':0,'ชาย':0,'อื่น ๆ':0};for(let seed=1;seed<=600;seed++)counts[rollBirth(seed).person.gender]++
@@ -41,7 +49,8 @@ describe('life simulation engine',()=>{
     expect(cards.length).toBeGreaterThanOrEqual(40)
     const reached=new Set<string>()
     for(let seed=1;seed<=1000;seed++){
-      const s=createLife(seed)
+      const roll=rollBirth(seed,1950+(seed%40))
+      const s=createLifeFromRoll(seed,roll)
       for(let i=0;i<90&&s.status==='playing';i++){
         beginTurn(s,cards)
         if(s.currentCardIds[0]){const c=cards.find(x=>x.id===s.currentCardIds[0])!;reached.add(c.id);if(c.auto)resolveAutoCard(s,c);else choose(s,c,c.choices[0]!)}
@@ -89,7 +98,7 @@ function advanceTo(s:LifeState,year:number):void { while(s.year<year&&s.status==
 export function scriptedWorkedExample():LifeState {
   for(let seed=123456;seed<123556;seed++){
     const roll=rollBirth(seed)
-    Object.assign(roll.person,{name:'สมศรี นาดี',gender:'หญิง',birthYear:1992,province:'ร้อยเอ็ด',householdType:'ทำนา',householdLandRai:15,householdMoney:18,birthOrder:2,siblingCount:2,debt:25,health:100})
+    Object.assign(roll.person,{name:'สมศรี นาดี',gender:'หญิง',birthYear:1992,birthYearBE:2535,province:'ร้อยเอ็ด',householdType:'ทำนา',householdLandRai:15,householdMoney:18,birthOrder:2,siblingCount:2,debt:25,health:100})
     const mother=roll.person.relatives.find(relative=>relative.role==='mother')!
     mother.age=22;mother.health=100
     const s=createLifeFromRoll(seed,roll)
