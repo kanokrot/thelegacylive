@@ -29,7 +29,7 @@ npm run build
 - `src/world`: อินเทอร์เฟซ `WorldService` และ `SimulatedWorld` สำหรับนับชีวิต เกิดใหม่ ดู cohort และเผยแพร่อนุสรณ์
 - `src/ui`: Vue, Pinia, บันทึกในเครื่อง และภาพพิกเซล
 
-ปีเกิดและปีจำลองเก็บเป็น ค.ศ. เพื่อรองรับช่วง 1950–2026 และปีคาดการณ์ หลังจากนั้นหน้าจอแสดงปี พ.ศ. โดยบวก 543
+ปีเกิดอ่านจากปี ค.ศ. ของนาฬิกาอุปกรณ์ตอนสุ่มเกิด โดยบันทึกทั้ง `birthYear` (ค.ศ. สำหรับคำนวณอายุและการ์ดประวัติศาสตร์) และ `birthYearBE` (พ.ศ. สำหรับแสดงผล) ลงใน roll/เซฟชีวิต; เทสต์กำหนดปีได้ด้วย `rollBirth(seed, currentYear)` หรือ `vi.setSystemTime`
 
 ## เพิ่มการ์ดเหตุการณ์
 
@@ -57,3 +57,12 @@ npm run build
 3. Workflow จะ build และ deploy เมื่อมี push ไป `main` หรือสั่งเองจาก **Actions > Deploy to GitHub Pages > Run workflow**
 
 URL จะเป็น `https://<owner>.github.io/<repository>/` สำหรับ repository ทั่วไป หรือ `https://<owner>.github.io/` เมื่อชื่อ repository เป็น `<owner>.github.io`
+
+## Font credits
+
+- PS Pimpdeed by touchie ([font page](https://www.f0nt.com/release/ps-pimpdeed-family/)).
+- Tlwg Typist by Thai Linux Working Group.
+
+## Birth story place names
+
+Tambon and amphoe names are bundled from the MIT-licensed [kongvut/thai-province-data](https://github.com/kongvut/thai-province-data) dataset; the source and snapshot date are recorded in `src/content/data/SOURCES.md`. Village names in birth stories are fictional combinations for the story and do not refer to real villages or describe local facts.
