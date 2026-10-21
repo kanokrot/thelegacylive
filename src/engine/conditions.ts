@@ -9,6 +9,7 @@ export function evaluateCondition(c: Condition | undefined, s: LifeState): boole
   if ('stat' in c) return cmp(s.person[c.stat], c.op, c.value)
   if ('flag' in c) return (s.person.flags[c.flag] ?? false) === (c.value ?? true)
   if ('gender' in c) return s.person.gender === c.gender
+  if ('province' in c) return Array.isArray(c.province) ? c.province.includes(s.person.province) : s.person.province === c.province
   if ('relativeAlive' in c) return s.person.relatives.some(r => r.role === c.relativeAlive && r.alive)
   if ('household' in c) return s.person.householdType === c.household
   if ('householdMoney' in c) return cmp(s.person.householdMoney,c.householdMoney,c.value)

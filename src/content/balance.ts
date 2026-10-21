@@ -2,14 +2,14 @@
 export const balance = {
   yearMax: 2026, maxAge: { value: 105, provenance: { type: 'design', reason: 'Simulation endpoint; death is forced at this ceiling to prevent unbounded lives.' } }, maxStat: 100, minStat: 0, yearOffsetBE: 543,
   stages: { childhood: 12, teen: 19, youngAdult: 35, midLife: 59 }, nameEraBreaks: [1980,2000] as const,
-  milestoneAges:{earlyHealth:[0,2],schoolStart:[6,8],farmWork:[8,12],gradeSix:[12,12],gradeNine:[15,16],gradeTwelve:[18,19],migration:[16,19],conscription:20},
+  milestoneAges:{earlyHealth:[0,2],schoolStart:[6,8],farmWork:[12,13],gradeSix:[12,12],gradeNine:[15,16],gradeTwelve:[18,19],migration:[16,19],conscription:20},
   // TODO(verify): placeholder game weights, not demographic estimates; all genders have equal birth-roll weight.
   genderWeights:[1,1,1] as const,
   // TODO(verify): background weights are placeholders, not measured population shares.
-  householdWeights:[1,1,1,1,1,1,1,1,1] as const,relativeHealth:[55,95] as const,relativeRelationship:[35,90] as const,affinityRange:[-20,30] as const,childFarmWorkAge:16,
+  householdWeights:[1,1,1,1,1,1,1,1,1,1] as const,relativeHealth:[55,95] as const,relativeRelationship:[35,90] as const,affinityRange:[-20,30] as const,childFarmWorkAge:16,
   provinceWeights: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1] as const,
   stats: { health: [45, 99], wellbeing: [40, 80], knowledge: [0, 35], relationships: [35, 85], careBurden: [0, 25], aptitude: [20, 95], diligence: [20, 95], temperament: [20, 95] },
-  startingMoney: [0, 50], startingDebt: [0, 40], startingPersonalDebt:[0,10], rai: [0, 30], householdTypes: ['ทำนา', 'รับจ้าง', 'ค้าขายเล็ก ๆ', 'ข้าราชการชั้นผู้น้อย', 'ประมงน้ำจืด', 'งานฝีมือ', 'แรงงานในเมือง', 'ค้าขายครอบครัวไทยเชื้อสายจีน', 'ข้าราชการในเมือง'],
+  startingMoney: [0, 50], startingDebt: [0, 40], startingPersonalDebt:[0,10], rai: [0, 30], householdTypes: ['ทำนา', 'ไร่อ้อย', 'รับจ้าง', 'ค้าขายเล็ก ๆ', 'ข้าราชการชั้นผู้น้อย', 'ประมงน้ำจืด', 'งานฝีมือ', 'แรงงานในเมือง', 'ค้าขายครอบครัวไทยเชื้อสายจีน', 'ข้าราชการในเมือง'],
   startingHouseholdMoney: [8, 55], siblingCount: [0, 5], relativeLife: { parentMother: [22, 42], parentFather: [24, 45], grandmother: [55, 82], grandfather: [55, 85], siblingAge: [0, 15], extendedAge: [20, 75], marriageAge: 18, marriageChance: 0.04, deathAge: 92, migrationChance: 0.004 },
   mortality: {
     childAgeLimit: { value: 15, provenance: { type: 'sourced', sourceId: 'MORT09', year: 2024, ageBand: '0-14', reason: 'DDC reports child drowning surveillance under age fifteen.' } },

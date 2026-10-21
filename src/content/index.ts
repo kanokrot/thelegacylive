@@ -2,6 +2,7 @@
 import type { Card, Condition, RegionProfile } from '../engine/types'
 import { isanFamilyMoneyCards } from './isanFamilyMoneyCards'
 import { isanHouseholdThreadCards } from './isanHouseholdThreadCards'
+import { isanCultureCards } from './isanCultureCards'
 import healthZoneData from './data/isan-health-zones.json'
 
 export { balance }
@@ -21,7 +22,7 @@ export const givenNamesByEra = {
 }
 export const surnames = ['นาดี', 'แสนสุข', 'บุญช่วย', 'คำแพง', 'ศรีสวัสดิ์', 'แก้วคำ', 'วงศ์สว่าง', 'ใจมั่น', 'พูนผล', 'อินทร์ทอง']
 export const birthRevealLabels = ['เพศ','ปีเกิด','จังหวัด','ครอบครัว','พี่น้อง','สุขภาพแรกเกิด','พรสวรรค์','ความขยัน','นิสัยใจคอ','ชื่อ'] as const
-export const occupations = { farmWork:'ช่วยงานนา', urbanWork:'งานรับจ้างในเมือง', migrantRelative:'แรงงานย้ายถิ่น' }
+export const occupations = { farmWork:'ช่วยงานในไร่นาของครอบครัว', urbanWork:'งานรับจ้างในเมือง', migrantRelative:'แรงงานย้ายถิ่น' }
 export const provinces = ['กาฬสินธุ์', 'ขอนแก่น', 'ชัยภูมิ', 'นครพนม', 'นครราชสีมา', 'บึงกาฬ', 'บุรีรัมย์', 'มหาสารคาม', 'มุกดาหาร', 'ยโสธร', 'ร้อยเอ็ด', 'เลย', 'ศรีสะเกษ', 'สกลนคร', 'สุรินทร์', 'หนองคาย', 'หนองบัวลำภู', 'อำนาจเจริญ', 'อุดรธานี', 'อุบลราชธานี']
 const healthZoneByProvince = new Map(Object.entries(healthZoneData.zones).flatMap(([zone, names]) => names.map(name => [name, Number(zone)] as const)))
 export const regions: RegionProfile[] = provinces.map((name, i) => ({ id: `isan-${i}`, name, schoolAccess: balance.access.school, hospitalAccess: balance.access.hospital, jobAccess: balance.access.jobs, healthZone: healthZoneByProvince.get(name) }))
@@ -102,9 +103,9 @@ routineCards.find(card=>card.id==='childcare-shift')!.choices[0]!.setFlags=['met
 
 const milestone = (id: string, stage: Card['stage'], title: string, body: string, choiceA: string, choiceB: string, effectsA: Card['choices'][number]['effects'], effectsB: Card['choices'][number]['effects'], opts: Partial<Card> = {}): Card => ({ id, stage, title, body, weight: balance.cards.milestoneWeight, once: true, ...opts, choices: [{ id: `${id}-a`, label: choiceA, effects: effectsA }, { id: `${id}-b`, label: choiceB, effects: effectsB }] })
 const extra: Card[] = [
-  milestone('birth-health', 'childhood', 'วันแรกของชีวิต', 'คนในบ้านช่วยกันดูแลคุณในช่วงแรก ผู้ใหญ่สังเกตอาการและหาความช่วยเหลือตามที่เข้าถึงได้', 'พาไปสถานพยาบาล', 'ขอแรงญาติช่วยดูแล', [S('health', 5), H('money', -3)], [S('relationships', 2), S('health', 1)], {when:ageWindow(balance.milestoneAges.earlyHealth)}),
+  milestone('birth-health', 'childhood', 'วันแรกของชีวิต', 'คุณเพิ่งเกิดที่โรงพยาบาลอำเภอ คนในบ้านช่วยกันดูแลและตัดสินใจว่าจะพาคุณไปตรวจอาการเพิ่มเติมหรือขอแรงญาติมาช่วย', 'พาไปตรวจอาการเพิ่มเติม', 'ขอแรงญาติมาช่วยดูแล', [S('health', 5), H('money', -3)], [S('relationships', 2), S('health', 1)], {when:ageWindow([0,0]), opening:true}),
   milestone('who-raises', 'childhood', 'ใครช่วยเลี้ยงดู', 'งานและการเดินทางของผู้ใหญ่ทำให้การดูแลเป็นเรื่องที่หลายคนช่วยกัน', 'อยู่กับยายช่วงกลางวัน', 'ไปกับแม่ตามงาน', [S('relationships', 3), S('careBurden', -1)], [S('relationships', 1), S('knowledge', 1)]),
-  milestone('child-farm-work', 'childhood', 'ช่วยงานนา', 'ช่วงฤดูทำนามีงานเล็ก ๆ ให้ช่วยตามกำลังและเวลาเรียน', 'ช่วยเก็บของหลังเลิกเรียน', 'ช่วยตามเวลาว่าง', [S('diligence', 2), S('careBurden', 1)], [S('wellbeing', 1)], {when:ageWindow(balance.milestoneAges.farmWork)}),
+  milestone('child-farm-work', ['childhood','teen'], 'ช่วงเกี่ยวข้าวกับวันเรียน', 'ตอนอายุ 12–13 งานในนาบางวันชนกับเวลาเรียนหรืออ่านหนังสือ คุณกับผู้ใหญ่คุยกันว่าจะช่วยกันอย่างไร', 'ช่วยงานที่พอทำไหวแล้วแบ่งเวลาอ่านหนังสือ', 'ขอให้ผู้ใหญ่จัดงานนาโดยไม่ชนวันเรียน', [S('diligence', 2), S('careBurden', 1)], [S('knowledge', 1), S('wellbeing', 1)], {when:{all:[ageWindow(balance.milestoneAges.farmWork),{household:'ทำนา'}]}}),
   milestone('school-start', 'childhood', 'เริ่มเข้าโรงเรียน', 'โรงเรียนอยู่ห่างจากบ้านพอให้ต้องวางแผนการเดินทางและค่าใช้จ่าย', 'เดินทางไปเรียน', 'เรียนใกล้บ้านและแบ่งเวลาช่วยงาน', [S('knowledge', 5), H('money', -2)], [S('knowledge', 2), S('careBurden', 2)], {when:ageWindow(balance.milestoneAges.schoolStart)}),
   milestone('grade-six', 'childhood', 'หลังจบ ป.6', 'การเรียนต่อ ม.1 ต้องคุยกันเรื่องระยะทาง ค่าเดินทาง และภาระของบ้าน', 'เรียนต่อ ม.1', 'ทำงานและเรียนตามโอกาส', [S('knowledge', 5), H('money', -3)], [H('money', 3), S('knowledge', 1)], {when:ageWindow(balance.milestoneAges.gradeSix)}),
   milestone('grade-nine', 'teen', 'หลังจบ ม.3', 'คุณทำคะแนนได้ดี แต่ค่าเรียนของคุณกับพี่ชายเกินกำลังที่บ้านจะจ่ายพร้อมกัน จึงต้องเลือกระหว่างเรียนต่อกับเริ่มทำงาน', 'เรียนต่อ ม.4', 'เริ่มทำงานและส่งเงินกลับบ้าน', [S('knowledge', 5), H('money', -4)], [H('money', 4), S('relationships', -1)], {when:ageWindow(balance.milestoneAges.gradeNine)}),
@@ -156,6 +157,7 @@ addModifiers('market-stall',0,[{when:{householdMoney:'<',value:balance.lowWealth
 addModifiers('clinic-queue',0,[{when:{regionAccess:'hospital',op:'<',value:balance.access.lowSchoolThreshold},effects:[H('money',-distanceCost)],narration:'การเดินทางไปตรวจสุขภาพใช้เงินและเวลามากขึ้น'}])
 extra.find(card=>card.id==='migration-first')!.choices[0]!.setFlags=['migrated']
 extra.find(card=>card.id==='grade-nine')!.choices[1]!.setFlags=['topStudentM3','cannotAffordFurtherStudy']
+extra.find(card=>card.id==='grade-twelve')!.choices.forEach(choice=>{choice.setFlags=['completedM6']})
 extra.find(card=>card.id==='love')!.choices[0]!.setFlags=['partnered']
 extra.find(card=>card.id==='marriage')!.choices[0]!.setFlags=['partnered']
 extra.find(card=>card.id==='children')!.choices[0]!.setFlags=['hasChild']
@@ -170,4 +172,4 @@ function genderModifiers(reason: string, female: Card['choices'][number]['effect
     {when:{gender:'อื่น ๆ'},effects:[other],narration:`${reason}: ตามบริบทของผู้มีเพศอื่น ๆ`},
   ]
 }
-export const cards = [...extra, ...routineCards, ...isanFamilyMoneyCards, ...isanHouseholdThreadCards]
+export const cards = [...extra, ...routineCards, ...isanFamilyMoneyCards, ...isanHouseholdThreadCards, ...isanCultureCards]
