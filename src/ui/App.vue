@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onUnmounted, ref } from 'vue'
+import { computed, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useGameStore } from './store'
 import { ui } from '../content/ui'
@@ -20,7 +20,7 @@ import { displayStageForAge } from './portraits/portrait'
 import './collection-theme.css'
 
 const store = useGameStore()
-const { game, screen, roll, collection, deathRecords, person, card, counters, recentBirth, candleCount, worldLabel, worldDescription, cohort, playbackSpeed, playbackRunning, autoMode, autoPolicy } = storeToRefs(store)
+const { game, screen, roll, collection, person, card, counters, recentBirth, candleCount, worldLabel, worldDescription, cohort, playbackSpeed, playbackRunning, autoMode, autoPolicy } = storeToRefs(store)
 const unbindNavigation = bindScreenNavigation(screen, target => {
   if (target === 'birthplace') return Boolean(roll.value)
   if (target === 'reveal') return Boolean(roll.value)
@@ -49,26 +49,6 @@ const yearResolved = computed(() => Boolean(game.value?.log.some(event => event.
 const buddhistYear = (year: number | undefined) => year === undefined ? '' : year + balance.yearOffsetBE
 const rarity = (i: number) => i % 23 === 0 ? ui.special : i % 7 === 0 ? ui.rare : ui.common
 const roleLabel = (role: RelativeRole) => ui.relativeRoles[role]
-const mortalityFilter = ref<'manual'|'auto'|'mixed'|'all'>('manual')
-const mortalityLives = computed(() => deathRecords.value.filter(life => {
-  const total = (life.manualDecisions ?? 0) + (life.autoDecisions ?? 0)
-  const manualShare = total === 0 ? 1 : (life.manualDecisions ?? 0) / total
-  if (mortalityFilter.value === 'manual') return manualShare >= 0.5
-  if (mortalityFilter.value === 'auto') return manualShare < 0.5
-  if (mortalityFilter.value === 'mixed') return (life.manualDecisions ?? 0) > 0 && (life.autoDecisions ?? 0) > 0
-  return true
-}))
-const causeStats = computed(() => {
-  const counts = new Map<string, { count: number; ageTotal: number }>()
-  for (const life of mortalityLives.value) {
-    const cause = life.deathCause ?? 'unknown'
-    const current = counts.get(cause) ?? { count: 0, ageTotal: 0 }
-    current.count += 1
-    current.ageTotal += life.deathAge ?? 0
-    counts.set(cause, current)
-  }
-  return [...counts.entries()].map(([cause, value]) => ({ cause, ...value, averageAge: value.count ? Math.round(value.ageTotal / value.count) : 0 })).sort((a,b) => b.count - a.count)
-})
 const memorialManualShare = computed(() => {
   const manual = person.value?.manualDecisions ?? 0
   const total = manual + (person.value?.autoDecisions ?? 0)
@@ -81,8 +61,8 @@ const deathFactorLabel = (factor: string) => ui.deathFactorLabels[factor as keyo
 <template>
   <main class="shell" :class="{ 'home-shell': screen === 'home' || screen === 'birthplace', 'birth-shell': screen === 'reveal', 'life-shell': screen === 'life', 'memorial-shell': screen === 'memorial', 'collection-shell': screen === 'collection', 'sprite-shell': screen === 'sprites' }" :inert="screen === 'birthplace'">
     <header class="masthead">
-      <button v-if="screen !== 'mortality'" class="brand" @click="screen = 'home'"><span class="mark">ช</span><span><small>{{ ui.subtitle }}</small><strong>{{ ui.title }}</strong></span></button>
-      <nav><button :aria-current="screen === 'home' ? 'page' : undefined" @click="screen = 'home'">{{ ui.home }}</button><button :aria-current="screen === 'collection' ? 'page' : undefined" @click="screen = 'collection'">{{ ui.collection }}</button><button :aria-current="screen === 'mortality' ? 'page' : undefined" @click="screen = 'mortality'">{{ ui.mortalityTitle }}</button></nav>
+      <button class="brand" @click="screen = 'home'"><span class="mark">ช</span><span><small>{{ ui.subtitle }}</small><strong>{{ ui.title }}</strong></span></button>
+      <nav><button :aria-current="screen === 'home' ? 'page' : undefined" @click="screen = 'home'">{{ ui.home }}</button><button :aria-current="screen === 'collection' ? 'page' : undefined" @click="screen = 'collection'">{{ ui.collection }}</button></nav>
     </header>
 
     <section v-if="screen === 'home' || screen === 'birthplace'" class="home-page">
@@ -153,11 +133,6 @@ const deathFactorLabel = (factor: string) => ui.deathFactorLabels[factor as keyo
       <div class="collection-stripe" aria-hidden="true" />
       <div class="collection-head"><div><p class="eyebrow">{{ ui.collectionEyebrow }}</p><h1>{{ ui.collectionTitle }}</h1><p>{{ ui.collectionIntro }}</p></div><span>{{ collection.length }} {{ ui.peopleSuffix }}</span></div>
       <div class="collection-grid"><article v-for="(item, i) in collection" :key="item.id" class="person-card panel"><Portrait :person="item" :size="126" /><div><span class="rarity">{{ rarity(i) }}</span><h2>{{ item.name }}</h2><p>{{ item.province }} · {{ ui.stage[item.stage] }}</p></div></article><template v-if="collection.length < balance.collection.maxEntries"><article v-for="i in balance.collection.lockedSlots" :key="`locked-${i}`" class="person-card locked panel"><div class="silhouette">?</div><div><span class="rarity">{{ ui.locked }}</span><h2>{{ ui.locked }}</h2><p>{{ ui.unlockHint }}</p></div></article></template></div>
-    </section>
-    <section v-else-if="screen === 'mortality'" class="mortality-page panel">
-      <p class="eyebrow">{{ ui.mortalityTitle }}</p><h1>{{ ui.mortalityTitle }}</h1><p class="mortality-disclaimer">{{ ui.mortalityDisclaimer }}</p>
-      <label class="mortality-filter">{{ ui.mortalityTitle }}<select v-model="mortalityFilter"><option v-for="(label, key) in ui.mortalityFilters" :key="key" :value="key">{{ label }}</option></select></label>
-      <p>{{ mortalityLives.length }} ชีวิต</p><div class="mortality-table"><div class="mortality-row mortality-head"><b>สาเหตุ</b><b>จำนวนชีวิต</b><b>อายุเฉลี่ยเมื่อเสียชีวิต</b></div><div v-for="row in causeStats" :key="row.cause" class="mortality-row"><span>{{ deathCauseLabel(row.cause) }}</span><span>{{ row.count }}</span><span>{{ row.averageAge }} {{ ui.yearsOld }}</span></div></div>
     </section>
     <SpriteGallery v-else-if="screen === 'sprites'" />
     <Teleport to="body">

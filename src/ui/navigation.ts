@@ -1,8 +1,8 @@
 import { watch, type Ref } from 'vue'
 
-export type Screen = 'home' | 'birthplace' | 'reveal' | 'life' | 'memorial' | 'collection' | 'mortality' | 'sprites'
+export type Screen = 'home' | 'birthplace' | 'reveal' | 'life' | 'memorial' | 'collection' | 'sprites'
 
-const validScreens = new Set<Screen>(['home', 'birthplace', 'reveal', 'life', 'memorial', 'collection', 'mortality', 'sprites'])
+const validScreens = new Set<Screen>(['home', 'birthplace', 'reveal', 'life', 'memorial', 'collection', 'sprites'])
 
 export function screenFromHash(hash: string): Screen | null {
   const path = hash.replace(/^#\/?/, '')

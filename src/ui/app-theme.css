@@ -686,23 +686,13 @@ body,
   .birth-shell .birth-card-details > .primary { align-self: stretch; }
 }
 
-.auto-policy,
-.mortality-filter { display: inline-flex; align-items: center; gap: 8px; color: var(--cream, #f6efe0); font-size: 14px; }
-.auto-policy select,
-.mortality-filter select { max-width: 220px; min-height: 36px; padding: 5px 10px; border: 1px solid var(--gold, #e6b23d); border-radius: 8px; background: var(--navy, #0f1a2e); color: var(--cream, #f6efe0); }
+.auto-policy { display: inline-flex; align-items: center; gap: 8px; color: var(--cream, #f6efe0); font-size: 14px; }
+.auto-policy select { max-width: 220px; min-height: 36px; padding: 5px 10px; border: 1px solid var(--gold, #e6b23d); border-radius: 8px; background: var(--navy, #0f1a2e); color: var(--cream, #f6efe0); }
 .memorial-death-cause { margin: 0 0 8px; color: var(--gold, #e6b23d); font-size: 20px; font-weight: 700; }
 .death-factors { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0 auto 12px; padding: 0; list-style: none; }
 .death-factors li { padding: 5px 10px; border: 1px solid #c9657f; border-radius: 999px; color: #f6efe0; font-size: 14px; }
 .memorial-decision-mode,.mortality-disclaimer { color: #c8d2e1; font-size: 14px; }
-.mortality-page { width: min(100% - 32px, 900px); margin: 28px auto 64px; padding: clamp(20px, 4vw, 44px); }
-.mortality-page h1 { margin: 0 0 10px; color: var(--gold, #e6b23d); }
-.mortality-filter { margin: 12px 0; }
-.mortality-table { display: grid; gap: 0; margin-top: 16px; }
-.mortality-row { display: grid; grid-template-columns: minmax(0, 1.5fr) repeat(2, minmax(120px, 1fr)); gap: 12px; padding: 10px 12px; border-bottom: 1px solid #3a5380; color: var(--cream, #f6efe0); }
-.mortality-head { color: var(--gold, #e6b23d); }
 .memorial-art > .portrait { position: relative; z-index: 1; display: flex; margin-inline: auto; image-rendering: pixelated; }
 @media (max-width: 640px) {
-  .mortality-row { grid-template-columns: minmax(0, 1fr) auto; }
-  .mortality-row > :last-child { grid-column: 1 / -1; }
   .life-time-controls .auto-policy { width: 100%; justify-content: space-between; }
 }
