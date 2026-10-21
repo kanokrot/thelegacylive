@@ -170,8 +170,111 @@
   line-height: var(--line-height-base);
 }
 
-.life-screen .quiet .primary {
-  margin-top: var(--space-3);
+.life-screen .life-time-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 var(--space-3);
+  padding: 9px;
+  overflow: visible;
+  border: 1px solid #3a5380;
+  border-radius: 12px;
+  background: #0f1a2e;
+}
+
+.life-screen .life-time-controls button,
+.life-screen .life-time-controls select {
+  flex: 0 0 auto;
+  min-height: 42px;
+  padding: 7px 12px;
+  border: 1px solid #3a5380;
+  border-radius: 8px;
+  background: #1a2b48;
+  color: #f6efe0;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.life-screen .life-time-controls button[aria-pressed="true"] {
+  border-color: #e6b23d;
+  background: #e6b23d;
+  color: #0f1a2e;
+}
+
+.life-screen .life-time-controls button:not(:disabled):hover,
+.life-screen .life-time-controls select:hover {
+  border-color: #f4d58a;
+  background: #263c5e;
+  color: #f6efe0;
+}
+
+.life-screen .life-time-controls button[aria-pressed="true"]:not(:disabled):hover {
+  border-color: #f4d58a;
+  background: #f4d58a;
+  color: #0f1a2e;
+}
+
+.life-screen .life-time-controls :is(button, select):focus-visible {
+  outline: 3px solid #f4d58a;
+  outline-offset: 2px;
+}
+
+.life-screen .life-time-controls .next-decision {
+  margin-left: auto;
+  border-color: #3a5380;
+  background: #1a2b48;
+  color: #f6efe0;
+}
+
+.life-screen .life-time-controls .next-decision:disabled {
+  cursor: default;
+  border-color: #526782;
+  background: #26364f;
+  color: #d4deeb;
+  opacity: 1;
+}
+
+.life-screen .life-time-controls .auto-policy {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 42px;
+  color: #f6efe0;
+}
+
+.life-screen .life-time-controls .auto-policy select {
+  max-width: min(230px, 30vw);
+  min-width: 0;
+  cursor: pointer;
+}
+
+.life-screen .profile-stat-help {
+  margin: var(--space-3) 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.life-screen .profile-stat-help summary {
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.life-screen .profile-stat-help p {
+  margin: var(--space-2) 0;
+  line-height: 1.6;
+}
+
+.life-screen .profile-stat-help ul {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-2) 0 0;
+  padding-left: 18px;
+  color: var(--ink);
+  line-height: 1.6;
 }
 
 .life-screen .log ol {
@@ -223,6 +326,45 @@
 
   .life-screen .life-stat-row {
     grid-template-columns: minmax(88px, 0.8fr) minmax(0, 1fr) 32px;
+  }
+
+  .life-screen .life-time-controls {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    padding: 7px;
+  }
+
+  .life-screen .life-time-controls button {
+    width: 100%;
+    min-width: 0;
+    min-height: 46px;
+    padding: 6px 3px;
+    font-size: 13px;
+  }
+
+  .life-screen .life-time-controls .auto-policy {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 5px;
+    min-width: 0;
+    font-size: 14px;
+  }
+
+  .life-screen .life-time-controls .auto-policy select {
+    width: 100%;
+    max-width: none;
+    min-height: 46px;
+    padding-inline: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 12px;
+  }
+
+  .life-screen .life-time-controls .next-decision {
+    grid-column: span 2;
+    margin-left: 0;
   }
 }
 

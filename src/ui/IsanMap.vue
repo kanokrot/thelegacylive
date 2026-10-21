@@ -94,9 +94,13 @@ const activeProvinceShape = computed(() => provinceShapes.find(province => provi
     <svg class="isan-map-art" viewBox="0 0 720 620" role="img" :aria-label="ui.isanMapIllustration" preserveAspectRatio="xMidYMid meet">
       <defs>
         <linearGradient id="isan-land" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#192a45" />
-          <stop offset="1" stop-color="#101d32" />
+          <stop offset="0" stop-color="#16263f" />
+          <stop offset="1" stop-color="#16263f" />
         </linearGradient>
+        <radialGradient id="isan-active-glow">
+          <stop offset="0" stop-color="#e6b23d" stop-opacity=".42" />
+          <stop offset="1" stop-color="#e6b23d" stop-opacity="0" />
+        </radialGradient>
       </defs>
       <g class="isan-province-shapes">
         <path
@@ -106,6 +110,7 @@ const activeProvinceShape = computed(() => provinceShapes.find(province => provi
           :class="{ 'province-active': province.name === props.activeProvince }"
           :aria-label="province.name"
         />
+        <circle v-if="activeProvinceShape" :cx="activeProvinceShape.labelPoint.x" :cy="activeProvinceShape.labelPoint.y" r="100" class="province-active-glow" />
       </g>
       <path :d="regionOutline" class="isan-region-outline" />
       <text
@@ -125,9 +130,10 @@ const activeProvinceShape = computed(() => provinceShapes.find(province => provi
 <style>
 .isan-map-wrap{position:absolute;inset:0;z-index:0;pointer-events:none}
 .isan-map-wrap .isan-map-art{position:absolute;z-index:0;inset:0;width:100%;height:100%;overflow:visible}
-.isan-province-shapes path{fill:url(#isan-land);stroke:#344e74;stroke-width:1.5;stroke-linejoin:round;vector-effect:non-scaling-stroke}
-.isan-province-shapes path.province-active{fill:#243858;stroke:#e5b638;stroke-width:2}
-.isan-province-label{fill:#f3ebd8;stroke:#0e1a2b;stroke-width:4px;paint-order:stroke;stroke-linejoin:round;font:400 18px 'PS Pimpdeed','Noto Sans Thai',sans-serif}
-.isan-region-outline{fill:none;stroke:#344e74;stroke-width:2;stroke-linejoin:round;vector-effect:non-scaling-stroke;opacity:.45;filter:none}
+.isan-province-shapes path{fill:url(#isan-land);stroke:#c9657f;stroke-opacity:.4;stroke-width:1.25;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.isan-province-shapes path.province-active{fill:#e6b23d;fill-opacity:.3;stroke:#e6b23d;stroke-opacity:1;stroke-width:2.5}
+.province-active-glow{fill:url(#isan-active-glow);pointer-events:none}
+.isan-province-label{fill:#f6efe0;stroke:#0f1a2e;stroke-width:4px;paint-order:stroke;stroke-linejoin:round;font:600 18px var(--font-main)}
+.isan-region-outline{fill:none;stroke:#c9657f;stroke-width:2;stroke-linejoin:round;vector-effect:non-scaling-stroke;opacity:.7;filter:none}
 .map-attribution{position:absolute;right:12px;bottom:2px;margin:0;color:#9fb0c8;font-size:12px;text-align:right}
 </style>

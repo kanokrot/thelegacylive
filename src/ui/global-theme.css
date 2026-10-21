@@ -1,0 +1,40 @@
+:root {
+  --font-main: 'Pridi', serif;
+  --navy: #0f1a2e;
+  --card: #111f38;
+  --card-border: #3a5380;
+  --gold: #e6b23d;
+  --gold-light: #f4d58a;
+  --pink: #e8457c;
+  --pink-dark: #d6246e;
+  --red: #d62f2a;
+  --green: #2e9e4f;
+  --blue: #1e88e5;
+  --orange: #f57c1f;
+  --cream: #f6efe0;
+  --woven: #e3c08a;
+  --wax: #e8c98a;
+  --wax-dark: #c9a468;
+  --card-px: #15264a;
+  --edge-px: #3a5380;
+  color-scheme: dark;
+  font-family: var(--font-main);
+}
+
+html,
+body,
+button,
+input,
+select,
+textarea,
+#app,
+#app * {
+  font-family: var(--font-main) !important;
+}
+
+html,
+body { background: var(--navy); }
+
+:is(h1, h2, h3, strong, b, button, .counter strong, .reel-current) { font-weight: 600; }
+button.primary { font-weight: 700; }
+

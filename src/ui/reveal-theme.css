@@ -1,0 +1,175 @@
+.birth-shell {
+  position: relative;
+  min-height: 100vh;
+  padding-bottom: 170px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: var(--navy);
+  color: var(--cream);
+  font-family: var(--font-main);
+}
+
+.birth-shell .birth-profile {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  max-width: 1360px;
+  min-height: max(650px, calc(100dvh - 230px));
+  background: transparent;
+  font-family: var(--font-main);
+}
+
+.birth-shell .reveal-decor {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  pointer-events: none;
+}
+
+.birth-shell .reveal-decor svg {
+  position: absolute;
+  display: block;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.birth-shell .reveal-decor-stripe {
+  top: -36px;
+  left: 0;
+  width: 100%;
+  height: 12px;
+}
+
+.birth-shell .reveal-decor-skyline {
+  bottom: -170px;
+  left: 50%;
+  width: 100vw;
+  height: 170px;
+  transform: translateX(-50%);
+}
+
+.birth-shell .birth-card-layout {
+  position: relative;
+  z-index: 1;
+  grid-template-columns: minmax(300px, 390px) minmax(0, 1fr);
+  gap: 32px;
+}
+
+.birth-shell .birth-card-aside,
+.birth-shell .birth-card-details { gap: 20px; }
+
+.birth-shell .birth-portrait-card,
+.birth-shell .birth-province-card,
+.birth-shell .birth-story-card,
+.birth-shell .birth-province-income,
+.birth-shell .birth-traits {
+  margin: 4px;
+  border: 0;
+  border-radius: 0;
+  background: var(--card-px);
+  box-shadow:
+    0 -4px 0 0 var(--edge-px),
+    0 4px 0 0 var(--edge-px),
+    -4px 0 0 0 var(--edge-px),
+    4px 0 0 0 var(--edge-px);
+  color: var(--cream);
+}
+
+.birth-shell .birth-portrait-card { min-height: 176px; padding: 20px; }
+.birth-shell .birth-province-card { padding: 18px 20px; }
+.birth-shell .birth-province-map { height: 220px; }
+.birth-shell .birth-story-card { padding: 22px 24px; }
+.birth-shell .birth-story-card h1,
+.birth-shell .birth-province-income h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--cream);
+  font-family: var(--font-main);
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.birth-shell .birth-story-card h1 { margin: 0 0 12px; }
+.birth-shell .birth-story-paragraphs { gap: 14px; }
+.birth-shell .birth-story-paragraphs p {
+  margin: 0;
+  color: var(--cream);
+  font-family: var(--font-main);
+  font-size: 18px !important;
+  line-height: 1.7;
+}
+
+.birth-shell .birth-name-label,
+.birth-shell .birth-province-caption,
+.birth-shell .birth-province-map-label,
+.birth-shell .birth-province-income span,
+.birth-shell .birth-province-income small,
+.birth-shell .birth-trait-label { color: #aebbd2; }
+.birth-shell .birth-province-card > strong { color: var(--gold); border-color: var(--gold); }
+.birth-shell .birth-province-income { padding: 18px 20px; }
+.birth-shell .birth-province-income h2 { margin: 0 0 12px; font-size: 22px; }
+.birth-shell .birth-income-values strong { color: var(--cream); font-size: 20px; font-weight: 700; }
+.birth-shell .birth-income-values p { color: #aebbd2; }
+.birth-shell .birth-traits { padding: 18px 20px; gap: 12px 20px; }
+.birth-shell .birth-trait-row > div:first-child { align-items: center; color: var(--cream); }
+.birth-shell .birth-trait-row > div:first-child strong { color: var(--cream); font-size: 18px; font-weight: 700; }
+.birth-shell .birth-trait-label { display: inline-flex; align-items: center; gap: 8px; color: var(--cream); }
+.birth-shell .reveal-icon { flex: 0 0 21px; display: inline-block; image-rendering: pixelated; }
+.birth-shell .birth-trait-meter {
+  height: 14px;
+  margin-top: 7px;
+  overflow: hidden;
+  border-radius: 0;
+  background: repeating-linear-gradient(90deg, #27395f 0 10px, transparent 10px 12px);
+}
+.birth-shell .birth-trait-meter i {
+  display: block;
+  height: 14px;
+  border-radius: 0;
+  background: repeating-linear-gradient(90deg, var(--gold) 0 10px, transparent 10px 12px);
+}
+
+.birth-shell .birth-card-details > .primary {
+  position: relative;
+  z-index: 2;
+  align-self: flex-end;
+  min-width: 250px;
+  min-height: 64px;
+  margin: 8px 4px 12px;
+  padding: 12px 30px;
+  border: 0;
+  border-radius: 0;
+  background: var(--gold);
+  box-shadow:
+    0 -4px 0 0 var(--gold-light),
+    -4px 0 0 0 var(--gold-light),
+    0 4px 0 0 #9b6a2f,
+    4px 0 0 0 #9b6a2f;
+  color: var(--navy);
+  font-family: var(--font-main);
+  font-size: 26px;
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .birth-shell { padding-bottom: 170px; }
+  .birth-shell .birth-card-layout { grid-template-columns: 1fr; gap: 22px; }
+  .birth-shell .birth-card-aside { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  .birth-shell .reveal-tower-two,
+  .birth-shell .reveal-tower-four { display: none; }
+  .birth-shell .birth-province-map { height: 180px; }
+}
+
+@media (max-width: 520px) {
+  .birth-shell .birth-card-aside { display: grid; grid-template-columns: 1fr; }
+  .birth-shell .birth-portrait-card { flex-direction: row; text-align: left; }
+  .birth-shell .birth-province-income,
+  .birth-shell .birth-traits,
+  .birth-shell .birth-story-card { padding: 16px; }
+  .birth-shell .birth-income-values { grid-template-columns: 1fr; }
+  .birth-shell .birth-traits { grid-template-columns: 1fr; }
+  .birth-shell .birth-card-details > .primary { align-self: stretch; min-width: 0; }
+  .birth-shell .reveal-decor-skyline { height: 120px; bottom: -170px; }
+}

@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   color-scheme: dark;
   --ink: #F3EBD8;
   --muted: #9FB0C8;
@@ -200,7 +200,8 @@ body {
 .life-screen .sidebar { display: flex; flex-direction: column; }
 .life-screen .profile, .life-screen .household, .life-screen .story, .life-screen .log { background: #16263D; color: #F3EBD8; border-color: #2B3F5C; }
 .life-screen .profile { text-align: left; }
-.life-screen .profile > svg { display: block; margin-inline: auto; }
+.life-screen .profile > svg,
+.life-screen .profile > .portrait { display: flex; margin-inline: auto; image-rendering: pixelated; }
 .life-screen .profile h2 { text-align: center; color: #F3EBD8; font-size: 24px; }
 .life-screen .profile > p { color: #9FB0C8; text-align: center; }
 .life-screen .profile dl dt { color: #C2CDDC; font-size: 14px !important; }
@@ -267,7 +268,7 @@ body {
 :root,
 body,
 .shell {
-  font-family: 'PS Pimpdeed', 'Noto Sans Thai', monospace;
+  font-family: var(--font-main);
   letter-spacing: 0;
 }
 
@@ -306,6 +307,7 @@ body,
 .birth-shell .masthead,
 .life-shell .masthead { margin-bottom: 22px; }
 .life-shell .brand { display: none; }
+.memorial-shell .brand { display: none; }
 .home-shell .home-stripe,
 .birth-card-stripe,
 .life-stripe {
@@ -404,7 +406,7 @@ body,
   box-shadow: none;
 }
 .birth-card-topline { display: flex; justify-content: space-between; align-items: center; gap: 16px; color: #9FB0C8; font-size: 14px; }
-.birth-card-topline strong { color: #F3EBD8; font-family: 'PS Pimpdeed', 'Noto Sans Thai', sans-serif; font-size: 18px; font-weight: 400; }
+.birth-card-topline strong { color: #F3EBD8; font-family: var(--font-main); font-size: 18px; font-weight: 400; }
 .birth-card-layout { display: grid; flex: 1; grid-template-columns: minmax(300px, 380px) minmax(0, 1fr); gap: 40px; }
 .birth-card-aside { display: flex; flex-direction: column; gap: 20px; }
 .birth-portrait-card,
@@ -419,7 +421,7 @@ body,
 .birth-province-map .map-attribution { display: none; }
 .birth-province-income { display: grid; gap: 4px; padding-top: 12px; border-top: 1px solid #2B3F5C; text-align: left; }
 .birth-province-income span { color: #9FB0C8; }
-.birth-province-income > strong { color: #E3B341; font-family: 'PS Pimpdeed', 'Noto Sans Thai', sans-serif; font-size: 26px; font-weight: 400; }
+.birth-province-income > strong { color: #E3B341; font-family: var(--font-main); font-size: 26px; font-weight: 400; }
 .birth-province-income small { color: #9FB0C8; }
 .birth-card-details { display: flex; flex-direction: column; gap: 20px; min-width: 0; padding: 12px 0 4px; }
 .birth-profile-heading { padding: 0; border: 0; }
@@ -568,12 +570,12 @@ body,
 /* Single type family and shared emphasis treatment. */
 :root {
   --font-strong-stroke: 0.5px currentColor;
-  font-family: 'PS Pimpdeed', 'Noto Sans Thai', monospace;
+  font-family: var(--font-main);
   letter-spacing: 0;
 }
 #app,
 #app * {
-  font-family: 'PS Pimpdeed', 'Noto Sans Thai', monospace !important;
+  font-family: var(--font-main);
   letter-spacing: 0 !important;
 }
 :is(h1, h2, h3, button, label, dt, dd, strong, b, .eyebrow, .stage-pill, .world-identity-label, .counter, .reel-current, .birth-name-label, .birth-province-card > strong, .birth-story-chip > span, .birth-province-income span, .birth-trait-row > div:first-child) {
@@ -682,4 +684,25 @@ body,
   .birth-story-card, .birth-province-income, .birth-traits { padding: 14px; }
   .birth-traits { grid-template-columns: 1fr; }
   .birth-shell .birth-card-details > .primary { align-self: stretch; }
+}
+
+.auto-policy,
+.mortality-filter { display: inline-flex; align-items: center; gap: 8px; color: var(--cream, #f6efe0); font-size: 14px; }
+.auto-policy select,
+.mortality-filter select { max-width: 220px; min-height: 36px; padding: 5px 10px; border: 1px solid var(--gold, #e6b23d); border-radius: 8px; background: var(--navy, #0f1a2e); color: var(--cream, #f6efe0); }
+.memorial-death-cause { margin: 0 0 8px; color: var(--gold, #e6b23d); font-size: 20px; font-weight: 700; }
+.death-factors { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0 auto 12px; padding: 0; list-style: none; }
+.death-factors li { padding: 5px 10px; border: 1px solid #c9657f; border-radius: 999px; color: #f6efe0; font-size: 14px; }
+.memorial-decision-mode,.mortality-disclaimer { color: #c8d2e1; font-size: 14px; }
+.mortality-page { width: min(100% - 32px, 900px); margin: 28px auto 64px; padding: clamp(20px, 4vw, 44px); }
+.mortality-page h1 { margin: 0 0 10px; color: var(--gold, #e6b23d); }
+.mortality-filter { margin: 12px 0; }
+.mortality-table { display: grid; gap: 0; margin-top: 16px; }
+.mortality-row { display: grid; grid-template-columns: minmax(0, 1.5fr) repeat(2, minmax(120px, 1fr)); gap: 12px; padding: 10px 12px; border-bottom: 1px solid #3a5380; color: var(--cream, #f6efe0); }
+.mortality-head { color: var(--gold, #e6b23d); }
+.memorial-art > .portrait { position: relative; z-index: 1; display: flex; margin-inline: auto; image-rendering: pixelated; }
+@media (max-width: 640px) {
+  .mortality-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .mortality-row > :last-child { grid-column: 1 / -1; }
+  .life-time-controls .auto-policy { width: 100%; justify-content: space-between; }
 }
