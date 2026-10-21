@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="360" viewBox="0 0 240 90" shape-rendering="crispEdges" role="img" aria-labelledby="title desc">
+  <title id="title">ชีวิต: เรื่องราวหนึ่งชีวิตในภาคอีสาน</title>
+  <desc id="desc">ภาพพิกเซลของบ้านไม้ ทุ่งนา ต้นไม้ และผู้คนในแสงเช้า</desc>
+  <rect width="240" height="90" fill="#d7e5d2"/>
+  <rect y="0" width="240" height="43" fill="#d7e5d2"/>
+  <rect y="43" width="240" height="47" fill="#b8cda9"/>
+  <rect x="177" y="10" width="19" height="19" fill="#f2d394"/>
+  <rect x="182" y="5" width="9" height="5" fill="#f2d394"/>
+  <rect x="172" y="15" width="5" height="9" fill="#f2d394"/>
+  <rect x="196" y="15" width="5" height="9" fill="#f2d394"/>
+
+  <!-- distant tree line -->
+  <rect x="0" y="36" width="240" height="8" fill="#9eae8c"/>
+  <rect x="13" y="28" width="6" height="11" fill="#71876e"/>
+  <rect x="8" y="25" width="16" height="8" fill="#71876e"/>
+  <rect x="5" y="29" width="21" height="7" fill="#82977b"/>
+  <rect x="32" y="33" width="5" height="8" fill="#71876e"/>
+  <rect x="28" y="29" width="13" height="8" fill="#82977b"/>
+  <rect x="219" y="30" width="6" height="12" fill="#71876e"/>
+  <rect x="214" y="26" width="16" height="10" fill="#82977b"/>
+
+  <!-- rice fields -->
+  <rect y="48" width="240" height="12" fill="#81976c"/>
+  <rect y="60" width="240" height="12" fill="#9cab76"/>
+  <rect y="72" width="240" height="18" fill="#6f8664"/>
+  <rect x="0" y="47" width="240" height="2" fill="#d7d6a0"/>
+  <rect x="0" y="59" width="240" height="2" fill="#d7d6a0"/>
+  <rect x="0" y="71" width="240" height="2" fill="#d7d6a0"/>
+  <rect x="9" y="52" width="16" height="2" fill="#adc084"/>
+  <rect x="34" y="55" width="22" height="2" fill="#adc084"/>
+  <rect x="83" y="52" width="19" height="2" fill="#adc084"/>
+  <rect x="119" y="55" width="24" height="2" fill="#adc084"/>
+  <rect x="172" y="52" width="20" height="2" fill="#adc084"/>
+  <rect x="205" y="55" width="25" height="2" fill="#adc084"/>
+  <rect x="17" y="65" width="24" height="2" fill="#c3ce8d"/>
+  <rect x="63" y="64" width="18" height="2" fill="#c3ce8d"/>
+  <rect x="148" y="65" width="24" height="2" fill="#c3ce8d"/>
+  <rect x="190" y="64" width="28" height="2" fill="#c3ce8d"/>
+
+  <!-- wooden stilt house -->
+  <rect x="47" y="34" width="48" height="3" fill="#493e36"/>
+  <rect x="43" y="37" width="56" height="3" fill="#755943"/>
+  <rect x="48" y="40" width="46" height="13" fill="#b27d53"/>
+  <rect x="53" y="43" width="14" height="10" fill="#c48e5c"/>
+  <rect x="72" y="43" width="17" height="10" fill="#9d694a"/>
+  <rect x="77" y="45" width="7" height="8" fill="#473b35"/>
+  <rect x="46" y="39" width="51" height="2" fill="#e0b77a"/>
+  <rect x="52" y="53" width="3" height="15" fill="#594637"/>
+  <rect x="89" y="53" width="3" height="15" fill="#594637"/>
+  <rect x="64" y="53" width="3" height="10" fill="#594637"/>
+  <rect x="47" y="67" width="51" height="2" fill="#594637"/>
+  <rect x="62" y="41" width="2" height="12" fill="#805b43"/>
+  <rect x="51" y="36" width="3" height="4" fill="#d8b27a"/>
+  <rect x="90" y="36" width="3" height="4" fill="#d8b27a"/>
+
+  <!-- small water channel -->
+  <rect x="0" y="79" width="49" height="5" fill="#738f88"/>
+  <rect x="6" y="80" width="14" height="1" fill="#a8c1ad"/>
+  <rect x="28" y="82" width="16" height="1" fill="#a8c1ad"/>
+
+  <!-- three villagers in the game's chibi pixel style -->
+  <g transform="translate(120 25) scale(2.7)">
+    <rect x="5" y="2" width="6" height="1" fill="#49392f"/><rect x="4" y="3" width="8" height="1" fill="#49392f"/>
+    <rect x="3" y="4" width="10" height="2" fill="#806447"/><rect x="2" y="6" width="12" height="1" fill="#806447"/>
+    <rect x="5" y="6" width="6" height="4" fill="#c58d67"/><rect x="4" y="7" width="1" height="2" fill="#c58d67"/><rect x="11" y="7" width="1" height="2" fill="#c58d67"/>
+    <rect x="6" y="7" width="1" height="2" fill="#342d2b"/><rect x="9" y="7" width="1" height="2" fill="#342d2b"/>
+    <rect x="5" y="10" width="6" height="2" fill="#c58d67"/><rect x="4" y="12" width="8" height="5" fill="#53745e"/>
+    <rect x="2" y="13" width="2" height="3" fill="#c58d67"/><rect x="12" y="13" width="2" height="3" fill="#c58d67"/>
+    <rect x="5" y="17" width="3" height="4" fill="#394c55"/><rect x="9" y="17" width="3" height="4" fill="#394c55"/>
+    <rect x="4" y="21" width="4" height="1" fill="#49392f"/><rect x="9" y="21" width="4" height="1" fill="#49392f"/>
+  </g>
+  <g transform="translate(156 32) scale(2.2)">
+    <rect x="4" y="2" width="8" height="2" fill="#49392f"/><rect x="3" y="4" width="10" height="5" fill="#c58d67"/>
+    <rect x="4" y="5" width="1" height="2" fill="#342d2b"/><rect x="10" y="5" width="1" height="2" fill="#342d2b"/>
+    <rect x="3" y="9" width="10" height="2" fill="#c58d67"/><rect x="2" y="11" width="12" height="5" fill="#8b584c"/>
+    <rect x="1" y="12" width="2" height="3" fill="#c58d67"/><rect x="13" y="12" width="2" height="3" fill="#c58d67"/>
+    <rect x="4" y="16" width="3" height="4" fill="#51433c"/><rect x="9" y="16" width="3" height="4" fill="#51433c"/>
+  </g>
+  <g transform="translate(189 40) scale(1.65)">
+    <rect x="5" y="2" width="6" height="2" fill="#49392f"/><rect x="4" y="4" width="8" height="5" fill="#d09b73"/>
+    <rect x="5" y="5" width="1" height="2" fill="#342d2b"/><rect x="10" y="5" width="1" height="2" fill="#342d2b"/>
+    <rect x="4" y="9" width="8" height="2" fill="#d09b73"/><rect x="3" y="11" width="10" height="5" fill="#647b83"/>
+    <rect x="2" y="12" width="2" height="3" fill="#d09b73"/><rect x="12" y="12" width="2" height="3" fill="#d09b73"/>
+    <rect x="5" y="16" width="2" height="4" fill="#394c55"/><rect x="9" y="16" width="2" height="4" fill="#394c55"/>
+  </g>
+
+  <!-- rice shoots and birds -->
+  <rect x="108" y="58" width="2" height="8" fill="#566f4f"/><rect x="104" y="59" width="3" height="2" fill="#748d5a"/><rect x="110" y="57" width="3" height="2" fill="#748d5a"/>
+  <rect x="232" y="55" width="2" height="9" fill="#566f4f"/><rect x="229" y="56" width="3" height="2" fill="#748d5a"/><rect x="234" y="58" width="3" height="2" fill="#748d5a"/>
+  <rect x="139" y="16" width="4" height="1" fill="#71816f"/><rect x="142" y="15" width="2" height="1" fill="#71816f"/>
+  <rect x="151" y="21" width="3" height="1" fill="#71816f"/><rect x="153" y="20" width="2" height="1" fill="#71816f"/>
+</svg>
