@@ -39,4 +39,27 @@ describe('birth story presentation', () => {
     }
     expect(familyStories.size).toBe(balance.householdTypes.length)
   })
+
+  it('uses generated relatives, household circumstances, and trait rolls in the story', () => {
+    const person = rollBirth(532916, 2026).person
+    const sibling = person.relatives.find(relative => relative.role === 'sibling')
+    const story = buildBirthStory(person, new Date(2026, 9, 20, 12))
+    const familyText = story.paragraphs[1]
+
+    expect(familyText).toContain(person.birthOrder === 1 && person.siblingCount === 0 ? 'ลูกคนเดียว' : `คนที่ ${person.birthOrder}`)
+    if (sibling) expect(familyText).toContain(sibling.name)
+    if (person.householdLandRai > 0) expect(familyText).toContain(`${person.householdLandRai} ไร่`)
+    if (person.debt > 0) expect(familyText).toContain('หนี้')
+    expect(story.paragraphs[2]).not.toContain('{')
+  })
+
+  it('produces a broader set of deterministic stories across seeds', () => {
+    const date = new Date(2026, 9, 20, 12)
+    const stories = Array.from({ length: 80 }, (_, seed) => {
+      const person = rollBirth(seed + 1000, 2026).person
+      return buildBirthStory(person, date).paragraphs.join(' ')
+    })
+
+    expect(new Set(stories).size).toBeGreaterThan(70)
+  })
 })

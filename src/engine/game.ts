@@ -4,7 +4,8 @@ import { ui } from '../content/ui'
 import { evaluateCondition } from './conditions'
 import { mulberry32 } from './rng'
 import { buildMemorial } from '../content/chronicle'
-import type { BirthRoll, Card, Choice, LifeState, Person, Relative, Stage } from './types'
+import type { AutoPolicy, BirthRoll, Card, Choice, DeathCause, LifeState, Person, Relative, Stage } from './types'
+import { chooseDeathCause, mortalityDraw } from './mortality'
 
 const int = (rng: () => number, min: number, max: number) => min + Math.floor(rng() * (max - min + 1))
 const pick = <T>(rng: () => number, list: readonly T[]): T => list[Math.floor(rng() * list.length)]!
@@ -37,25 +38,28 @@ function setStage(s: LifeState): void { s.person.stage=stageFor(s.year-s.person.
 export function eligibleCards(s: LifeState,cards: Card[]=defaultCards): Card[] {
   return cards.filter(c=>(Array.isArray(c.stage)?c.stage.includes(s.person.stage):c.stage===s.person.stage)&&!s.playedCards.includes(c.id)&&evaluateCondition(c.when,s)&&(!c.pinnedYear||c.pinnedYear===s.year))
 }
+export function cardWeightForState(card: Card,s: LifeState): number {
+  return (card.weightMods ?? []).reduce((weight,modifier)=>evaluateCondition(modifier.when,s)?weight*modifier.mult:weight,card.weight)
+}
 export function beginTurn(s: LifeState,cards: Card[]=defaultCards): void {
   if(s.status!=='playing'||s.currentCardIds.length) return
   const rng=random(s); const pool=eligibleCards(s,cards)
   if(rng()<b.annual.quietYearChance||!pool.length) return
-  const draw=():Card=>{let roll=rng()*pool.reduce((n,c)=>n+c.weight,0);const index=pool.findIndex(c=>(roll-=c.weight)<0);return pool.splice(Math.max(0,index),1)[0]!}
+  const draw=():Card=>{let roll=rng()*pool.reduce((n,c)=>n+cardWeightForState(c,s),0);const index=pool.findIndex(c=>(roll-=cardWeightForState(c,s))<0);return pool.splice(Math.max(0,index),1)[0]!}
   const selected=[draw()]
   if(pool.length&&rng()<b.annual.secondEventChance)selected.push(draw())
   s.currentCardIds=selected.map(c=>c.id)
 }
-function finish(s: LifeState): void {
-  const p=s.person; p.alive=false;p.deathYear=s.year;s.status='dead'
+function finish(s: LifeState, cause: DeathCause = 'other', factors: string[] = []): void {
+  const p=s.person; p.alive=false;p.deathYear=s.year;p.deathAge=Math.max(0,s.year-p.birthYear);p.deathCause=cause;p.deathFactors=factors.slice(0,3);s.status='dead'
   s.memorial=buildMemorial(p,s.year,s.log)
 }
 function annual(s: LifeState): void {
   const p=s.person, rng=random(s); s.year++; const age=s.year-p.birthYear; setStage(s)
   p.relatives.forEach(r=>{if(r.alive){r.age++; if(r.age>b.relativeLife.deathAge || rng()<Math.max(b.annual.relativeDeathBase,(r.age-b.annual.relativeAgeGate)*b.annual.relativeDeathPerYear)) r.alive=false; if(!r.migrated&&age>b.annual.migrationMinAge&&rng()<b.relativeLife.migrationChance)r.migrated=true; if(!r.married&&r.age>=b.relativeLife.marriageAge&&rng()<b.relativeLife.marriageChance)r.married=true}})
   p.health=clamp(p.health-b.annual.healthDecay-rng()*b.annual.healthVariation+(p.householdType==='ทำนา'&&age<b.annual.harvestAgeLimit?b.annual.farmHealth:0)); p.money=clamp(p.money+rng()*b.annual.moneyRange-b.annual.moneyRange/2); p.householdMoney=clamp(p.householdMoney+b.annual.householdIncome+(p.householdType==='ทำนา'?p.householdLandRai*b.annual.riceIncomePerRai:0)+(p.migrated?b.annual.migrantRemittance:0)); if(p.migrated)p.remittancesSent+=b.annual.migrantRemittance; p.debt=clamp(p.debt*(1+b.annual.debtInterest));p.personalDebt=clamp(p.personalDebt*(1+b.annual.debtInterest))
-  const mortality=age>=b.maxAge?1:Math.min(b.mortality.maxChance,(age<b.mortality.age50At?b.mortality.base:age<b.mortality.age65At?b.mortality.age50:age<b.mortality.age80At?b.mortality.age65:b.mortality.age80)+(b.maxStat-p.health)/b.mortality.healthDivisor+(1-s.region.hospitalAccess)*b.mortality.accessRisk)
-  if(rng()<mortality) finish(s)
+  const mortality=mortalityDraw(s)
+  if(rng()<mortality.probability) finish(s,chooseDeathCause(rng,mortality.causes),mortality.factors)
   if(age===b.childFarmWorkAge&&p.householdType==='ทำนา')p.occupation=occupations.farmWork
   if(age>=b.annual.workMinAge&&p.occupation==='')p.occupation=p.householdType
   if(p.flags.migrated&&!p.migrated){p.migrated=true;p.location=b.migrationDestinations.bangkok;p.occupation=occupations.urbanWork}
@@ -69,13 +73,33 @@ export function applyEffects(s: LifeState,effects: Choice['effects']): void {
     else if(typeof e.target==='object'){const role=(e.target as {relativeRole:string}).relativeRole;const r=p.relatives.find(x=>x.role===role);if(r&&e.key==='health')r.health=clamp(r.health+e.delta);if(r&&e.key==='relationships')r.relationship=clamp(r.relationship+e.delta)}
   }
 }
-export function choose(s: LifeState,card: Card,choice: Choice): void {
+export function choose(s: LifeState,card: Card,choice: Choice,mode: 'manual'|'auto' = 'manual'): void {
   if(!s.currentCardIds.includes(card.id))throw new Error(ui.gameErrors.inactiveCard)
   if(!evaluateCondition(choice.requires,s))throw new Error(ui.gameErrors.unavailableChoice)
   const modifierEffects=choice.modifiers?.filter(m=>evaluateCondition(m.when,s)).flatMap(m=>m.effects)??[]
   applyEffects(s,[...choice.effects,...modifierEffects]); choice.setFlags?.forEach(flag=>{s.person.flags[flag]=true;if(flag==='migrated'||flag==='migrated-east'){s.person.migrated=true;s.person.location=flag==='migrated-east'?b.migrationDestinations.east:b.migrationDestinations.bangkok;s.person.occupation=occupations.urbanWork}if(flag==='returnedHome'){s.person.migrated=false;s.person.flags.migrated=false;s.person.location=s.person.province;s.person.occupation=occupations.farmWork}if(flag==='partnered')s.person.partnered=true;if(flag==='hasChild')s.person.children++;if(flag==='metUrbanCoworker'||flag==='metThaiChineseShopkeeper')addMetPerson(s,flag)})
+  if(mode==='auto')s.person.autoDecisions=(s.person.autoDecisions??0)+1
+  else s.person.manualDecisions=(s.person.manualDecisions??0)+1
   s.log.push({year:s.year,title:card.title,text:choice.label,cardId:card.id}); if(card.once&&!s.playedCards.includes(card.id))s.playedCards.push(card.id)
   s.currentCardIds.shift()
+}
+export function chooseAuto(s: LifeState,card: Card,policy: AutoPolicy = 'neutral'): Choice | undefined {
+  const choices=card.choices.filter(choice=>evaluateCondition(choice.requires,s))
+  if(!choices.length)return undefined
+  let candidates=choices
+  if(policy==='preserveMoney'){
+    const score=(choice:Choice)=>choice.effects.reduce((sum,effect)=>sum+(effect.key==='money'?effect.delta:effect.key==='debt'||effect.key==='personalDebt'?-effect.delta:0),0)
+    const best=Math.max(...choices.map(score));candidates=choices.filter(choice=>score(choice)===best)
+  } else if(policy==='prioritizeStudy'){
+    const score=(choice:Choice)=>choice.effects.reduce((sum,effect)=>sum+(effect.key==='knowledge'?effect.delta:0),0)
+    const best=Math.max(...choices.map(score));candidates=choices.filter(choice=>score(choice)===best)
+  } else if(policy==='returnHome'){
+    const home=choices.filter(choice=>choice.setFlags?.includes('returnedHome'))
+    if(home.length)candidates=home
+  }
+  const selected=candidates[Math.floor(random(s)()*candidates.length)]!
+  choose(s,card,selected,'auto')
+  return selected
 }
 function addMetPerson(s: LifeState, flag: string): void {
   if(s.metPeople.some(person=>person.id.endsWith(flag)))return
@@ -93,9 +117,9 @@ export function resolveAutoCard(s:LifeState,card:Card):void {
   if(card.once&&!s.playedCards.includes(card.id))s.playedCards.push(card.id)
   s.currentCardIds.shift()
 }
-export function simulateLife(seed:number,cards:Card[]=defaultCards):LifeState {
+export function simulateLife(seed:number,cards:Card[]=defaultCards,options:{decisionMode?:'manual'|'auto';autoPolicy?:AutoPolicy}={}):LifeState {
   const s=createLife(seed); let guard=0
-  while(s.status==='playing'&&guard++<b.maxAge+1){beginTurn(s,cards);if(s.currentCardIds.length){const c=cards.find(x=>x.id===s.currentCardIds[0])!;const ch=c.choices.find(x=>evaluateCondition(x.requires,s))??c.choices[0];if(c.auto)resolveAutoCard(s,c);else if(ch)choose(s,c,ch)}advanceYear(s,cards)}
+  while(s.status==='playing'&&guard++<b.maxAge.value+1){beginTurn(s,cards);if(s.currentCardIds.length){const c=cards.find(x=>x.id===s.currentCardIds[0])!;const ch=c.choices.find(x=>evaluateCondition(x.requires,s))??c.choices[0];if(c.auto)resolveAutoCard(s,c);else if(options.decisionMode==='auto')chooseAuto(s,c,options.autoPolicy);else if(ch)choose(s,c,ch)}advanceYear(s,cards)}
   if(s.status==='playing')finish(s)
   return s
 }

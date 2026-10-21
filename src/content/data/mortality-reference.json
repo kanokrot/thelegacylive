@@ -1,0 +1,193 @@
+{
+  "sourceId": "MORT01",
+  "year": 2023,
+  "unit": "deaths per 100,000 midyear population",
+  "provenance": { "type": "sourced", "sourceId": "MORT01", "year": 2023, "ageBands": "as reported in each observation" },
+  "notes": [
+    "These are observed rates reported in the source, not annual game probabilities.",
+    "Age bands follow the source's reported age groups. Do not redistribute them into different bands.",
+    "Zone entries list only the reported highest zones; omitted zones are not zero."
+  ],
+  "modelParameters": [
+    { "id": "allCauseAgeSexBaseline", "provenance": { "type": "sourced", "sourceId": "MORT07", "year": 2023, "ageBands": ["0-4", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65+"] } },
+    { "id": "causeDistributionByCause", "provenance": { "type": "sourced", "sourceId": "MORT01", "year": 2023, "ageBands": ["as reported per cause"] } },
+    { "id": "causeMixOutsideReportedAgeBands", "provenance": { "type": "calibrated", "sourceId": "MORT01", "year": 2023, "ageBands": ["all ages when no matching cause-specific band is reported"], "method": "Use each cause's national sex-specific rate only as its relative weight when no age match exists. Keep the all-age residual as other; these weights select a cause conditional on death and do not alter the NSO age-sex all-cause hazard." } },
+    { "id": "sexLifeExpectancyScale", "provenance": { "type": "calibrated", "sourceId": "MORT04", "year": 2024, "ageBands": ["birth"], "method": "Multiply each sex's NSO age-sex band rate by one constant found by binary search to match the cited life expectancy." } },
+    { "id": "otherGenderHazard", "provenance": { "type": "design", "reason": "Use the arithmetic mean of the male and female calibrated hazards because no separate reference rate is available." } }
+  ],
+  "observations": [
+    {
+      "cause": "copd",
+      "provenance": { "type": "sourced", "sourceId": "MORT01", "year": 2023, "ageBands": ["60+"] },
+      "national": { "total": 9.51, "male": 15.64, "female": 3.67 },
+      "ageSex": [
+        { "ageBand": "60+", "male": 80.78 },
+        { "ageBand": "60+", "female": 16.39 }
+      ],
+      "healthZones": [{ "zone": 1, "rate": 21.72 }, { "zone": 2, "rate": 13.92 }, { "zone": 3, "rate": 13.35 }]
+    },
+    {
+      "cause": "liverDisease",
+      "provenance": { "type": "sourced", "sourceId": "MORT01", "year": 2023, "ageBands": ["45-59", "60+"] },
+      "national": { "total": 16.72, "male": 24.35, "female": 9.45 },
+      "ageSex": [
+        { "ageBand": "45-59", "male": 51.48 },
+        { "ageBand": "60+", "male": 45.89 }
+      ],
+      "healthZones": [{ "zone": 9, "rate": 25.62 }, { "zone": 7, "rate": 23.06 }, { "zone": 2, "rate": 23.04 }]
+    },
+    {
+      "cause": "diabetes",
+      "provenance": { "type": "sourced", "sourceId": "MORT01", "year": 2023, "ageBands": ["60+"] },
+      "national": { "total": 22.03, "male": 19.69, "female": 24.27 },
+      "ageSex": [
+        { "ageBand": "60+", "male": 79.33 },
+        { "ageBand": "60+", "female": 96.17 }
+      ],
+      "healthZones": [{ "zone": 7, "rate": 41.79 }, { "zone": 8, "rate": 33.84 }, { "zone": 10, "rate": 25.7 }]
+    },
+    {
+      "cause": "ischemicHeartDisease",
+      "provenance": { "type": "sourced", "sourceId": "MORT01", "year": 2023, "ageBands": ["60+"] },
+      "national": { "total": 33.53, "male": 43.44, "female": 24.1 },
+      "ageSex": [
+        { "ageBand": "60+", "male": 155.1 },
+        { "ageBand": "60+", "female": 94.83 }
+      ],
+      "healthZones": [{ "zone": 3, "rate": 43.72 }, { "zone": 4, "rate": 42.22 }, { "zone": 2, "rate": 41.14 }]
+    },
+    {
+      "cause": "stroke",
+      "provenance": { "type": "sourced", "sourceId": "MORT01", "year": 2023, "ageBands": ["60+"] },
+      "national": { "total": 58.3, "male": 69.71, "female": 47.45 },
+      "ageSex": [
+        { "ageBand": "60+", "male": 247.09 },
+        { "ageBand": "60+", "female": 177.14 }
+      ],
+      "healthZones": [{ "zone": 3, "rate": 78.75 }, { "zone": 2, "rate": 71.26 }, { "zone": 9, "rate": 65.79 }]
+    },
+    {
+      "cause": "chronicKidneyDisease",
+      "provenance": { "type": "sourced", "sourceId": "MORT01", "year": 2023, "ageBands": ["60+"] },
+      "national": { "total": 17.21, "male": 16.69, "female": 17.7 },
+      "ageSex": [
+        { "ageBand": "60+", "male": 70.29 },
+        { "ageBand": "60+", "female": 69.04 }
+      ],
+      "healthZones": [{ "zone": 7, "rate": 26.74 }, { "zone": 1, "rate": 26.68 }, { "zone": 10, "rate": 23.88 }]
+    },
+    {
+      "cause": "liverAndBileDuctCancer",
+      "provenance": { "type": "sourced", "sourceId": "MORT01", "year": 2023, "ageBands": ["45-59", "60+"] },
+      "national": { "total": 23, "male": 33.93, "female": 12.6 },
+      "ageSex": [
+        { "ageBand": "60+", "male": 117.2 },
+        { "ageBand": "45-59", "male": 49.36 },
+        { "ageBand": "60+", "female": 45.13 }
+      ],
+      "healthZones": [{ "zone": 8, "rate": 35.68 }, { "zone": 7, "rate": 35.5 }, { "zone": 2, "rate": 31.54 }]
+    },
+    {
+      "cause": "lungCancer",
+      "provenance": { "type": "sourced", "sourceId": "MORT01", "year": 2023, "ageBands": ["60+"] },
+      "national": { "total": 23.04, "male": 29.73, "female": 16.68 },
+      "ageSex": [
+        { "ageBand": "60+", "male": 128.3 },
+        { "ageBand": "60+", "female": 57.13 }
+      ],
+      "healthZones": [{ "zone": 1, "rate": 35.58 }, { "zone": 2, "rate": 26.45 }, { "zone": 3, "rate": 26.08 }]
+    },
+    {
+      "cause": "colorectalCancer",
+      "provenance": { "type": "sourced", "sourceId": "MORT01", "year": 2023, "ageBands": ["60+"] },
+      "national": { "total": 8.86, "male": 10.4, "female": 7.39 },
+      "ageSex": [
+        { "ageBand": "60+", "male": 42.58 },
+        { "ageBand": "60+", "female": 24.63 }
+      ],
+      "healthZones": [{ "zone": 13, "rate": 14.06 }, { "zone": 4, "rate": 12.42 }, { "zone": 3, "rate": 12.1 }]
+    },
+    {
+      "cause": "breastCancer",
+      "provenance": { "type": "sourced", "sourceId": "MORT01", "year": 2023, "ageBands": ["45-59", "60+"] },
+      "national": { "total": 7.6, "female": 14.75 },
+      "ageSex": [
+        { "ageBand": "60+", "female": 32.26 },
+        { "ageBand": "45-59", "female": 25.25 }
+      ],
+      "healthZones": [{ "zone": 13, "rate": 10.33 }, { "zone": 3, "rate": 9.17 }, { "zone": 4, "rate": 8.78 }, { "zone": 10, "rate": 5.65 }]
+    },
+    {
+      "cause": "roadTraffic",
+      "provenance": { "type": "sourced", "sourceId": "MORT01", "year": 2023, "ageBands": ["15-29", "30-44", "60+"] },
+      "national": { "total": 25.96, "male": 41.07, "female": 11.58 },
+      "ageSex": [
+        { "ageBand": "60+", "male": 54.87 },
+        { "ageBand": "15-29", "male": 52.89 },
+        { "ageBand": "30-44", "male": 42.33 }
+      ],
+      "healthZones": [{ "zone": 3, "rate": 33.86 }, { "zone": 1, "rate": 30.84 }, { "zone": 5, "rate": 30.44 }]
+    },
+    {
+      "cause": "drowning",
+      "provenance": { "type": "sourced", "sourceId": "MORT01", "year": 2023, "ageBands": ["5-14", "45-59", "60+"] },
+      "national": { "total": 5.95, "male": 10.04, "female": 2.06 },
+      "ageSex": [
+        { "ageBand": "60+", "male": 15.01 },
+        { "ageBand": "45-59", "male": 14.22 },
+        { "ageBand": "5-14", "male": 8.82 }
+      ],
+      "healthZones": [{ "zone": 7, "rate": 9.11 }, { "zone": 9, "rate": 9.01 }, { "zone": 10, "rate": 8.46 }]
+    },
+    {
+      "cause": "suicide",
+      "provenance": { "type": "sourced", "sourceId": "MORT01", "year": 2023, "ageBands": ["30-44", "45-59", "60+"] },
+      "national": { "total": 10.63, "male": 17.42, "female": 4.18 },
+      "ageSex": [
+        { "ageBand": "30-44", "male": 24.12 },
+        { "ageBand": "60+", "male": 23.27 },
+        { "ageBand": "45-59", "male": 21.89 }
+      ],
+      "healthZones": []
+    }
+  ],
+  "unavailable": [
+    { "item": "neonatalCauseByAgeSexZone", "value": "TODO(verify)" },
+    { "item": "maternalMortalityByAgeAndHealthZone", "value": "TODO(verify)" },
+    { "item": "allCauseMortalityByRequestedAgeBandsSexAndHealthZone", "value": "TODO(verify)" },
+    { "item": "householdSeasonAndProvinceRiskAdjustments", "value": "TODO(verify)" },
+    { "item": "motorcycleSpecificRatesByAgeSexAndHealthZone", "value": "TODO(verify)" }
+  ],
+  "calibration": {
+    "sourceId": "MORT07",
+    "year": 2023,
+    "unit": "annual deaths divided by registered population in the same age and sex band",
+    "provenance": { "type": "calibrated", "sourceId": "MORT07", "year": 2023, "ageBands": ["0-4", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65+"] },
+    "lifeExpectancyTargets": {
+      "male": { "years": 71.9, "sourceId": "MORT04", "year": 2024, "provenance": { "type": "sourced", "sourceId": "MORT04", "year": 2024, "ageBands": ["birth"] } },
+      "female": { "years": 80.0, "sourceId": "MORT04", "year": 2024, "provenance": { "type": "sourced", "sourceId": "MORT04", "year": 2024, "ageBands": ["birth"] } }
+    },
+    "allCauseRateInputs": {
+      "male": { "deaths": 310731, "population": 32224008, "provenance": { "type": "sourced", "sourceId": "MORT07", "year": 2023, "ageBands": ["all ages"] } },
+      "female": { "deaths": 241919, "population": 33828607, "provenance": { "type": "sourced", "sourceId": "MORT07", "year": 2023, "ageBands": ["all ages"] } },
+      "provenance": { "type": "sourced", "sourceId": "MORT07", "year": 2023, "ageBands": ["all ages"] }
+    },
+    "rawProvenance": { "type": "sourced", "sourceId": "MORT07", "year": 2023, "ageBands": ["0-4", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65+"] },
+    "bands": [
+      { "ageBand": "0-4", "maleDeaths": 2066, "malePopulation": 1419132, "femaleDeaths": 1634, "femalePopulation": 1338890, "provenance": { "type": "sourced", "sourceId": "MORT07", "year": 2023, "ageBands": ["0-4"] } },
+      { "ageBand": "5-9", "maleDeaths": 591, "malePopulation": 1850936, "femaleDeaths": 399, "femalePopulation": 1750034, "provenance": { "type": "sourced", "sourceId": "MORT07", "year": 2023, "ageBands": ["5-9"] } },
+      { "ageBand": "10-14", "maleDeaths": 1125, "malePopulation": 2038420, "femaleDeaths": 644, "femalePopulation": 1926861, "provenance": { "type": "sourced", "sourceId": "MORT07", "year": 2023, "ageBands": ["10-14"] } },
+      { "ageBand": "15-19", "maleDeaths": 2423, "malePopulation": 2067590, "femaleDeaths": 886, "femalePopulation": 1961949, "provenance": { "type": "sourced", "sourceId": "MORT07", "year": 2023, "ageBands": ["15-19"] } },
+      { "ageBand": "20-24", "maleDeaths": 3219, "malePopulation": 2097432, "femaleDeaths": 1079, "femalePopulation": 2004584, "provenance": { "type": "sourced", "sourceId": "MORT07", "year": 2023, "ageBands": ["20-24"] } },
+      { "ageBand": "25-29", "maleDeaths": 4698, "malePopulation": 2447813, "femaleDeaths": 1519, "femalePopulation": 2360145, "provenance": { "type": "sourced", "sourceId": "MORT07", "year": 2023, "ageBands": ["25-29"] } },
+      { "ageBand": "30-34", "maleDeaths": 6096, "malePopulation": 2406291, "femaleDeaths": 2000, "femalePopulation": 2349828, "provenance": { "type": "sourced", "sourceId": "MORT07", "year": 2023, "ageBands": ["30-34"] } },
+      { "ageBand": "35-39", "maleDeaths": 8073, "malePopulation": 2307815, "femaleDeaths": 2850, "femalePopulation": 2300006, "provenance": { "type": "sourced", "sourceId": "MORT07", "year": 2023, "ageBands": ["35-39"] } },
+      { "ageBand": "40-44", "maleDeaths": 12733, "malePopulation": 2513547, "femaleDeaths": 4734, "femalePopulation": 2560787, "provenance": { "type": "sourced", "sourceId": "MORT07", "year": 2023, "ageBands": ["40-44"] } },
+      { "ageBand": "45-49", "maleDeaths": 17934, "malePopulation": 2494417, "femaleDeaths": 6953, "femalePopulation": 2625168, "provenance": { "type": "sourced", "sourceId": "MORT07", "year": 2023, "ageBands": ["45-49"] } },
+      { "ageBand": "50-54", "maleDeaths": 22326, "malePopulation": 2441366, "femaleDeaths": 10106, "femalePopulation": 2676888, "provenance": { "type": "sourced", "sourceId": "MORT07", "year": 2023, "ageBands": ["50-54"] } },
+      { "ageBand": "55-59", "maleDeaths": 27161, "malePopulation": 2303050, "femaleDeaths": 13572, "femalePopulation": 2616419, "provenance": { "type": "sourced", "sourceId": "MORT07", "year": 2023, "ageBands": ["55-59"] } },
+      { "ageBand": "60-64", "maleDeaths": 31125, "malePopulation": 1939333, "femaleDeaths": 17246, "femalePopulation": 2258564, "provenance": { "type": "sourced", "sourceId": "MORT07", "year": 2023, "ageBands": ["60-64"] } },
+      { "ageBand": "65+", "maleDeaths": 171159, "malePopulation": 3896852, "femaleDeaths": 178293, "femalePopulation": 5098468, "provenance": { "type": "sourced", "sourceId": "MORT07", "year": 2023, "ageBands": ["65+"] } }
+    ]
+  }
+}

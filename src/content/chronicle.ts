@@ -1,4 +1,5 @@
 import type { Person } from '../engine/types'
+import type { DeathCause } from '../engine/types'
 
 const summaryByCard: Record<string, string> = {
   'school-start': 'เริ่มเรียนรู้จากโรงเรียนใกล้บ้าน',
@@ -15,9 +16,36 @@ const summaryByCard: Record<string, string> = {
   'inheritance': 'ร่วมตกลงเรื่องทรัพย์สินในครอบครัว',
 }
 
+const ageLines: Record<'child'|'adult'|'elder', [string,string]> = {
+  child: ['จากไปตั้งแต่วัยเยาว์ ท่ามกลางความรักของคนรอบตัว', 'ชีวิตสิ้นสุดลงในวัยเยาว์ โดยมีครอบครัวและชุมชนร่วมระลึกถึง'],
+  adult: ['จากไปในช่วงวัยทำงาน หลังผ่านเรื่องราวหลายอย่างในชีวิต', 'ชีวิตเดินทางมาถึงปลายทางในวัยผู้ใหญ่ ท่ามกลางความผูกพันที่สร้างไว้'],
+  elder: ['จากไปในวัยสูงอายุ พร้อมเรื่องราวที่คนรอบข้างยังจดจำ', 'ชีวิตเดินทางมาถึงปลายทางในวัยสูงอายุ ท่ามกลางความทรงจำของครอบครัว'],
+}
+const causeLines: Record<DeathCause, [string,string]> = {
+  copd: ['สาเหตุการเสียชีวิตเกี่ยวข้องกับโรคปอดอุดกั้นเรื้อรัง', 'การเสียชีวิตสัมพันธ์กับโรคปอดเรื้อรัง'],
+  liverDisease: ['สาเหตุการเสียชีวิตเกี่ยวข้องกับโรคตับ', 'การเสียชีวิตสัมพันธ์กับโรคของตับ'],
+  diabetes: ['สาเหตุการเสียชีวิตเกี่ยวข้องกับโรคเบาหวาน', 'การเสียชีวิตสัมพันธ์กับโรคเบาหวาน'],
+  ischemicHeartDisease: ['สาเหตุการเสียชีวิตเกี่ยวข้องกับโรคหัวใจขาดเลือด', 'การเสียชีวิตสัมพันธ์กับโรคหัวใจ'],
+  stroke: ['สาเหตุการเสียชีวิตเกี่ยวข้องกับโรคหลอดเลือดสมอง', 'การเสียชีวิตสัมพันธ์กับโรคหลอดเลือดสมอง'],
+  chronicKidneyDisease: ['สาเหตุการเสียชีวิตเกี่ยวข้องกับโรคไตเรื้อรัง', 'การเสียชีวิตสัมพันธ์กับโรคไตเรื้อรัง'],
+  liverAndBileDuctCancer: ['สาเหตุการเสียชีวิตเกี่ยวข้องกับมะเร็งตับและท่อน้ำดี', 'การเสียชีวิตสัมพันธ์กับมะเร็งตับหรือท่อน้ำดี'],
+  lungCancer: ['สาเหตุการเสียชีวิตเกี่ยวข้องกับมะเร็งปอด', 'การเสียชีวิตสัมพันธ์กับมะเร็งปอด'],
+  colorectalCancer: ['สาเหตุการเสียชีวิตเกี่ยวข้องกับมะเร็งลำไส้ใหญ่', 'การเสียชีวิตสัมพันธ์กับมะเร็งลำไส้ใหญ่'],
+  breastCancer: ['สาเหตุการเสียชีวิตเกี่ยวข้องกับมะเร็งเต้านม', 'การเสียชีวิตสัมพันธ์กับมะเร็งเต้านม'],
+  roadTraffic: ['สาเหตุการเสียชีวิตมาจากอุบัติเหตุทางถนน', 'การเสียชีวิตเกิดจากอุบัติเหตุบนท้องถนน'],
+  drowning: ['สาเหตุการเสียชีวิตมาจากการจมน้ำ', 'การเสียชีวิตเกิดจากเหตุจมน้ำ'],
+  suicide: ['สาเหตุการเสียชีวิตเกี่ยวข้องกับการฆ่าตัวตาย', 'การเสียชีวิตสัมพันธ์กับการฆ่าตัวตาย'],
+  other: ['สาเหตุการเสียชีวิตอยู่ในกลุ่มสาเหตุอื่น', 'การเสียชีวิตมาจากสาเหตุอื่นที่แบบจำลองไม่ได้แจกแจง'],
+  unknown: ['ไม่มีข้อมูลสาเหตุการเสียชีวิตในบันทึกชีวิตนี้', 'บันทึกชีวิตนี้ไม่มีข้อมูลสาเหตุการเสียชีวิต'],
+}
+
 export function buildMemorial(person: Person, year: number, log: Array<{ title: string; text: string; cardId?: string }>): string {
   const moments = log.flatMap(event => event.cardId && summaryByCard[event.cardId] ? [summaryByCard[event.cardId]!] : [])
   const unique = [...new Set(moments)].slice(-2)
   const story = unique.length ? unique.join(' และ ') : 'ใช้ชีวิตท่ามกลางผู้คนและบ้านเกิด'
-  return `${person.name} เกิดที่${person.province} มีชีวิตอยู่ ${year - person.birthYear} ปี ${story}`
+  const age = person.deathAge ?? year - person.birthYear
+  const ageGroup = age < 15 ? 'child' : age < 60 ? 'adult' : 'elder'
+  const variant = (person.id.codePointAt(0) ?? 0) % 2
+  const cause = causeLines[person.deathCause ?? 'unknown'][variant]!
+  return `${person.name} เกิดที่${person.province} มีชีวิตอยู่ ${age} ปี ${story} ${ageLines[ageGroup][variant]} ${cause}`
 }

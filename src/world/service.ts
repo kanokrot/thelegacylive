@@ -25,7 +25,7 @@ export class SimulatedWorld implements WorldService {
     this.lives=Array.from({length:count},(_,i)=>{
       const state=createLife(seed+i*104729+17011)
       let guard=0
-      while(state.status==='playing'&&state.year<this.worldYear&&guard++<balance.maxAge){
+      while(state.status==='playing'&&state.year<this.worldYear&&guard++<balance.maxAge.value){
         beginTurn(state,cards)
         if(state.currentCardIds[0]){const card=cards.find(item=>item.id===state.currentCardIds[0]);const choice=card?.choices[0];if(card?.auto)resolveAutoCard(state,card);else if(card&&choice)choose(state,card,choice)}
         advanceYear(state,cards)

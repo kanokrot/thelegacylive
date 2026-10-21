@@ -1,5 +1,8 @@
 ﻿import { balance } from './balance'
 import type { Card, Condition, RegionProfile } from '../engine/types'
+import { isanFamilyMoneyCards } from './isanFamilyMoneyCards'
+import { isanHouseholdThreadCards } from './isanHouseholdThreadCards'
+import healthZoneData from './data/isan-health-zones.json'
 
 export { balance }
 export { isanHouseholds2023, isanHouseholds2023Source } from './data/isan-households-2023'
@@ -20,7 +23,8 @@ export const surnames = ['นาดี', 'แสนสุข', 'บุญช่�
 export const birthRevealLabels = ['เพศ','ปีเกิด','จังหวัด','ครอบครัว','พี่น้อง','สุขภาพแรกเกิด','พรสวรรค์','ความขยัน','นิสัยใจคอ','ชื่อ'] as const
 export const occupations = { farmWork:'ช่วยงานนา', urbanWork:'งานรับจ้างในเมือง', migrantRelative:'แรงงานย้ายถิ่น' }
 export const provinces = ['กาฬสินธุ์', 'ขอนแก่น', 'ชัยภูมิ', 'นครพนม', 'นครราชสีมา', 'บึงกาฬ', 'บุรีรัมย์', 'มหาสารคาม', 'มุกดาหาร', 'ยโสธร', 'ร้อยเอ็ด', 'เลย', 'ศรีสะเกษ', 'สกลนคร', 'สุรินทร์', 'หนองคาย', 'หนองบัวลำภู', 'อำนาจเจริญ', 'อุดรธานี', 'อุบลราชธานี']
-export const regions: RegionProfile[] = provinces.map((name, i) => ({ id: `isan-${i}`, name, schoolAccess: balance.access.school, hospitalAccess: balance.access.hospital, jobAccess: balance.access.jobs }))
+const healthZoneByProvince = new Map(Object.entries(healthZoneData.zones).flatMap(([zone, names]) => names.map(name => [name, Number(zone)] as const)))
+export const regions: RegionProfile[] = provinces.map((name, i) => ({ id: `isan-${i}`, name, schoolAccess: balance.access.school, hospitalAccess: balance.access.hospital, jobAccess: balance.access.jobs, healthZone: healthZoneByProvince.get(name) }))
 
 const ageWindow = (range:readonly [number,number]):Condition => ({all:[{age:'>=',value:range[0]},{age:'<=',value:range[1]}]})
 const S = (key: 'health'|'wellbeing'|'knowledge'|'relationships'|'careBurden'|'aptitude'|'diligence'|'temperament', delta: number) => ({ target: 'self' as const, key, delta: balance.eventDeltas[key][String(delta)]! })
@@ -166,4 +170,4 @@ function genderModifiers(reason: string, female: Card['choices'][number]['effect
     {when:{gender:'อื่น ๆ'},effects:[other],narration:`${reason}: ตามบริบทของผู้มีเพศอื่น ๆ`},
   ]
 }
-export const cards = [...extra, ...routineCards]
+export const cards = [...extra, ...routineCards, ...isanFamilyMoneyCards, ...isanHouseholdThreadCards]
