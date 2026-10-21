@@ -28,5 +28,6 @@ const accessText = (value: number) => `${Math.round(value * 100)}%`
     </div>
     <p class="recent">{{ ui.recently }}<b>{{ recentProvince }}</b></p>
     <p class="access-note">{{ ui.school }} {{ accessText(balance.access.school) }} · {{ ui.hospital }} {{ accessText(balance.access.hospital) }} · {{ ui.jobs }} {{ accessText(balance.access.jobs) }}</p>
+    <span class="world-ticket-edge" />
   </aside>
 </template>
