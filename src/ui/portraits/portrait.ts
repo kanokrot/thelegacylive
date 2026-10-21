@@ -1,21 +1,126 @@
+import { balance } from '../../content/balance'
 import { portraitSvg, TONES, type Palette } from './sprites'
-import type { Person } from '../../engine/types'
+import type { Gender, Person, Stage } from '../../engine/types'
 
-function hash(text: string): number { let h=2166136261;for(const char of text)h=Math.imul(h^char.charCodeAt(0),16777619);return h>>>0 }
-export function personPortraitSvg(person: Person, size=110): string {
-  const p=person,h=hash(`${p.id}:${p.stage}:${p.gender}:${p.occupation}:${p.birthYear}:${p.province}`)
-  const layers:string[]=[]
-  if(p.stage==='childhood'||p.stage==='teen')layers.push(p.gender==='หญิง'?'osf':'osm')
-  else if(p.flags.thaiChinese){layers.push(p.stage==='elder'?'ox':p.gender==='หญิง'?'ok':'ap')}
-  else if(p.occupation.includes('ราชการ')||p.householdType==='ข้าราชการในเมือง')layers.push(p.gender==='หญิง'?'ol':'os')
-  else if(p.householdType==='ค้าขายครอบครัวไทยเชื้อสายจีน'||p.householdType==='ค้าขายเล็ก ๆ'){layers.push('ap')}
-  else if(p.householdType==='แรงงานในเมือง')layers.push(p.gender==='หญิง'?'ol':'os')
-  else if(p.occupation.includes('นา')||p.householdType==='ทำนา'){layers.push('ow','kr');if(p.gender==='หญิง')layers.push('op')}
-  else layers.push(p.gender==='หญิง'?'op':'oc')
-  if(p.stage==='elder'&&p.flags.thaiChinese)layers.push('ox')
-  layers.push(['hc','hp','hb','hl','hbo'][h%5]!)
-  if(p.stage==='elder')layers.push('wr');if(h%4===0)layers.push('gl');if(p.householdType==='ทำนา'&&h%2===0)layers.push('ht')
-  const tone=TONES[`s${(h>>>8)%6}`]!
-  const palette:Palette={...tone,hair:p.stage==='elder'?'#8e8d7e':['#211b18','#38231b','#30241e','#161616'][h%4]!,top:['#6c8064','#aa6949','#637f92','#c29357','#726486'][h%5]!,btm:['#55433b','#314954','#716248','#453e53'][h%4]!,acc:['#c28b43','#6c7f66','#a55e51'][h%3]!}
-  return portraitSvg(layers,palette,Math.max(1,Math.floor(size/22)))
+export type PortraitAgeGroup = 'infant' | 'toddler' | 'child' | 'teen' | 'adult' | 'elder'
+
+function hash(text: string): number {
+  let value = 2166136261
+  for (const character of text) value = Math.imul(value ^ character.charCodeAt(0), 16777619)
+  return value >>> 0
 }
+
+export function portraitAgeGroup(age: number): PortraitAgeGroup {
+  if (age < 3) return 'infant'
+  if (age < 6) return 'toddler'
+  if (age < 15) return 'child'
+  if (age < 20) return 'teen'
+  if (age < 60) return 'adult'
+  return 'elder'
+}
+
+/** The status badge follows the displayed age even if an older save has a stale stage field. */
+export function displayStageForAge(age: number): Stage {
+  if (age < 15) return 'childhood'
+  if (age < 20) return 'teen'
+  if (age <= balance.stages.youngAdult) return 'youngAdult'
+  if (age <= balance.stages.midLife) return 'midLife'
+  return 'elder'
+}
+
+export function pixelScaleForSize(size: number): number {
+  return Math.max(1, Math.floor(size / 22))
+}
+
+export function portraitPixelDimensions(size: number): { width: string; height: string } {
+  const scale = pixelScaleForSize(size)
+  return { width: `${16 * scale}px`, height: `${22 * scale}px` }
+}
+
+const HAIR_BY_GENDER: Record<Gender, readonly string[]> = {
+  'หญิง': ['hshort', 'hside', 'hbo', 'hl', 'hb', 'hpon', 'hcurl', 'hbraid'],
+  'ชาย': ['hc', 'hp', 'hfringe', 'hcurl', 'hunder', 'hbuzz', 'hwave', 'hl'],
+  'อื่น ๆ': ['hshort', 'hside', 'hbo', 'hl', 'hb', 'hpon', 'hcurl', 'hbraid', 'hc', 'hp', 'hfringe', 'hunder'],
+}
+
+export function hairstyleOptions(gender: Gender): readonly string[] {
+  return HAIR_BY_GENDER[gender]
+}
+
+const types = balance.householdTypes
+const isType = (person: Person, indexes: number[]) => indexes.some(index => person.householdType === types[index])
+
+export function selectPortraitLayers(person: Person, age: number): string[] {
+  const group = portraitAgeGroup(age)
+  const identity = hash(person.id)
+  const accessoryRoll = hash(`${person.id}:accessories`) % 100
+  const layers: string[] = []
+
+  if (group === 'infant') {
+    layers.push('swaddle')
+  } else if (group === 'toddler') {
+    layers.push('romper')
+  } else if (group === 'child' || group === 'teen') {
+    layers.push(person.flags.school ? person.gender === 'หญิง' ? 'osf' : 'osm' : 'oc')
+    if (accessoryRoll < 45) layers.push('bag')
+  } else if (person.flags.thaiChinese) {
+    layers.push('oc', 'ap', 'shopJacket', 'scarf')
+  } else if (isType(person, [0])) {
+    layers.push('ow', 'kr', 'ht')
+  } else if (isType(person, [4])) {
+    layers.push('ofishing', 'kr')
+  } else if (isType(person, [7])) {
+    layers.push('oc', 'ap', 'shopJacket')
+  } else if (isType(person, [2])) {
+    layers.push('oc', 'ap')
+  } else if (isType(person, [3, 8])) {
+    layers.push(person.gender === 'หญิง' ? 'ol' : 'os')
+  } else if (person.flags.constructionWork || person.occupation.includes('construction')) {
+    layers.push('oconstruction', 'hardhat', 'bag')
+  } else if (isType(person, [6]) || person.flags.factoryWork || person.occupation.includes('factory')) {
+    layers.push('ofactory')
+  } else if (isType(person, [1])) {
+    layers.push(person.flags.constructionWork ? 'oconstruction' : 'ow')
+    if (person.flags.constructionWork) layers.push('hardhat')
+  } else if (isType(person, [5])) {
+    layers.push('oc', 'scarf')
+  } else {
+    layers.push('oc')
+  }
+
+  const hairStyles = HAIR_BY_GENDER[person.gender]
+  if (group !== 'infant') layers.push(hairStyles[identity % hairStyles.length]!)
+  if (group === 'infant') layers.push('babyCap')
+  if (group === 'elder') layers.push('wr')
+  if (group !== 'infant' && accessoryRoll >= 46 && accessoryRoll < 62) layers.push('gl')
+  if (group === 'elder' && accessoryRoll < 35) layers.push('cane')
+  return layers
+}
+
+function outfitPalette(person: Person, age: number, identity: number): Palette {
+  const group = portraitAgeGroup(age)
+  const wardrobe = hash(`${person.id}:${group}:${person.householdType}:${person.occupation}`)
+  const tone = TONES[`s${identity % 6}`]!
+  const naturalHair = ['#28221f', '#392a25', '#49352d', '#241f1c', '#514039', '#302a28', '#3c2d26', '#252423'][identity % 8]!
+  const tops = ['#53745e', '#496878', '#8b584c', '#b18b55', '#625a75', '#647b83', '#75624f', '#4d6854']
+  const bottoms = ['#394c55', '#51433c', '#4a5947', '#5b4d60', '#3e464e', '#68563f']
+  const accessories = ['#bb8a48', '#627b69', '#a65e5b', '#647e8d', '#9b7854']
+  return {
+    ...tone,
+    hair: group === 'elder' ? '#969895' : naturalHair,
+    top: tops[wardrobe % tops.length]!,
+    btm: bottoms[Math.floor(wardrobe / 7) % bottoms.length]!,
+    acc: accessories[Math.floor(wardrobe / 13) % accessories.length]!,
+    tie: '#9f4e4a',
+  }
+}
+
+export function personPortraitSvg(person: Person, size = 110, age?: number): string {
+  const currentAge = age ?? (person.stage === 'elder' ? 70 : person.stage === 'midLife' ? 45 : person.stage === 'youngAdult' ? 27 : person.stage === 'teen' ? 16 : 10)
+  const group = portraitAgeGroup(currentAge)
+  const identity = hash(person.id)
+  const palette = outfitPalette(person, currentAge, identity)
+  return portraitSvg(selectPortraitLayers(person, currentAge), palette, pixelScaleForSize(size), group)
+}
+
+// TODO(verify): have people in Isan review locally specific work clothes and accessories before adding traditional garments.

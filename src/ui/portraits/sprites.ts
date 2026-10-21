@@ -1,13 +1,11 @@
 // Layered chibi pixel sprites, 16x22 grid. Layer ids:
-// body: bd (always drawn first)
-// outfits: ow farmer, oc casual, osm school boy, osf school girl, op pha-thung, ox samfoo, ok cheongsam, os suit, ol office woman
-// extras: ap apron, kr waist cloth, sw shawl, ht straw hat, gl glasses, wr wrinkles
-// hair: hc crop, hp side part, hb bun, hl long, hbo bob
+// Body and clothing are vector layers on a shared 16x22 pixel grid.
+// TODO(verify): local review needed before adding named regional garments.
 export const LAYERS: Record<string, [string, string][]> = {
  "bd": [
   [
    "sk",
-   "M5 2h6v1H5zM4 3h8v1H4zM3 4h10v5H3zM4 9h8v1H4zM5 10h6v1H5zM7 11h2v1H7zM2 13h2v5H2zM12 13h2v5h-2zM5 18h2v4H5zM9 18h2v4H9z"
+   "M5 2h6v1H5zM4 3h8v1H4zM3 4h10v5H3zM4 9h8v1H4zM5 10h6v1H5zM7 11h2v1H7z"
   ],
   [
    "sh",
@@ -26,6 +24,17 @@ export const LAYERS: Record<string, [string, string][]> = {
    "M7 9h2v1H7z"
   ]
  ],
+ "swaddle": [["ac", "M4 12h8v1H4zM3 13h10v5H3zM4 18h8v3H4zM2 15h2v3H2zM12 15h2v3h-2z"]],
+ "babyCap": [["hr", "M4 2h8v1H4zM3 3h10v2H3zM4 5h8v1H4z"], ["ac", "M7 2h2v1H7z"]],
+ "romper": [["tp", "M4 12h8v5H4zM2 13h2v4H2zM12 13h2v4h-2z"], ["bt", "M4 17h8v2H4zM5 19h2v2H5zM9 19h2v2H9z"]],
+ "ofactory": [["tp", "M4 12h8v5H4zM2 13h2v4H2zM12 13h2v4h-2z"], ["ac", "M5 13h2v2H5zM9 13h2v2H9z"], ["bt", "M4 17h8v1H4zM5 18h2v3H5zM9 18h2v3H9z"]],
+ "ofishing": [["tp", "M4 12h8v5H4zM2 13h2v4H2zM12 13h2v4h-2z"], ["ac", "M4 15h8v1H4z"], ["bt", "M4 17h8v1H4zM5 18h2v3H5zM9 18h2v3H9z"]],
+ "oconstruction": [["tp", "M4 12h8v6H4zM2 13h2v4H2zM12 13h2v4h-2z"], ["ac", "M4 13h8v2H4z"], ["bt", "M4 18h8v1H4zM5 19h2v2H5zM9 19h2v2H9z"]],
+ "hardhat": [["st", "M4 2h8v2H4zM3 4h10v1H3z"]],
+ "bag": [["ac", "M12 13h2v6h-2zM13 14h1v4h-1z"]],
+ "scarf": [["ac", "M3 12h10v2H3zM11 14h2v4h-2z"]],
+ "shopJacket": [["ac", "M3 12h2v5H3zM11 12h2v5h-2zM6 12h1v5H6zM9 12h1v5H9z"]],
+ "cane": [["ca", "M14 13h1v8h-1zM13 12h2v1h-2z"]],
  "ow": [
   [
    "tp",
@@ -256,6 +265,16 @@ export const LAYERS: Record<string, [string, string][]> = {
    "M5 1h6v1H5zM4 2h8v1H4zM3 3h10v2H3zM2 5h2v5H2zM12 5h2v5h-2z"
   ]
  ],
+ "hshort": [["hr", "M5 1h6v1H5zM4 2h8v1H4zM3 3h10v2H3zM3 5h2v2H3zM11 5h2v2h-2z"]],
+ "hside": [["hr", "M4 1h8v1H4zM3 2h10v2H3zM3 4h5v2H3zM11 4h2v3h-2z"]],
+ "hfringe": [["hr", "M5 1h6v1H5zM4 2h8v1H4zM3 3h10v2H3zM4 5h2v2H4zM7 5h2v2H7zM11 5h1v2h-1z"]],
+ "hcurl": [["hr", "M5 1h2v2H5zM9 1h2v2H9zM3 3h3v2H3zM7 2h2v3H7zM10 3h3v2h-3zM3 5h2v3H3zM11 5h2v3h-2z"]],
+ "hunder": [["hr", "M5 1h6v1H5zM4 2h8v1H4zM3 3h10v2H3zM3 5h2v1H3zM11 5h2v1h-2zM5 6h6v1H5z"]],
+ "hbuzz": [["hr", "M5 2h6v1H5zM4 3h8v2H4zM4 5h2v1H4zM10 5h2v1h-2z"]],
+ "hwave": [["hr", "M5 1h6v1H5zM4 2h3v1H4zM8 2h4v1H8zM3 3h10v2H3zM3 5h2v2H3zM11 5h2v2h-2z"]],
+ "hpon": [["hr", "M5 1h6v1H5zM4 2h8v1H4zM3 3h10v2H3zM3 5h2v5H3zM11 5h2v3h-2zM12 7h2v4h-2z"]],
+ "hbraid": [["hr", "M5 1h6v1H5zM4 2h8v1H4zM3 3h10v2H3zM2 5h2v4H2zM12 5h2v4h-2zM3 9h1v3H3zM12 9h1v3h-1z"]],
+ "hbun": [["hr", "M6 0h4v1H6zM5 1h6v1H5zM4 2h8v1H4zM3 3h10v2H3zM3 5h2v3H3zM11 5h2v3h-2z"]],
  "ht": [
   [
    "st",
@@ -280,29 +299,39 @@ export const LAYERS: Record<string, [string, string][]> = {
  ]
 };
 
+export type SpriteAgeGroup = 'infant' | 'toddler' | 'child' | 'teen' | 'adult' | 'elder'
+export const BODY_BY_AGE: Record<SpriteAgeGroup, [string, string][]> = {
+  infant: [['sk', 'M2 13h2v4H2zM12 13h2v4h-2zM5 18h2v2H5zM9 18h2v2H9z']],
+  toddler: [['sk', 'M2 13h2v5H2zM12 13h2v5h-2zM5 18h2v4H5zM9 18h2v4H9z']],
+  child: [['sk', 'M2 13h2v5H2zM12 13h2v5h-2zM5 18h2v4H5zM9 18h2v4H9z']],
+  teen: [['sk', 'M2 13h2v5H2zM12 13h2v5h-2zM5 18h2v4H5zM9 18h2v4H9z']],
+  adult: [['sk', 'M2 13h2v5H2zM12 13h2v5h-2zM5 18h2v4H5zM9 18h2v4H9z']],
+  elder: [['sk', 'M2 13h2v5H2zM12 13h2v5h-2zM5 18h2v4H5zM9 18h2v4H9z']],
+}
+
 export interface Palette { skin: string; shade: string; lip: string; hair: string; top: string; btm: string; acc: string; tie?: string }
 
 // Skin tone presets (skin, shade, lip). Tune freely.
 export const TONES: Record<string, Pick<Palette, 'skin' | 'shade' | 'lip'>> = {
-  s0: { skin: '#E3BC95', shade: '#C9A07A', lip: '#B26B5A' },
-  s1: { skin: '#D2A073', shade: '#B88A5F', lip: '#A85F4B' },
-  s2: { skin: '#C99466', shade: '#AE7C52', lip: '#9E5A47' },
-  s3: { skin: '#BC8458', shade: '#A06E46', lip: '#9A5545' },
-  s4: { skin: '#A86F48', shade: '#8E5A39', lip: '#8A4A3A' },
-  s5: { skin: '#9A6540', shade: '#7F5233', lip: '#7A4638' },
+  s0: { skin: '#E4C7AD', shade: '#C9A990', lip: '#A86E62' },
+  s1: { skin: '#D7B29A', shade: '#B9957F', lip: '#9E655B' },
+  s2: { skin: '#C89F86', shade: '#AA806A', lip: '#965E55' },
+  s3: { skin: '#B88A70', shade: '#9B7059', lip: '#88554C' },
+  s4: { skin: '#A6765F', shade: '#895F4D', lip: '#794B45' },
+  s5: { skin: '#8D634E', shade: '#73503F', lip: '#68423D' },
 };
 
 const FILL: Record<string, (p: Palette) => string> = {
   sk: p => p.skin, sh: p => p.shade, ck: p => p.lip, lp: p => p.lip, ee: () => '#1a1410',
-  hr: p => p.hair, tp: p => p.top, bt: p => p.btm, ac: p => p.acc, st: () => '#d9b25f',
+  hr: p => p.hair, tp: p => p.top, bt: p => p.btm, ac: p => p.acc, st: () => '#d9b25f', ca: p => p.acc,
   sd: () => '#000', fr: () => '#2a2420', ti: p => p.tie ?? '#b3262d', wh: () => '#f2efe6',
 };
 const OPACITY: Record<string, number> = { ck: 0.45, sd: 0.2 };
 
 /** Compose a portrait. Order matters: outfit, extras, hair, hat/glasses/wrinkles last. */
-export function portraitSvg(layerIds: string[], p: Palette, scale = 6): string {
-  const paths = ['bd', ...layerIds].flatMap(id =>
-    (LAYERS[id] ?? []).map(([c, d]) =>
-      `<path fill="${FILL[c](p)}"${OPACITY[c] ? ` fill-opacity="${OPACITY[c]}"` : ''} d="${d}"/>`));
+export function portraitSvg(layerIds: string[], p: Palette, scale = 6, ageGroup: SpriteAgeGroup = 'adult'): string {
+  const layers = [...LAYERS.bd!, ...BODY_BY_AGE[ageGroup], ...layerIds.flatMap(id => LAYERS[id] ?? [])]
+  const paths = layers.map(([c, d]) =>
+      `<path fill="${FILL[c](p)}"${OPACITY[c] ? ` fill-opacity="${OPACITY[c]}"` : ''} d="${d}"/>`);
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 22" width="${16 * scale}" height="${22 * scale}" shape-rendering="crispEdges">${paths.join('')}</svg>`;
 }
