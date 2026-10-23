@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { balance, cards } from '../content'
-import { applyEffects, advanceYear, beginTurn, choose, createLife, createLifeFromRoll, resolveAutoCard, rollBirth, simulateLife } from './game'
+import { applyEffects, advanceYear, beginTurn, choose, createLife, createLifeFromRoll, eligibleCards, resolveAutoCard, rollBirth, simulateLife } from './game'
 import { evaluateCondition } from './conditions'
 import { portraitSvg, TONES } from '../ui/portraits/sprites'
 import { personPortraitSvg } from '../ui/portraits/portrait'
@@ -112,6 +112,24 @@ describe('life simulation engine',()=>{
     expect(narrativeDraws).toBeGreaterThan(0)
     expect(authoredDraws).toBeGreaterThan(0)
     expect(narrativeDraws+authoredDraws).toBe(400)
+  })
+  it('allows a second child and makes the elder land event eligible',()=>{
+    const s=createLife(444)
+    s.year=s.person.birthYear+25
+    s.person.stage='youngAdult'
+    s.person.partnered=true
+    s.person.flags.partnered=true
+    s.person.children=1
+    const secondChild=cards.find(card=>card.id==='second-child')!
+    expect(eligibleCards(s,cards)).toContain(secondChild)
+    s.currentCardIds=[secondChild.id]
+    choose(s,secondChild,secondChild.choices[0]!)
+    expect(s.person.children).toBe(2)
+    s.year=s.person.birthYear+60
+    s.person.stage='elder'
+    s.person.householdLandRai=1
+    const elderLand=cards.find(card=>card.id==='ex-07-land-under-the-house')!
+    expect(eligibleCards(s,cards)).toContain(elderLand)
   })
   it('resolves automatic cards without a player choice',()=>{const s=createLife(44);const c=cards.find(item=>item.id==='heat-wave-auto')!;s.currentCardIds=[c.id];const initial=s.person.health;resolveAutoCard(s,c);expect(s.person.health).toBe(initial-1);expect(s.log.at(-1)?.cardId).toBe(c.id);expect(s.currentCardIds).toEqual([])})
 })

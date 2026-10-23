@@ -118,6 +118,7 @@ const extra: Card[] = [
   milestone('love', 'youngAdult', 'คนที่อยากใช้ชีวิตด้วย', 'ความสัมพันธ์เติบโตจากการใช้เวลาและพูดคุยถึงความคาดหวังของแต่ละคน', 'ค่อย ๆ สร้างความสัมพันธ์', 'ให้เวลากับงานและตัวเองก่อน', [S('relationships', 4), S('wellbeing', 2)], [S('knowledge', 1), S('wellbeing', 1)]),
   milestone('marriage', 'youngAdult', 'ตกลงสร้างครอบครัว', 'คุณและคนรักคุยกันเรื่องงาน ที่อยู่ และวิธีแบ่งภาระในชีวิตประจำวัน', 'จัดพิธีพอเหมาะกับกำลัง', 'ใช้ชีวิตร่วมกันแบบเรียบง่าย', [H('money', -3), S('relationships', 3)], [S('relationships', 2)]),
   milestone('children', 'youngAdult', 'มีลูกคนแรก', 'สมาชิกใหม่ทำให้มีทั้งความสุขและงานดูแลเพิ่มขึ้น เครือญาติช่วยกันตามความพร้อม', 'เลี้ยงดูใกล้ชิด', 'ให้ผู้ใหญ่ช่วยดูแลระหว่างทำงาน', [S('relationships', 4), S('careBurden', 5)], [S('relationships', 2), H('money', 2)]),
+  milestone('second-child', 'youngAdult', 'ลูกคนที่สองกับค่าใช้จ่ายของบ้าน', 'บ้านเริ่มตั้งหลักได้แล้ว ญาติผู้ใหญ่ถามว่าจะมีลูกอีกคนไหม ส่วนคุณกับคู่ก็นั่งชั่งว่ารายได้กับค่าเลี้ยงดูจะพอหรือเปล่า', 'มีลูกอีกคน', 'รอก่อน ให้ตั้งตัวให้มั่นคงกว่านี้', [H('money', -2), S('relationships', 1)], [H('money', 1)], {when:{all:[{flag:'partnered'},{children:'=',value:1}]},once:true}),
   milestone('grandparent-care', ['youngAdult','midLife'], 'ฝากลูกไว้กับยาย', 'งานต่างจังหวัดช่วยให้มีรายได้ แต่ลูกต้องอยู่กับยายและมีค่าเดินทางกลับบ้าน', 'ไปทำงานฝั่งตะวันออกและส่งเงิน', 'หางานที่กลับบ้านได้บ่อย', [H('money', 5), S('relationships', -2)], [H('money', 2), S('relationships', 1)]),
   // TODO(verify): verify the current and historical conscription rules and how deferments are represented.
   milestone('conscription', 'youngAdult', 'จับสลากเกณฑ์ทหาร', 'ชายไทยถึงวัยเข้ารับการตรวจเลือก คุณเตรียมตัวตามขั้นตอนและวางแผนเรื่องงานระหว่างนั้น', 'ไปตรวจเลือกตามหมายเรียก', 'สอบถามช่องทางการศึกษาและการผ่อนผัน', [S('wellbeing', -2), S('relationships', 1)], [S('knowledge', 1), H('money', -1)], { when: { all: [{ age: '>=', value: balance.milestoneAges.conscription }, { gender: 'ชาย' }] } }),
@@ -163,6 +164,7 @@ extra.find(card=>card.id==='love')!.choices[0]!.setFlags=['partnered']
 extra.find(card=>card.id==='marriage')!.choices[0]!.setFlags=['partnered']
 extra.find(card=>card.id==='children')!.choices[0]!.setFlags=['hasChild']
 extra.find(card=>card.id==='children')!.choices[1]!.setFlags=['hasChild']
+extra.find(card=>card.id==='second-child')!.choices[0]!.setFlags=['hasChild']
 extra.find(card=>card.id==='grandparent-care')!.choices[0]!.setFlags=['migrated-east','grandparentCares']
 extra.find(card=>card.id==='floods-2011')!.choices[0]!.setFlags=['returnedHome']
 // Every gender receives an explicit, visible modifier; values are tunable placeholders.
