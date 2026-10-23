@@ -113,6 +113,17 @@ describe('life simulation engine',()=>{
     expect(authoredDraws).toBeGreaterThan(0)
     expect(narrativeDraws+authoredDraws).toBe(400)
   })
+  it('limits narrative cards to once per life and uses annual fallbacks in full simulations',()=>{
+    let annualFallbackEvents=0
+    for(let seed=1;seed<=500;seed++){
+      const life=simulateLife(seed)
+      const heatWaveEvents=life.log.filter(event=>event.cardId==='heat-wave-auto')
+      expect(heatWaveEvents.length,`seed ${seed}`).toBeLessThanOrEqual(1)
+      annualFallbackEvents+=life.log.filter(event=>event.cardId?.startsWith('annual-')).length
+    }
+    // Half of the 14,852 annual fallback events measured at 27ac28e leaves margin for draw variation.
+    expect(annualFallbackEvents).toBeGreaterThanOrEqual(7_426)
+  })
   it('allows a second child and makes the elder land event eligible',()=>{
     const s=createLife(444)
     s.year=s.person.birthYear+25
