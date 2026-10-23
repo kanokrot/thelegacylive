@@ -3,26 +3,13 @@
 // TODO(verify): local review needed before adding named regional garments.
 export const LAYERS: Record<string, [string, string][]> = {
  "bd": [
-  [
-   "sk",
-   "M5 2h6v1H5zM4 3h8v1H4zM3 4h10v5H3zM4 9h8v1H4zM5 10h6v1H5zM7 11h2v1H7z"
-  ],
-  [
-   "sh",
-   "M5 10h6v1H5zM7 11h2v1H7z"
-  ],
-  [
-   "ck",
-   "M4 8h1v1H4zM11 8h1v1h-1z"
-  ],
-  [
-   "ee",
-   "M5 6h1v2H5zM10 6h1v2h-1z"
-  ],
-  [
-   "lp",
-   "M7 9h2v1H7z"
-  ]
+  ["sk", "M5 2h6v1H5zM4 3h8v1H4zM3 4h10v5H3zM4 9h8v1H4zM5 10h6v1H5zM7 11h2v1H7z"],
+  ["sl", "M4 5h1v2H4z"],
+  ["sh", "M12 5h1v4h-1zM5 10h6v1H5zM7 11h2v1H7z"],
+  ["ck", "M4 8h1v1H4zM11 8h1v1h-1z"],
+  ["ee", "M5 6h2v2H5zM9 6h2v2H9z"],
+  ["ew", "M5 6h1v1H5zM9 6h1v1H9z"],
+  ["lp", "M7 9h2v1H7z"]
  ],
  "swaddle": [["ac", "M4 12h8v1H4zM3 13h10v5H3zM4 18h8v3H4zM2 15h2v3H2zM12 15h2v3h-2z"]],
  "babyCap": [["hr", "M4 2h8v1H4zM3 3h10v2H3zM4 5h8v1H4z"], ["ac", "M7 2h2v1H7z"]],
@@ -321,17 +308,86 @@ export const TONES: Record<string, Pick<Palette, 'skin' | 'shade' | 'lip'>> = {
   s5: { skin: '#8D634E', shade: '#73503F', lip: '#68423D' },
 };
 
+const mix = (a: string, b: string, t: number) => {
+  const n = (h: string, i: number) => parseInt(h.slice(1 + i * 2, 3 + i * 2), 16)
+  return '#' + [0, 1, 2]
+    .map(i => Math.round(n(a, i) + (n(b, i) - n(a, i)) * t).toString(16).padStart(2, '0'))
+    .join('')
+}
+
 const FILL: Record<string, (p: Palette) => string> = {
   sk: p => p.skin, sh: p => p.shade, ck: p => p.lip, lp: p => p.lip, ee: () => '#1a1410',
   hr: p => p.hair, tp: p => p.top, bt: p => p.btm, ac: p => p.acc, st: () => '#d9b25f', ca: p => p.acc,
   sd: () => '#000', fr: () => '#2a2420', ti: p => p.tie ?? '#b3262d', wh: () => '#f2efe6',
+  sl: p => mix(p.skin, '#fff1d6', 0.3), ew: () => '#f4f1e8',
 };
 const OPACITY: Record<string, number> = { ck: 0.45, sd: 0.2 };
 
-/** Compose a portrait. Order matters: outfit, extras, hair, hat/glasses/wrinkles last. */
+const GRID_W = 16
+const GRID_H = 22
+const OUTLINE = '#2b1a14'
+
+const lighten = (color: string) => mix(color, '#fff1d6', 0.25)
+const darken = (color: string) => mix(color, '#2a1840', 0.3)
+
+function pixels(d: string): Set<number> {
+  const result = new Set<number>()
+  for (const match of d.matchAll(/M(\d+) (\d+)h(\d+)v(\d+)/g)) {
+    const [x, y, width, height] = match.slice(1).map(Number) as [number, number, number, number]
+    for (let row = y; row < y + height; row++)
+      for (let column = x; column < x + width; column++)
+        if (column < GRID_W && row < GRID_H) result.add(row * GRID_W + column)
+  }
+  return result
+}
+
+const toPath = (set: Set<number>) =>
+  [...set].map(key => `M${key % GRID_W} ${Math.floor(key / GRID_W)}h1v1h-1z`).join('')
+
+function shadeOverlay(d: string, base: string, withLight: boolean): [string, string][] {
+  const shape = pixels(d)
+  const lit = new Set<number>()
+  const dark = new Set<number>()
+  for (const key of shape) {
+    const x = key % GRID_W
+    if (withLight && !shape.has(key - GRID_W) && x <= 8) lit.add(key)
+    else if (!shape.has(key + GRID_W) || (!shape.has(key + 1) && x >= 8)) dark.add(key)
+  }
+  const overlays: [string, string][] = []
+  if (lit.size) overlays.push([lighten(base), toPath(lit)])
+  if (dark.size) overlays.push([darken(base), toPath(dark)])
+  return overlays
+}
+
+function outlinePath(layers: [string, string][]): string {
+  const filled = new Set<number>()
+  for (const [color, path] of layers)
+    if (!OPACITY[color]) for (const key of pixels(path)) filled.add(key)
+  const outline = new Set<number>()
+  for (let y = 0; y < GRID_H; y++) {
+    for (let x = 0; x < GRID_W; x++) {
+      const key = y * GRID_W + x
+      if (filled.has(key)) continue
+      if ((x > 0 && filled.has(key - 1)) || (x < GRID_W - 1 && filled.has(key + 1)) ||
+          filled.has(key - GRID_W) || filled.has(key + GRID_W)) outline.add(key)
+    }
+  }
+  return toPath(outline)
+}
+
+/** Compose a portrait with a generated silhouette outline and per-layer shading. */
 export function portraitSvg(layerIds: string[], p: Palette, scale = 6, ageGroup: SpriteAgeGroup = 'adult'): string {
   const layers = [...LAYERS.bd!, ...BODY_BY_AGE[ageGroup], ...layerIds.flatMap(id => LAYERS[id] ?? [])]
-  const paths = layers.map(([c, d]) =>
-      `<path fill="${FILL[c](p)}"${OPACITY[c] ? ` fill-opacity="${OPACITY[c]}"` : ''} d="${d}"/>`);
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 22" width="${16 * scale}" height="${22 * scale}" shape-rendering="crispEdges">${paths.join('')}</svg>`;
+  const paths: string[] = [`<path fill="${OUTLINE}" d="${outlinePath(layers)}"/>`]
+  const add = (fill: string, d: string, opacity?: number) =>
+    paths.push(`<path fill="${fill}"${opacity ? ` fill-opacity="${opacity}"` : ''} d="${d}"/>`)
+
+  for (const [color, path] of layers) {
+    add(FILL[color](p), path, OPACITY[color])
+    if (color === 'hr') for (const [fill, overlay] of shadeOverlay(path, p.hair, true)) add(fill, overlay)
+    if (color === 'tp') for (const [fill, overlay] of shadeOverlay(path, p.top, false)) add(fill, overlay)
+    if (color === 'bt') for (const [fill, overlay] of shadeOverlay(path, p.btm, false)) add(fill, overlay)
+  }
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 22" width="${16 * scale}" height="${22 * scale}" shape-rendering="crispEdges">${paths.join('')}</svg>`
 }

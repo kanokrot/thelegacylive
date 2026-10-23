@@ -49,4 +49,4 @@ flowchart TD
 
 - ฟอนต์ PS Pimpdeed โดย touchie ([หน้าฟอนต์](https://www.f0nt.com/release/ps-pimpdeed-family/))
 - ฟอนต์ Tlwg Typist โดย Thai Linux Working Group
-- ชื่อตำบลและอำเภอมาจากชุดข้อมูล MIT-licensed [kongvut/thai-province-data](https://github.com/kongvut/thai-province-data) รายละเอียดแหล่งข้อมูลและวันที่ snapshot อยู่ใน [`src/content/data/SOURCES.md`](src/content/data/SOURCES.md) ชื่อหมู่บ้านในเรื่องเกิดเป็นชื่อสมมติที่นำมาผสมกัน
+- ชื่อตำบลและอำเภอมาจากชุดข้อมูล MIT-licensed [kongvut/thai-province-data](https://github.com/kongvut/thai-province-data) รายละเอียดแหล่งข้อมูลและวันที่ snapshot อยู่ใน [`src/content/data/SOURCES.md`](src/content/data/SOURCES.md) ชื่อหมู่บ้านในเรื่องเกิดเป็นชื่อสมมุติที่นำมาผสมกัน

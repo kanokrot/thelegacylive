@@ -149,6 +149,6 @@ describe('sprite system and life controls', () => {
     expect(css).not.toContain('overflow-x: auto')
     const app = readFileSync(new URL('../App.vue', import.meta.url), 'utf8')
     const controls = app.slice(app.indexOf('class="life-time-controls"'), app.indexOf('</div>', app.indexOf('class="life-time-controls"')))
-    expect(controls.match(/\{\{ ui\.autoMode \}\}/g)).toHaveLength(1)
+    expect(controls).toContain('ถ้าไม่เลือก')
   })
 })

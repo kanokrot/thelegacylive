@@ -196,7 +196,11 @@ body {
 .life-screen .stage-pill { padding: 5px 12px; border: 1px solid #E3B341; border-radius: 99px; color: #E3B341; }
 .life-screen .age-readout, .life-screen .place { font-size: 14px !important; color: #9FB0C8; }
 .life-screen .place { margin-left: auto; }
-.life-screen .life-layout { grid-template-columns: minmax(300px, .82fr) minmax(0, 1.18fr); gap: 22px; }
+.life-screen .life-year-clock { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; margin: 8px 2px 12px; color: #C2CDDC; font-size: 13px; }
+.life-screen .life-year-clock-track { height: 10px; overflow: hidden; border: 1px solid #3A5380; border-radius: 99px; background: #0E1A2B; }
+.life-screen .life-year-clock-track span { display: block; width: 100%; height: 100%; transform-origin: left center; background: linear-gradient(90deg, #65B891, #E3B341); transition: transform 100ms linear; }
+.life-screen .life-year-clock.paused .life-year-clock-track span { background: #73849C; }
+.life-screen .life-layout { grid-template-columns: minmax(300px, .82fr) minmax(0, 1.18fr); gap: 22px; align-items: stretch; }
 .life-screen .sidebar { display: flex; flex-direction: column; }
 .life-screen .profile, .life-screen .household, .life-screen .story, .life-screen .log { background: #16263D; color: #F3EBD8; border-color: #2B3F5C; }
 .life-screen .profile { text-align: left; }
@@ -210,12 +214,16 @@ body {
 .life-screen .profile-home-map .isan-map-wrap { inset: 8px; }
 .life-screen .profile-home-map .map-attribution { display: none; }
 .life-screen .household h2, .life-screen .household h3 { color: #F3EBD8; }
-.life-screen .household p, .life-screen .household li, .life-screen .economy { color: #C2CDDC; }
+.life-screen .household p, .life-screen .household li { color: #C2CDDC; }
+.life-screen .economy { color: #F3EBD8; background: #0E1A2B; border: 1px solid #2B3F5C; }
+.life-screen .economy b { color: #E3B341; }
 .life-screen .household small { color: #9FB0C8; font-size: 12px !important; }
 .life-screen .story h2, .life-screen .log h2 { color: #F3EBD8; }
 .life-screen .story > p:not(.eyebrow) { color: #F3EBD8; font-size: 18px !important; line-height: 1.75; }
 .life-screen .choices button { color: #F3EBD8; background: #0E1A2B; border-color: #2B3F5C; font-size: 16px; }
 .life-screen .choices button:hover { border-color: #E3B341; }
+.life-screen .choices button:disabled { cursor: not-allowed; opacity: .52; }
+.life-screen .story-column { min-height: 100%; display: flex; flex-direction: column; justify-content: space-between; }
 .life-screen .quiet .primary { margin-top: 14px; }
 .life-screen .log ol li { border-color: #2B3F5C; color: #C2CDDC; }
 .life-screen .log time { color: #E3B341; }

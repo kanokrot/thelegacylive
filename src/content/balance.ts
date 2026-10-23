@@ -27,7 +27,7 @@ export const balance = {
     childLowHouseholdMultiplier: { value: 1.01, provenance: { type: 'design', sourceId: 'MORT09', reason: 'Minimal childhood context modifier; magnitude is game tuning and does not assign blame.' } },
     childFarmOrFishingMultiplier: { value: 1.01, provenance: { type: 'design', sourceId: 'MORT09', reason: 'Minimal exposure proxy for fictional household context; magnitude is game tuning.' } }
   },
-  annual: { healthDecay: 0.18, healthVariation:0.8,farmHealth:0.15, debtInterest: 0.035, moneyRange: 3, quietYearChance: 0.45, secondEventChance: 0.22, riceIncomePerRai: 0.12, householdIncome: 1, migrantRemittance: 5, relativeAgeGate:65,relativeDeathBase:0.002,relativeDeathPerYear:0.001,migrationMinAge:17,workMinAge:20,harvestAgeLimit:20 },
+  annual: { healthDecay: 0.18, healthVariation:0.8,farmHealth:0.15, debtInterest: 0.035, moneyRange: 3, riceIncomePerRai: 0.12, householdIncome: 1, migrantRemittance: 5, relativeAgeGate:65,relativeDeathBase:0.002,relativeDeathPerYear:0.001,migrationMinAge:17,workMinAge:20,harvestAgeLimit:20 },
   access: { school: 0.56, hospital: 0.42, jobs: 0.38, lowSchoolThreshold: 0.45, lowHospitalThreshold:0.45, lowJobThreshold: 0.35, distanceCost: 3 },
   routineAges:{library:[8,12] as const,siblingExam:[7,12] as const,examTrip:[13,19] as const,factoryInterview:[15,19] as const},
   migration: { travelCost: 8, homeRelationshipCost: 3, remittance: 5 },

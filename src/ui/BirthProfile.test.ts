@@ -16,7 +16,7 @@ describe('birth profile', () => {
     const storyHtml = html.match(/<div class="birth-story-paragraphs">([\s\S]*?)<\/div>/)?.[1] ?? ''
     expect(storyHtml.match(/<p>/g)).toHaveLength(3)
     expect(html).toContain('ประวัติ')
-    expect(html).toContain('หมู่บ้านสมมติ')
+    expect(html).toContain('หมู่บ้านสมมุติ')
     expect(html).not.toContain(ui.birthplaceCaption)
     for (const item of roll.reveals) expect(html).toContain(item.value)
     expect(html).toContain('เพศ')
