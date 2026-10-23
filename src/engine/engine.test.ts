@@ -133,14 +133,29 @@ describe('life simulation engine',()=>{
     s.person.children=1
     const secondChild=cards.find(card=>card.id==='second-child')!
     expect(eligibleCards(s,cards)).toContain(secondChild)
+    const relationshipsBefore=s.person.relationships
+    const careBurdenBefore=s.person.careBurden
     s.currentCardIds=[secondChild.id]
     choose(s,secondChild,secondChild.choices[0]!)
     expect(s.person.children).toBe(2)
+    expect(s.person.relationships).toBe(relationshipsBefore+4)
+    expect(s.person.careBurden).toBe(careBurdenBefore+5)
     s.year=s.person.birthYear+60
     s.person.stage='elder'
     s.person.householdLandRai=1
     const elderLand=cards.find(card=>card.id==='ex-07-land-under-the-house')!
     expect(eligibleCards(s,cards)).toContain(elderLand)
+    const defer=createLife(445)
+    defer.year=defer.person.birthYear+25
+    defer.person.stage='youngAdult'
+    defer.person.partnered=true
+    defer.person.flags.partnered=true
+    defer.person.children=1
+    defer.currentCardIds=[secondChild.id]
+    const householdMoneyBefore=defer.person.householdMoney
+    choose(defer,secondChild,secondChild.choices[1]!)
+    expect(defer.person.children).toBe(1)
+    expect(defer.person.householdMoney).toBe(householdMoneyBefore+1)
   })
   it('resolves automatic cards without a player choice',()=>{const s=createLife(44);const c=cards.find(item=>item.id==='heat-wave-auto')!;s.currentCardIds=[c.id];const initial=s.person.health;resolveAutoCard(s,c);expect(s.person.health).toBe(initial-1);expect(s.log.at(-1)?.cardId).toBe(c.id);expect(s.currentCardIds).toEqual([])})
 })
