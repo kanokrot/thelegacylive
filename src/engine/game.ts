@@ -46,9 +46,10 @@ export function beginTurn(s: LifeState,cards: Card[]=defaultCards): void {
   if(s.status!=='playing'||s.currentCardIds.length) return
   const eligible=eligibleCards(s,cards)
   const authored=eligible.filter(card=>!card.fallback&&!card.auto&&card.choices.some(choice=>evaluateCondition(choice.requires,s)))
-  let pool=authored.length?authored:eligible.filter(card=>card.fallback)
+  const narrative=eligible.filter(card=>!card.fallback&&card.auto&&card.choices.length===0)
+  let pool=authored.length||narrative.length?[...authored,...narrative]:eligible.filter(card=>card.fallback)
   if(!pool.length)return
-  if(!authored.length&&pool.length>1){
+  if(!authored.length&&!narrative.length&&pool.length>1){
     const previous=s.log.at(-1)?.cardId
     const alternatives=pool.filter(card=>card.id!==previous)
     if(alternatives.length)pool=alternatives

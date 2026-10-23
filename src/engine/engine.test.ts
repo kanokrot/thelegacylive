@@ -92,6 +92,27 @@ describe('life simulation engine',()=>{
     expect(s.log.find(event=>event.cardId==='floods-2011')?.year).toBe(2011)
   })
   it('provides a headless simulated world and same-window cohort outcomes',()=>{const w=new SimulatedWorld(721,4);expect(w.getLiveCounts().lives).toBeGreaterThanOrEqual(0);expect(w.getRecentBirths('').length).toBe(1);expect(w.getCohort(2010).every(life=>life.status==='dead')).toBe(true)})
+  it('draws an eligible narrative card when it is the only candidate',()=>{
+    const s=createLife(443)
+    const heatWave=cards.find(card=>card.id==='heat-wave-auto')!
+    beginTurn(s,[heatWave])
+    expect(s.currentCardIds).toEqual([heatWave.id])
+  })
+  it('includes narrative cards in weighted draws alongside authored choices',()=>{
+    const heatWave=cards.find(card=>card.id==='heat-wave-auto')!
+    const authored:Card={id:'authored-draw-test',stage:'childhood',title:'test',body:'test',weight:4,once:false,choices:[{id:'choice',label:'choice',effects:[]}]}
+    let narrativeDraws=0
+    let authoredDraws=0
+    for(let seed=1;seed<=400;seed++){
+      const s=createLife(seed)
+      beginTurn(s,[authored,heatWave])
+      if(s.currentCardIds[0]===heatWave.id)narrativeDraws++
+      if(s.currentCardIds[0]===authored.id)authoredDraws++
+    }
+    expect(narrativeDraws).toBeGreaterThan(0)
+    expect(authoredDraws).toBeGreaterThan(0)
+    expect(narrativeDraws+authoredDraws).toBe(400)
+  })
   it('resolves automatic cards without a player choice',()=>{const s=createLife(44);const c=cards.find(item=>item.id==='heat-wave-auto')!;s.currentCardIds=[c.id];const initial=s.person.health;resolveAutoCard(s,c);expect(s.person.health).toBe(initial-1);expect(s.log.at(-1)?.cardId).toBe(c.id);expect(s.currentCardIds).toEqual([])})
 })
 
