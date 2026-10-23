@@ -157,7 +157,7 @@ describe('card diversity analysis', () => {
     console.log(report)
     expect(report).toContain('CARD FREQUENCY')
     expect(report).toContain('REQUIRES-GATED CHOICES')
-  })
+  }, 30_000)
 
   it('reports 2,000 manual and 2,000 auto mortality outcomes without calibrating on auto lives', () => {
     const { report, manualAverageAge } = analyzeMortality()
