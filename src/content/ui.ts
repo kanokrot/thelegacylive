@@ -1,6 +1,6 @@
 export const ui = {
   title:'ชีวิต', subtitle:'เรื่องเล่าหนึ่งชีวิตในภาคอีสาน', homeEyebrow:'ภาคอีสาน · หนึ่งชีวิต', homeHeadline:'ถ้าคุณเกิดเป็น', homeHeadlineAccent:'คนอีสาน', isanMapIllustration:'ภาพประกอบแผนที่ภาคอีสาน', isanProvinces:'รายชื่อจังหวัดภาคอีสาน', pitch:'คุณจะเกิดมาเป็นใครสักคนโดยบังเอิญ แล้วใช้ชีวิตหนึ่งเดียวไปทีละปี ท่ามกลางโลกจำลองที่ผู้คนเกิด เติบโต และจากไปพร้อมกัน',
-  lives:'ชีวิตที่กำลังดำเนินอยู่', births:'เกิดใหม่ในวันนี้', recently:'เมื่อครู่มีคนเกิดที่', worldHeading:'โลกเดินต่อไป',accessPlaceholder:'ตัวเลขการเข้าถึงเป็นค่าตั้งต้นสำหรับเกม',projectedNotice:'เหตุการณ์ต่อไปนี้เป็นภาพสมมุติสำหรับอนาคต',
+  lives:'ชีวิตที่กำลังดำเนินอยู่', births:'เกิดใหม่ในวันนี้', recently:'เมื่อครู่มีคนเกิดที่', worldHeading:'โลกเดินต่อไป',accessPlaceholder:'ตัวเลขการเข้าถึงเป็นค่าตั้งต้นสำหรับเกม',
   born:'เกิดใหม่', continue:'ใช้ชีวิตต่ออีกหนึ่งปี', home:'หน้าแรก', collection:'สมุดสะสม', startLife:'เริ่มต้นชีวิต',
   stage:{childhood:'วัยเด็ก',teen:'วัยรุ่น',youngAdult:'วัยเริ่มต้นทำงาน',midLife:'วัยกลางคน',elder:'วัยสูงอายุ'},
   stats:{health:'สุขภาพ',wellbeing:'ความเป็นอยู่',knowledge:'ความรู้',relationships:'ความสัมพันธ์',careBurden:'ภาระดูแล'},
@@ -9,10 +9,8 @@ export const ui = {
   effectTargets:{self:'ตัวเอง',household:'ในบ้าน'},modifierHeading:'ผลตามบริบท',
   death:'อนุสรณ์',candle:'จุดเทียนให้ระลึกถึง',candles:'เทียนที่จุดในอุปกรณ์นี้',newLife:'เกิดใหม่อีกครั้ง',cohortTitle:'ชีวิตจำลองที่เกิดในช่วงเวลาใกล้กัน',
   mortalityDisclaimer:'เรื่องราวและสาเหตุในแบบจำลองเป็นเพียงส่วนหนึ่งของชีวิตจำลอง ไม่ใช่ข้อสรุปเกี่ยวกับชีวิตจริง',
-  autoPolicyHint:'ถ้าไม่เลือกก่อนเวลาจะเดินต่อ เกมจะตัดสินใจตามนโยบายนี้',playerDecisionMode:'ผู้เล่นเป็นผู้ตัดสินใจส่วนใหญ่ในชีวิตนี้',autoDecisionMode:'เกมตัดสินใจแทนเมื่อผู้เล่นไม่ได้เลือก',
   deathCauseLabels:{copd:'โรคปอดอุดกั้นเรื้อรัง',liverDisease:'โรคตับ',diabetes:'เบาหวาน',ischemicHeartDisease:'หัวใจขาดเลือด',stroke:'หลอดเลือดสมอง',chronicKidneyDisease:'ไตเรื้อรัง',liverAndBileDuctCancer:'มะเร็งตับและท่อน้ำดี',lungCancer:'มะเร็งปอด',colorectalCancer:'มะเร็งลำไส้ใหญ่',breastCancer:'มะเร็งเต้านม',roadTraffic:'อุบัติเหตุทางถนน',drowning:'จมน้ำ',suicide:'ฆ่าตัวตาย',other:'สาเหตุอื่น',unknown:'ไม่มีข้อมูล'},
   deathFactorLabels:{lowHealth:'สุขภาพในเกมอยู่ในระดับต่ำ',highDebt:'ภาระหนี้ในเกมอยู่ในระดับสูง',careBurden:'ภาระดูแลในเกมอยู่ในระดับสูง',migration:'มีสถานะย้ายถิ่นในเกม',hazardousWork:'มีสถานะงานเสี่ยงในเกม',motorcycle:'มีสถานะใช้รถจักรยานยนต์ในเกม',childHouseholdResources:'บริบททรัพยากรของบ้านในเกม',childWaterExposureProxy:'บริบทบ้านที่ผูกกับน้ำในเกม'},
-  autoPolicies:{neutral:'สุ่มตัวเลือกอย่างเป็นกลาง',preserveMoney:'รักษาเงิน',prioritizeStudy:'เน้นการเรียน',returnHome:'กลับบ้านเมื่อมีตัวเลือก'},
   collectionTitle:'สมุดสะสม',collectionIntro:'ผู้คนที่คุณเคยเป็นและคนที่ได้พบระหว่างชีวิตนี้',common:'ทั่วไป',rare:'หายาก',special:'พิเศษ',locked:'ยังไม่พบ',unlockHint:'ดำเนินชีวิตต่อไปเพื่อพบผู้คนและเรื่องราวใหม่',
   resume:'กลับไปใช้ชีวิตต่อ',peopleSuffix:'คน',relativeMigrated:'ย้ายถิ่น',relativeDead:'จากไปแล้ว',collectionEyebrow:'ชีวิตที่ผ่านมา',noTimeline:'เรื่องราวจะค่อย ๆ ปรากฏขึ้นที่นี่',
   school:'โรงเรียน',hospital:'สถานพยาบาล',jobs:'งาน',worldLives:'ชีวิตกำลังดำเนินอยู่',householdMoney:'เงินในบ้าน',personalMoney:'เงินส่วนตัว',householdDebt:'หนี้ในบ้าน',personalDebt:'หนี้ส่วนตัว',married:'มีคู่ครอง',notMarried:'ยังไม่มีคู่ครอง',place:'ที่อยู่',partnerStatus:'ความสัมพันธ์',childCount:'ลูก',

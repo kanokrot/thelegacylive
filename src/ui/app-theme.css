@@ -83,8 +83,6 @@ body {
 .shell .birth-trait-meter i { background: #E3B341; }
 .shell .birth-trait-meter { background: #2B3F5C; }
 .shell .choice-effect { color: #9FB0C8; }
-.shell .projected { color: #E3B341 !important; background: #0E1A2B; border: 1px solid #2B3F5C; }
-.shell .projected { font-size: 14px !important; }
 .shell .cohort { color: #F3EBD8; background: #0E1A2B; }
 .shell .cohort h2 { color: #F3EBD8; font-size: 14px !important; }
 .shell .cohort-row { border-color: #2B3F5C; }
@@ -694,13 +692,8 @@ body,
   .birth-shell .birth-card-details > .primary { align-self: stretch; }
 }
 
-.auto-policy { display: inline-flex; align-items: center; gap: 8px; color: var(--cream, #f6efe0); font-size: 14px; }
-.auto-policy select { max-width: 220px; min-height: 36px; padding: 5px 10px; border: 1px solid var(--gold, #e6b23d); border-radius: 8px; background: var(--navy, #0f1a2e); color: var(--cream, #f6efe0); }
 .memorial-death-cause { margin: 0 0 8px; color: var(--gold, #e6b23d); font-size: 20px; font-weight: 700; }
 .death-factors { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0 auto 12px; padding: 0; list-style: none; }
 .death-factors li { padding: 5px 10px; border: 1px solid #c9657f; border-radius: 999px; color: #f6efe0; font-size: 14px; }
-.memorial-decision-mode,.mortality-disclaimer { color: #c8d2e1; font-size: 14px; }
+.mortality-disclaimer { color: #c8d2e1; font-size: 14px; }
 .memorial-art > .portrait { position: relative; z-index: 1; display: flex; margin-inline: auto; image-rendering: pixelated; }
-@media (max-width: 640px) {
-  .life-time-controls .auto-policy { width: 100%; justify-content: space-between; }
-}
