@@ -3,6 +3,7 @@ import type { Card, Condition, RegionProfile } from '../engine/types'
 import { isanFamilyMoneyCards } from './isanFamilyMoneyCards'
 import { isanHouseholdThreadCards } from './isanHouseholdThreadCards'
 import { isanCultureCards } from './isanCultureCards'
+import { annualFallbackCards, isanEventBankCards } from './isanEventBankCards'
 import healthZoneData from './data/isan-health-zones.json'
 
 export { balance }
@@ -129,7 +130,7 @@ const extra: Card[] = [
   milestone('financial-crisis-1997', ['childhood','teen','youngAdult','midLife','elder'], 'วิกฤตเศรษฐกิจ พ.ศ. 2540', 'ข่าวเรื่องงานและรายได้ที่ลดลงเดินทางมาถึงครอบครัว ผลกระทบแตกต่างกันไปตามอาชีพและพื้นที่', 'ปรับแผนรายจ่าย', 'ช่วยกันหางานเพิ่ม', [S('wellbeing', 1), H('money', -1)], [S('careBurden', 1), H('money', 2)], { pinnedYear: 1997 }),
   milestone('floods-2011', ['childhood','teen','youngAdult','midLife','elder'], 'น้ำท่วม พ.ศ. 2554', 'น้ำท่วมกระทบการเดินทางและสถานที่ทำงานในหลายพื้นที่ หากโรงงานหยุดงาน ครอบครัวต้องวางแผนรายได้และการเดินทางกลับบ้าน', 'กลับอีสานและช่วยครอบครัวทำนา', 'หางานต่อในพื้นที่อื่น', [H('money', -2), S('relationships', 3)], [H('money', 1), S('relationships', -1)], { pinnedYear: 2011 }),
   milestone('covid-2020', ['childhood','teen','youngAdult','midLife','elder'], 'การระบาด พ.ศ. 2563', 'การเดินทางและงานหลายอย่างเปลี่ยนไป คุณปรับตัวตามข้อมูลและความช่วยเหลือที่เข้าถึงได้', 'ลดการเดินทางและดูแลคนในบ้าน', 'หาช่องทางทำงานที่ยังทำได้', [S('health', 2), S('relationships', 2)], [H('money', 2), S('wellbeing', -1)], { pinnedYear: 2020 }),
-  milestone('projected-2030', ['childhood','teen','youngAdult','midLife','elder'], 'ปีข้างหน้าที่คาดเดาไม่ได้', 'เหตุการณ์นี้เป็นภาพสมมติสำหรับปีหลัง พ.ศ. 2569 ไม่มีการอ้างว่าเป็นเหตุการณ์จริง', 'วางแผนจากสิ่งที่รู้', 'ขอคำแนะนำจากคนรอบตัว', [S('wellbeing', 1), S('knowledge', 1)], [S('relationships', 1)], { pinnedYear: 2030 }),
+  milestone('projected-2030', ['childhood','teen','youngAdult','midLife','elder'], 'ปีข้างหน้าที่คาดเดาไม่ได้', 'เหตุการณ์นี้เป็นภาพสมมุติสำหรับปีหลัง พ.ศ. 2569 ไม่มีการอ้างว่าเป็นเหตุการณ์จริง', 'วางแผนจากสิ่งที่รู้', 'ขอคำแนะนำจากคนรอบตัว', [S('wellbeing', 1), S('knowledge', 1)], [S('relationships', 1)], { pinnedYear: 2030 }),
   { id:'heat-wave-auto',stage:['childhood','teen','youngAdult','midLife','elder'],title:'วันที่อากาศร้อนจัด',body:'อากาศร้อนทำให้งานกลางแจ้งเหนื่อยขึ้น คุณพักและดื่มน้ำตามที่มี ในช่วงนี้การพักเป็นส่วนหนึ่งของการดูแลสุขภาพ',weight:balance.cards.lowWeight,once:false,auto:true,effects:[S('health',-1)],choices:[] },
 ]
 const addModifiers = (cardId: string, choiceIndex: number, modifiers: NonNullable<Card['choices'][number]['modifiers']>) => {
@@ -172,4 +173,4 @@ function genderModifiers(reason: string, female: Card['choices'][number]['effect
     {when:{gender:'อื่น ๆ'},effects:[other],narration:`${reason}: ตามบริบทของผู้มีเพศอื่น ๆ`},
   ]
 }
-export const cards = [...extra, ...routineCards, ...isanFamilyMoneyCards, ...isanHouseholdThreadCards, ...isanCultureCards]
+export const cards = [...extra, ...routineCards, ...isanFamilyMoneyCards, ...isanHouseholdThreadCards, ...isanCultureCards, ...isanEventBankCards, ...annualFallbackCards]

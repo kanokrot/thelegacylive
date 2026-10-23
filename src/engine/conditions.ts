@@ -14,6 +14,9 @@ export function evaluateCondition(c: Condition | undefined, s: LifeState): boole
   if ('household' in c) return s.person.householdType === c.household
   if ('householdMoney' in c) return cmp(s.person.householdMoney,c.householdMoney,c.value)
   if ('householdDebt' in c) return cmp(s.person.debt,c.householdDebt,c.value)
+  if ('householdLandRai' in c) return cmp(s.person.householdLandRai,c.householdLandRai,c.value)
+  if ('children' in c) return cmp(s.person.children,c.children,c.value)
+  if ('siblingCount' in c) return cmp(s.person.siblingCount,c.siblingCount,c.value)
   if ('birthOrder' in c) return cmp(s.person.birthOrder,c.birthOrder,c.value)
   return cmp(s.region[`${c.regionAccess === 'jobs' ? 'job' : c.regionAccess}Access` as 'schoolAccess'|'hospitalAccess'|'jobAccess'], c.op, c.value)
 }

@@ -21,7 +21,7 @@ describe('birth story presentation', () => {
     expect(fullText).toContain(first.amphoe)
     expect(fullText).toContain('เดือนตุลาคม')
     expect(first.fictionalVillage.startsWith('บ้าน')).toBe(true)
-    expect(fullText).toContain('หมู่บ้านสมมติ')
+    expect(fullText).toContain('หมู่บ้านสมมุติ')
     expect(fullText).toContain('ชีวิตของคุณเพิ่งเริ่มต้น')
     const province = (isanTambons as Array<{ province: string; amphoes: Array<{ name: string; tambons: string[] }> }>).find(item => item.province === person.province)!
     expect(province.amphoes.some(amphoe => amphoe.name.includes(first.amphoe) && amphoe.tambons.some(tambon => tambon.includes(first.tambon)))).toBe(true)

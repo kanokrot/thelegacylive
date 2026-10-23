@@ -20,7 +20,7 @@ import { displayStageForAge } from './portraits/portrait'
 import './collection-theme.css'
 
 const store = useGameStore()
-const { game, screen, roll, collection, person, card, counters, recentBirth, candleCount, worldLabel, worldDescription, cohort, playbackSpeed, playbackRunning, autoMode, autoPolicy } = storeToRefs(store)
+const { game, screen, roll, collection, person, card, counters, recentBirth, candleCount, worldLabel, worldDescription, cohort, yearDurationSeconds, yearProgress, yearRemainingMs, playbackRunning, autoPolicy } = storeToRefs(store)
 const unbindNavigation = bindScreenNavigation(screen, target => {
   if (target === 'birthplace') return Boolean(roll.value)
   if (target === 'reveal') return Boolean(roll.value)
@@ -30,7 +30,7 @@ const unbindNavigation = bindScreenNavigation(screen, target => {
 })
 onUnmounted(unbindNavigation)
 const age = computed(() => game.value && person.value ? game.value.year - person.value.birthYear : 0)
-const playbackSpeeds = [1, 2, 4, 8, 12, 16]
+const yearDurations = [15, 30, 60]
 const profileOccupation = computed(() => person.value ? occupationLabel(age.value, person.value.occupation, person.value.householdType, balance.annual.workMinAge, ui.notYetWorking) : '')
 const displayStage = computed(() => person.value ? ui.stage[displayStageForAge(age.value)] : '')
 const memorialAge = computed(() => person.value && game.value ? person.value.deathAge ?? game.value.year - person.value.birthYear : 0)
@@ -89,12 +89,14 @@ const deathFactorLabel = (factor: string) => ui.deathFactorLabels[factor as keyo
     <section v-else-if="screen === 'life' && game && person" class="life-screen">
       <div class="life-stripe" aria-hidden="true" />
       <div class="yearbar"><span class="stage-pill">{{ displayStage }}</span><strong>{{ ui.year }} {{ buddhistYear(game.year) }}</strong><span class="age-readout">{{ age }} {{ ui.yearsOld }}</span><span class="place">{{ person.province }}</span></div>
+      <div class="life-year-clock" :class="{ paused: !playbackRunning }">
+        <div class="life-year-clock-track" role="progressbar" :aria-label="ui.yearRemaining" :aria-valuemin="0" :aria-valuemax="100" :aria-valuenow="Math.round((1 - yearProgress) * 100)"><span :style="{ transform: `scaleX(${1 - yearProgress})` }" /></div>
+        <span>{{ ui.yearRemaining }} {{ Math.ceil(yearRemainingMs / 1000) }} {{ ui.seconds }}</span>
+      </div>
       <div class="life-time-controls" role="group" :aria-label="ui.timeControls">
         <button :aria-pressed="!playbackRunning" @click="store.pausePlayback()">❚❚ {{ ui.pause }}</button>
-        <button v-for="speed in playbackSpeeds" :key="speed" :aria-pressed="playbackRunning && playbackSpeed === speed" @click="store.setPlaybackSpeed(speed)">{{ speed }}×</button>
-        <button class="auto-mode" :aria-pressed="autoMode" :title="ui.autoModeHint" @click="store.setAutoMode(!autoMode)">{{ ui.autoMode }}</button>
-        <label class="auto-policy" :title="ui.autoPolicyHint"><span>นโยบาย</span><select v-model="autoPolicy" :aria-label="ui.autoPolicyHint" @change="store.setAutoPolicy(autoPolicy)"><option v-for="(label, policy) in ui.autoPolicies" :key="policy" :value="policy">{{ label }}</option></select></label>
-        <button class="next-decision" :disabled="Boolean(card)" @click="store.nextDecision()">{{ ui.nextDecision }} »</button>
+        <button v-for="seconds in yearDurations" :key="seconds" :aria-pressed="yearDurationSeconds === seconds" @click="store.setYearDuration(seconds)">{{ seconds === 60 ? '1 นาที' : `${seconds} วิ` }}</button>
+        <label class="auto-policy" :title="ui.autoPolicyHint"><span>ถ้าไม่เลือก</span><select v-model="autoPolicy" :aria-label="ui.autoPolicyHint" @change="store.setAutoPolicy(autoPolicy)"><option v-for="(label, policy) in ui.autoPolicies" :key="policy" :value="policy">{{ label }}</option></select></label>
       </div>
       <div class="life-layout">
         <aside class="sidebar">
@@ -108,11 +110,11 @@ const deathFactorLabel = (factor: string) => ui.deathFactorLabels[factor as keyo
             <h2>{{ ui.family }}</h2><p>{{ person.householdType }}<span v-if="person.householdLandRai"> · {{ person.householdLandRai }} {{ ui.rai }}</span></p>
             <div class="economy"><span>{{ ui.householdMoney }} <b>{{ Math.round(person.householdMoney) }}</b></span><span>{{ ui.personalMoney }} <b>{{ Math.round(person.money) }}</b></span><span>{{ ui.householdDebt }} <b>{{ Math.round(person.debt) }}</b></span><span>{{ ui.personalDebt }} <b>{{ Math.round(person.personalDebt) }}</b></span><span>{{ ui.remittances }} <b>{{ Math.round(person.remittancesSent) }}</b></span></div>
             <h3>{{ ui.relatives }}</h3>
-            <ul><li v-for="relative in person.relatives" :key="relative.id"><span :class="{ dead: !relative.alive }">{{ roleLabel(relative.role) }} · {{ relative.name }}</span><small>{{ relative.alive ? `${relative.age} ${ui.yearsOld}${relative.migrated ? ` · ${ui.relativeMigrated}` : ''} · ${relative.married ? ui.married : ui.notMarried}` : ui.relativeDead }}</small></li></ul>
+            <ul><li v-for="relative in person.relatives.filter(item => item.age >= 0)" :key="relative.id"><span :class="{ dead: !relative.alive }">{{ roleLabel(relative.role) }} · {{ relative.name }}</span><small>{{ relative.alive ? `${relative.age} ${ui.yearsOld}${relative.migrated ? ` · ${ui.relativeMigrated}` : ''} · ${relative.married ? ui.married : ui.notMarried}` : ui.relativeDead }}</small></li></ul>
           </section>
         </aside>
         <div class="story-column">
-          <article v-if="card" class="story panel"><p class="eyebrow">{{ ui.year }} {{ buddhistYear(game.year) }} · {{ ui.stage[person.stage] }}</p><h2>{{ card.title }}</h2><p v-if="game.year > balance.yearMax" class="projected">{{ ui.projectedNotice }}</p><p>{{ card.body }}</p><div v-if="card.auto" class="choices"><button @click="store.continueAuto()"><span>{{ ui.continue }}</span><span>→</span></button></div><div v-else class="choices"><button v-for="choice in currentChoices" :key="choice.id" @click="store.pick(choice.id)"><span>{{ choice.label }}<span v-if="choiceEffects(choice).length" class="choice-effects"><small v-for="(effect, i) in choiceEffects(choice)" :key="i" class="choice-effect">{{ effect }}</small></span></span><span>↗</span></button></div></article>
+          <article v-if="card" class="story panel"><p class="eyebrow">{{ ui.year }} {{ buddhistYear(game.year) }} · {{ ui.stage[person.stage] }}</p><h2>{{ card.title }}</h2><p v-if="game.year > balance.yearMax" class="projected">{{ ui.projectedNotice }}</p><p>{{ card.body }}</p><div v-if="card.auto" class="choices"><button @click="store.continueAuto()"><span>{{ ui.continue }}</span><span>→</span></button></div><div v-else class="choices"><button v-for="choice in card.choices" :key="choice.id" :disabled="!evaluateCondition(choice.requires, game)" @click="store.pick(choice.id)"><span>{{ choice.label }}<span v-if="choiceEffects(choice).length" class="choice-effects"><small v-for="(effect, i) in choiceEffects(choice)" :key="i" class="choice-effect">{{ effect }}</small></span></span><span>↗</span></button><p v-if="!card.choices.length" class="empty">{{ ui.yearResolved }}</p></div></article>
           <article v-else class="story quiet panel"><p>{{ yearResolved ? ui.yearResolved : annualVignette(game) }}</p></article>
           <section class="panel log"><h2>{{ ui.timeline }}</h2><p v-if="!game.log.length" class="empty">{{ ui.noTimeline }}</p><ol><li v-for="(event, i) in [...game.log].reverse().slice(0, 16)" :key="i"><time>{{ buddhistYear(event.year) }}</time><span><b>{{ event.title }}</b>{{ event.text }}</span></li></ol></section>
           <div class="world-strip"><span class="world-dot" /><strong>{{ worldLabel }}</strong><span>{{ counters.lives }} {{ ui.worldLives }}</span><small class="world-strip-description">{{ worldDescription }}</small><small>{{ recentBirth?.name }} {{ ui.recently }}{{ recentBirth?.province }}</small></div>

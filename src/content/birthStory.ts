@@ -78,9 +78,9 @@ export function buildBirthStory(person: Person, date = new Date()): BirthStory {
   const village = `บ้าน${choose(villageParts, `${seed}:village-prefix`)}${choose(villageEndings, `${seed}:village-ending`)}`
   const month = date.getMonth()
   const familyStory = choose(householdWork[person.householdType] ?? householdWork['รับจ้าง']!, `${seed}:family-work`)
-  const first = `${person.name} เกิดในเดือน${monthNames[month]} ${seasonalNotes[month]} ที่โรงพยาบาลของอำเภอ ใน${tambon} ${amphoe.name} จังหวัด${person.province} หมู่บ้านสมมติในเรื่องนี้มีชื่อว่า${village}`
+  const first = `${person.name} เกิดในเดือน${monthNames[month]} ${seasonalNotes[month]} ที่โรงพยาบาลของอำเภอ ใน${tambon} ${amphoe.name} จังหวัด${person.province} หมู่บ้านสมมุติในเรื่องนี้มีชื่อว่า${village}`
   const familyPosition = person.siblingCount === 0 ? 'เป็นลูกคนเดียว' : `เป็นลูกคนที่ ${person.birthOrder} จากพี่น้อง ${person.siblingCount + 1} คน`
-  const siblings = person.relatives.filter(relative => relative.role === 'sibling')
+  const siblings = person.relatives.filter(relative => relative.role === 'sibling' && relative.age >= 0)
   const siblingDetail = siblings.length
     ? ` พี่น้องที่มีชื่ออยู่ในครอบครัวคือ${siblings.map(relative => relative.name).join(' กับ ')}`
     : ' บ้านนี้ไม่มีพี่น้องร่วมรุ่นกับคุณ'
