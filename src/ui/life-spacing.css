@@ -222,35 +222,6 @@
   outline-offset: 2px;
 }
 
-.life-screen .life-time-controls .next-decision {
-  margin-left: auto;
-  border-color: #3a5380;
-  background: #1a2b48;
-  color: #f6efe0;
-}
-
-.life-screen .life-time-controls .next-decision:disabled {
-  cursor: default;
-  border-color: #526782;
-  background: #26364f;
-  color: #d4deeb;
-  opacity: 1;
-}
-
-.life-screen .life-time-controls .auto-policy {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  min-height: 42px;
-  color: #f6efe0;
-}
-
-.life-screen .life-time-controls .auto-policy select {
-  max-width: min(230px, 30vw);
-  min-width: 0;
-  cursor: pointer;
-}
-
 .life-screen .profile-stat-help {
   margin: var(--space-3) 0 0;
   color: var(--muted);
@@ -343,29 +314,6 @@
     font-size: 13px;
   }
 
-  .life-screen .life-time-controls .auto-policy {
-    grid-column: span 2;
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: 5px;
-    min-width: 0;
-    font-size: 14px;
-  }
-
-  .life-screen .life-time-controls .auto-policy select {
-    width: 100%;
-    max-width: none;
-    min-height: 46px;
-    padding-inline: 6px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 12px;
-  }
-
-  .life-screen .life-time-controls .next-decision {
-    grid-column: span 2;
-    margin-left: 0;
-  }
 }
 
 /* Home cards layer over the map; allow their content to define the panel height. */

@@ -20,7 +20,7 @@ import { displayStageForAge } from './portraits/portrait'
 import './collection-theme.css'
 
 const store = useGameStore()
-const { game, screen, roll, collection, person, card, counters, recentBirth, candleCount, worldLabel, worldDescription, cohort, yearDurationSeconds, yearProgress, yearRemainingMs, playbackRunning, autoPolicy } = storeToRefs(store)
+const { game, screen, roll, collection, person, card, counters, recentBirth, candleCount, worldLabel, worldDescription, cohort, yearDurationSeconds, yearProgress, yearRemainingMs, playbackRunning } = storeToRefs(store)
 const unbindNavigation = bindScreenNavigation(screen, target => {
   if (target === 'birthplace') return Boolean(roll.value)
   if (target === 'reveal') return Boolean(roll.value)
@@ -49,11 +49,6 @@ const yearResolved = computed(() => Boolean(game.value?.log.some(event => event.
 const buddhistYear = (year: number | undefined) => year === undefined ? '' : year + balance.yearOffsetBE
 const rarity = (i: number) => i % 23 === 0 ? ui.special : i % 7 === 0 ? ui.rare : ui.common
 const roleLabel = (role: RelativeRole) => ui.relativeRoles[role]
-const memorialManualShare = computed(() => {
-  const manual = person.value?.manualDecisions ?? 0
-  const total = manual + (person.value?.autoDecisions ?? 0)
-  return total === 0 ? 100 : Math.round(manual / total * 100)
-})
 const deathCauseLabel = (cause: string) => ui.deathCauseLabels[cause as keyof typeof ui.deathCauseLabels] ?? ui.deathCauseLabels.unknown
 const deathFactorLabel = (factor: string) => ui.deathFactorLabels[factor as keyof typeof ui.deathFactorLabels] ?? factor
 </script>
@@ -96,7 +91,6 @@ const deathFactorLabel = (factor: string) => ui.deathFactorLabels[factor as keyo
       <div class="life-time-controls" role="group" :aria-label="ui.timeControls">
         <button :aria-pressed="!playbackRunning" @click="store.pausePlayback()">❚❚ {{ ui.pause }}</button>
         <button v-for="seconds in yearDurations" :key="seconds" :aria-pressed="yearDurationSeconds === seconds" @click="store.setYearDuration(seconds)">{{ seconds === 60 ? '1 นาที' : `${seconds} วิ` }}</button>
-        <label class="auto-policy" :title="ui.autoPolicyHint"><span>ถ้าไม่เลือก</span><select v-model="autoPolicy" :aria-label="ui.autoPolicyHint" @change="store.setAutoPolicy(autoPolicy)"><option v-for="(label, policy) in ui.autoPolicies" :key="policy" :value="policy">{{ label }}</option></select></label>
       </div>
       <div class="life-layout">
         <aside class="sidebar">
@@ -114,7 +108,7 @@ const deathFactorLabel = (factor: string) => ui.deathFactorLabels[factor as keyo
           </section>
         </aside>
         <div class="story-column">
-          <article v-if="card" class="story panel"><p class="eyebrow">{{ ui.year }} {{ buddhistYear(game.year) }} · {{ ui.stage[person.stage] }}</p><h2>{{ card.title }}</h2><p v-if="game.year > balance.yearMax" class="projected">{{ ui.projectedNotice }}</p><p>{{ card.body }}</p><div v-if="card.auto" class="choices"><button @click="store.continueAuto()"><span>{{ ui.continue }}</span><span>→</span></button></div><div v-else class="choices"><button v-for="choice in card.choices" :key="choice.id" :disabled="!evaluateCondition(choice.requires, game)" @click="store.pick(choice.id)"><span>{{ choice.label }}<span v-if="choiceEffects(choice).length" class="choice-effects"><small v-for="(effect, i) in choiceEffects(choice)" :key="i" class="choice-effect">{{ effect }}</small></span></span><span>↗</span></button><p v-if="!card.choices.length" class="empty">{{ ui.yearResolved }}</p></div></article>
+          <article v-if="card" class="story panel"><p class="eyebrow">{{ ui.year }} {{ buddhistYear(game.year) }} · {{ ui.stage[person.stage] }}</p><h2>{{ card.title }}</h2><p>{{ card.body }}</p><div v-if="card.auto" class="choices"><button @click="store.continueAuto()"><span>{{ ui.continue }}</span><span>→</span></button></div><div v-else class="choices"><button v-for="choice in card.choices" :key="choice.id" :disabled="!evaluateCondition(choice.requires, game)" @click="store.pick(choice.id)"><span>{{ choice.label }}<span v-if="choiceEffects(choice).length" class="choice-effects"><small v-for="(effect, i) in choiceEffects(choice)" :key="i" class="choice-effect">{{ effect }}</small></span></span><span>↗</span></button><p v-if="!card.choices.length" class="empty">{{ ui.yearResolved }}</p></div></article>
           <article v-else class="story quiet panel"><p>{{ yearResolved ? ui.yearResolved : annualVignette(game) }}</p></article>
           <section class="panel log"><h2>{{ ui.timeline }}</h2><p v-if="!game.log.length" class="empty">{{ ui.noTimeline }}</p><ol><li v-for="(event, i) in [...game.log].reverse().slice(0, 16)" :key="i"><time>{{ buddhistYear(event.year) }}</time><span><b>{{ event.title }}</b>{{ event.text }}</span></li></ol></section>
           <div class="world-strip"><span class="world-dot" /><strong>{{ worldLabel }}</strong><span>{{ counters.lives }} {{ ui.worldLives }}</span><small class="world-strip-description">{{ worldDescription }}</small><small>{{ recentBirth?.name }} {{ ui.recently }}{{ recentBirth?.province }}</small></div>
@@ -126,7 +120,7 @@ const deathFactorLabel = (factor: string) => ui.deathFactorLabels[factor as keyo
       <p class="eyebrow">{{ ui.death }}</p><div class="memorial-art"><svg class="landscape" viewBox="0 0 180 90" preserveAspectRatio="none" shape-rendering="crispEdges"><rect width="180" height="90" fill="#e7eee3" /><rect x="130" y="12" width="18" height="18" fill="#e8c98d" /><rect x="136" y="6" width="6" height="6" fill="#e8c98d" /><rect x="124" y="18" width="6" height="6" fill="#e8c98d" /><rect x="28" y="34" width="24" height="8" fill="#c7d6c0" /><rect x="18" y="42" width="48" height="8" fill="#c7d6c0" /><rect y="53" width="180" height="37" fill="#9eaf8b" /><rect y="63" width="180" height="27" fill="#829970" /><rect x="8" y="59" width="34" height="3" fill="#d0d7a5" /><rect x="49" y="68" width="43" height="3" fill="#d0d7a5" /><rect x="102" y="59" width="54" height="3" fill="#d0d7a5" /><rect x="118" y="78" width="62" height="3" fill="#d0d7a5" /><rect x="0" y="84" width="180" height="6" fill="#718763" /></svg><Portrait :person="person" :age="memorialAge" :size="200" /></div>
       <h1>{{ person.name }}</h1><p class="dates">{{ ui.year }} {{ person.birthYearBE }} — {{ buddhistYear(person.deathYear) }} · {{ person.province }}</p><p class="memorial-copy">{{ game.memorial }}</p>
       <p class="memorial-death-cause">{{ deathCauseLabel(person.deathCause ?? 'unknown') }}</p><ul v-if="person.deathCause !== 'other' && person.deathFactors?.length" class="death-factors"><li v-for="factor in person.deathFactors" :key="factor">{{ deathFactorLabel(factor) }}</li></ul>
-      <p class="memorial-decision-mode">{{ memorialManualShare >= 50 ? ui.playerDecisionMode : ui.autoDecisionMode }}</p><p class="mortality-disclaimer">{{ ui.mortalityDisclaimer }}</p>
+      <p class="mortality-disclaimer">{{ ui.mortalityDisclaimer }}</p>
       <section v-if="cohort.length" class="cohort"><h2>{{ ui.cohortTitle }}</h2><article v-for="life in cohort" :key="life.person.id" class="cohort-row"><Portrait :person="life.person" :size="72" /><span><b>{{ life.person.name }}</b><small>{{ ui.year }} {{ buddhistYear(life.person.birthYear) }} — {{ buddhistYear(life.person.deathYear) }}</small><small>{{ life.memorial }}</small></span></article></section>
       <button class="candle" @click="store.lightCandle()">🕯 {{ ui.candle }}</button><p class="muted">{{ ui.candles }}: {{ candleCount }}</p><button class="primary" @click="store.newLife()">{{ ui.newLife }}</button>
     </section>
