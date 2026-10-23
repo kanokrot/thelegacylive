@@ -12,7 +12,7 @@ import IsanMap from './IsanMap.vue'
 import BirthProfile from './BirthProfile.vue'
 import BirthplaceRoll from './BirthplaceRoll.vue'
 import { evaluateCondition } from '../engine/conditions'
-import type { RelativeRole } from '../engine/types'
+import type { Choice, RelativeRole } from '../engine/types'
 import { bindScreenNavigation } from './navigation'
 import { occupationLabel } from './profile'
 import SpriteGallery from './portraits/SpriteGallery.vue'
@@ -34,8 +34,7 @@ const yearDurations = [15, 30, 60]
 const profileOccupation = computed(() => person.value ? occupationLabel(age.value, person.value.occupation, person.value.householdType, balance.annual.workMinAge, ui.notYetWorking) : '')
 const displayStage = computed(() => person.value ? ui.stage[displayStageForAge(age.value)] : '')
 const memorialAge = computed(() => person.value && game.value ? person.value.deathAge ?? game.value.year - person.value.birthYear : 0)
-const currentChoices = computed(() => game.value && card.value ? card.value.choices.filter(choice => evaluateCondition(choice.requires, game.value!)) : [])
-const choiceEffects = (choice: (typeof currentChoices.value)[number]) => {
+const choiceEffects = (choice: Choice) => {
   if (!game.value) return []
   const base = choice.effects.map(effect => ({ effect, context: '' }))
   const contextual = (choice.modifiers ?? []).filter(modifier => evaluateCondition(modifier.when, game.value!)).flatMap(modifier => modifier.effects.map(effect => ({ effect, context: modifier.narration })))
