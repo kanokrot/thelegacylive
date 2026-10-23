@@ -3,7 +3,15 @@ import { createLife, beginTurn, cardWeightForState } from './game'
 import { evaluateCondition } from './conditions'
 import type { Card } from './types'
 
-const card = (id: string, weight = 1): Card => ({ id, stage: 'childhood', title: id, body: '', weight, once: false, choices: [] })
+const card = (id: string, weight = 1): Card => ({
+  id,
+  stage: 'childhood',
+  title: id,
+  body: '',
+  weight,
+  once: false,
+  choices: [{ id: `${id}-choice`, label: 'เลือก', effects: [] }],
+})
 
 describe('economic conditions and contextual card weights', () => {
   it('reads household money and household debt from their own person fields', () => {
@@ -63,6 +71,8 @@ describe('economic conditions and contextual card weights', () => {
       baseline.person.householdMoney = weighted.person.householdMoney = 10
       beginTurn(baseline, [a, b])
       beginTurn(weighted, [weightedA, b])
+      expect(baseline.currentCardIds).not.toHaveLength(0)
+      expect(weighted.currentCardIds).not.toHaveLength(0)
       if (baseline.currentCardIds[0] === 'a') baselineA++
       if (weighted.currentCardIds[0] === 'a') weightedAFirst++
       expect(weighted.currentCardIds).toEqual(createWeightedReplay(seed, weightedA, b))
