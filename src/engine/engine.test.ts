@@ -57,7 +57,16 @@ describe('life simulation engine',()=>{
         s.year++;s.person.stage=s.year-s.person.birthYear<=12?'childhood':s.year-s.person.birthYear<=19?'teen':s.year-s.person.birthYear<=35?'youngAdult':s.year-s.person.birthYear<=59?'midLife':'elder'
       }
     }
-    expect([...cards.filter(c=>!reached.has(c.id)).map(c=>c.id)]).toEqual([])
+    expect([...cards.filter(c=>!c.fallback&&!reached.has(c.id)).map(c=>c.id)]).toEqual([])
+  })
+  it('draws an annual teen fallback when the authored pool is empty',()=>{
+    const s=createLife(204)
+    s.person.stage='teen'
+    s.year=s.person.birthYear+15
+    const teenFallbacks=cards.filter(card=>card.fallback&&['annual-teen-friends','annual-teen-next-step'].includes(card.id))
+    beginTurn(s,teenFallbacks)
+    expect(s.currentCardIds).toHaveLength(1)
+    expect(['annual-teen-friends','annual-teen-next-step']).toContain(s.currentCardIds[0])
   })
   it('uses pinned historical cards only in their exact year',()=>{const s=createLife(17);s.year=1997;s.person.birthYear=1970;s.person.stage='youngAdult';expect(cards.find(c=>c.id==='financial-crisis-1997')?.pinnedYear).toBe(1997)})
   it('creates identical lives from the same seed',()=>expect(simulateLife(557)).toEqual(simulateLife(557)))
